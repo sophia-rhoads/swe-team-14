@@ -1,0 +1,169 @@
+<!-- ================= LOADING TEMPLATE ================= -->
+<ng-template #loadingTemplate>
+    <div class="spinner-container">
+        <p-progressSpinner></p-progressSpinner>
+    </div>
+</ng-template>
+
+
+<!-- ================= MAIN CONTENT ================= -->
+<ng-container *ngIf="movies$ | async; else loadingTemplate">
+
+    <!-- ================= CURRENTLY RUNNING ================= -->
+    <div class="section-header">
+        <h2>Currently Running</h2>
+
+        <button *ngIf="(currentlyRunning$ | async)?.length" pButton class="p-button-text"
+            [label]="showAllRunning ? 'Show Less' : 'View All'" (click)="toggleRunning()">
+        </button>
+    </div>
+
+    <!-- If movies exist -->
+    <ng-container *ngIf="(currentlyRunning$ | async) as running">
+
+        <!-- Empty Message -->
+        <p *ngIf="running.length === 0" class="empty-message">
+            No currently running movies found.
+        </p>
+
+        <!-- Carousel View -->
+        <p-carousel *ngIf="!showAllRunning && running.length > 0" [value]="running | slice:0:6" [numVisible]="5"
+            [numScroll]="1" [circular]="true">
+
+            <ng-template let-movie pTemplate="item">
+                <div class="carousel-card">
+
+                    <img [src]="movie.posterUrl" />
+
+                    <h4>{{ movie.title }}</h4>
+
+                    <div class="rating-section">
+                        <ng-container *ngIf="movie.imdbRating; else notReleasedRunning">
+                            <p-rating [ngModel]="movie.imdbRating / 2" [readonly]="true">
+                            </p-rating>
+
+                            <span class="rating-number">
+                                {{ movie.imdbRating }} / 10
+                            </span>
+                        </ng-container>
+
+                        <ng-template #notReleasedRunning>
+                            <span class="not-released">
+                                Not yet Released
+                            </span>
+                        </ng-template>
+                    </div>
+
+                    <button pButton class="p-button-sm p-button-primary" label="View Details"
+                        (click)="viewDetails(movie.id)">
+                    </button>
+
+                </div>
+            </ng-template>
+
+        </p-carousel>
+
+        <!-- Grid View -->
+        <div class="movie-grid" *ngIf="showAllRunning && running.length > 0">
+
+            <div class="movie-card" *ngFor="let movie of running">
+
+                <img [src]="movie.posterUrl" />
+
+                <h3>{{ movie.title }}</h3>
+
+                <div class="rating-section">
+                    <ng-container *ngIf="movie.imdbRating; else notReleasedGridRunning">
+                        <p-rating [ngModel]="movie.imdbRating / 2" [readonly]="true">
+                        </p-rating>
+
+                        <span class="rating-number">
+                            {{ movie.imdbRating }} / 10
+                        </span>
+                    </ng-container>
+
+                    <ng-template #notReleasedGridRunning>
+                        <span class="not-released">
+                            Not yet Released
+                        </span>
+                    </ng-template>
+                </div>
+
+                <button pButton class="p-button-sm p-button-primary" label="View Details"
+                    (click)="viewDetails(movie.id)">
+                </button>
+
+            </div>
+        </div>
+
+    </ng-container>
+
+
+
+    <!-- ================= COMING SOON ================= -->
+    <div class="section-header">
+        <h2>Coming Soon</h2>
+
+        <button *ngIf="(comingSoon$ | async)?.length" pButton class="p-button-text"
+            [label]="showAllComing ? 'Show Less' : 'View All'" (click)="toggleComing()">
+        </button>
+    </div>
+
+    <ng-container *ngIf="(comingSoon$ | async) as coming">
+
+        <!-- Empty Message -->
+        <p *ngIf="coming.length === 0" class="empty-message">
+            No upcoming movies found.
+        </p>
+
+        <!-- Carousel View -->
+        <p-carousel *ngIf="!showAllComing && coming.length > 0" [value]="coming | slice:0:6" [numVisible]="5"
+            [numScroll]="1" [circular]="true">
+
+            <ng-template let-movie pTemplate="item">
+                <div class="carousel-card">
+
+                    <img [src]="movie.posterUrl" />
+
+                    <h4>{{ movie.title }}</h4>
+
+                    <div class="rating-section">
+                        <span class="not-released">
+                            Not yet Released
+                        </span>
+                    </div>
+
+                    <button pButton class="p-button-sm p-button-primary" label="View Details"
+                        (click)="viewDetails(movie.id)">
+                    </button>
+
+                </div>
+            </ng-template>
+
+        </p-carousel>
+
+        <!-- Grid View -->
+        <div class="movie-grid" *ngIf="showAllComing && coming.length > 0">
+
+            <div class="movie-card" *ngFor="let movie of coming">
+
+                <img [src]="movie.posterUrl" />
+
+                <h3>{{ movie.title }}</h3>
+
+                <div class="rating-section">
+                    <span class="not-released">
+                        Not yet Released
+                    </span>
+                </div>
+
+                <button pButton class="p-button-sm p-button-primary" label="View Details"
+                    (click)="viewDetails(movie.id)">
+                </button>
+
+            </div>
+        </div>
+
+    </ng-container>
+
+</ng-container>

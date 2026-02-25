@@ -1,0 +1,55 @@
+<ng-template #loading>
+    <div class="spinner-container">
+        <p-progressSpinner></p-progressSpinner>
+    </div>
+</ng-template>
+
+<ng-container *ngIf="movie$ | async as movie; else loading">
+
+    <div class="trailer-section">
+        <h2>Watch Trailer</h2>
+
+        <div class="trailer-wrapper">
+            <iframe [src]="trailerUrl$ | async" frameborder="0" allowfullscreen>
+            </iframe>
+        </div>
+    </div>
+
+    <div class="details-container">
+
+        <div class="details-left">
+            <img [src]="movie.posterUrl" class="poster">
+        </div>
+
+        <div class="details-right">
+
+            <h1>{{ movie.title }}</h1>
+
+            <div class="meta-info">
+                <span class="mpaa-badge">{{ movie.mpaaRating }}</span>
+                <span class="genre">{{ movie.genre }}</span>
+            </div>
+
+            <div *ngIf="movie.imdbRating; else notReleased">
+                <p-rating [ngModel]="movie.imdbRating / 2" [readonly]="true">
+                </p-rating>
+
+                <span>{{ movie.imdbRating }} / 10</span>
+            </div>
+
+            <ng-template #notReleased>
+                <p>Not yet Released</p>
+            </ng-template>
+
+            <p class="description">{{ movie.description }}</p>
+
+            <p><strong>Director:</strong> {{ movie.director }}</p>
+            <p><strong>Producer:</strong> {{ movie.producer }}</p>
+
+            <button pButton label="Book Tickets" icon="pi pi-ticket" (click)="goToBooking(movie.id)">
+            </button>
+
+        </div>
+    </div>
+
+</ng-container>
