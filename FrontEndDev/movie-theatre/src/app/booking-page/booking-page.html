@@ -1,1 +1,132 @@
-<p>booking-page works!</p>
+<ng-template #loading>
+    <div class="spinner-container">
+        <p-progressSpinner></p-progressSpinner>
+    </div>
+</ng-template>
+
+<ng-container *ngIf="movie$ | async as movie; else loading">
+
+    <div class="details-container">
+
+        <div class="details-left">
+            <img [src]="movie.posterUrl" class="poster">
+        </div>
+
+        <div class="details-right">
+
+            <h1>{{ movie.title }}</h1>
+
+            <div class="meta-info">
+                <span class="mpaa-badge">{{ movie.mpaaRating }}</span>
+                <span class="genre">{{ movie.genre }}</span>
+            </div>
+
+            <div *ngIf="movie.imdbRating; else notReleased">
+                <p-rating [ngModel]="movie.imdbRating / 2" [readonly]="true">
+                </p-rating>
+
+                <span>{{ movie.imdbRating }} / 10</span>
+            </div>
+
+            <ng-template #notReleased>
+                <p>Not yet Released</p>
+            </ng-template>
+
+            <br>
+            <br>
+            <h1>Select Show Time:</h1>
+            <br>
+            <p-radiobutton name="showTimes" [(ngModel)]="showTimes" value="10:00 am" inputId="time1"></p-radiobutton>
+            <label for="time1" class="text-lg pr-4">10:00 am</label>
+            <p-radiobutton name="showTimes" [(ngModel)]="showTimes" value="1:45 pm" inputId="time2"></p-radiobutton>
+            <label for="time2" class="text-lg pr-4">1:45 pm</label>
+            <p-radiobutton name="showTimes" [(ngModel)]="showTimes" value="2:30 pm" inputId="time3"></p-radiobutton>
+            <label for="time3" class="text-lg pr-4">2:30 pm</label>
+            <p-radiobutton name="showTimes" [(ngModel)]="showTimes" value="8:00 pm" inputId="time4"></p-radiobutton>
+            <label for="time4" class="text-lg pr-4">8:00 pm</label>
+            <br>
+            <br>
+
+            <h1>Ticket Types:</h1>
+            <br>
+            <label class="text-xl pr-4 font-bold" for="adult">Adult - $5.00</label>
+            <p-inputnumber [showButtons]="true" buttonLayout="horizontal" inputId="adult" [step]="1"
+                [inputStyle]="{width: '3rem'}">
+                <ng-template #incrementbuttonicon>
+                    <span class="pi pi-plus"></span>
+                </ng-template>
+                <ng-template #decrementbuttonicon>
+                    <span class="pi pi-minus"></span>
+                </ng-template>
+            </p-inputnumber>
+            <br>
+            <br>
+            <label class="text-xl pr-4 font-bold" for="child">Child - $2.50</label>
+            <p-inputnumber [showButtons]="true" buttonLayout="horizontal" inputId="child" [step]="1"
+                [inputStyle]="{width: '3rem'}">
+                <ng-template #incrementbuttonicon>
+                    <span class="pi pi-plus"></span>
+                </ng-template>
+                <ng-template #decrementbuttonicon>
+                    <span class="pi pi-minus"></span>
+                </ng-template>
+            </p-inputnumber>
+            <br>
+            <br>
+            <label class="text-xl pr-4 font-bold" for="senior">Senior - $3.50</label>
+            <p-inputnumber [showButtons]="true" buttonLayout="horizontal" inputId="senior" [step]="1"
+                [inputStyle]="{width: '3rem'}">
+                <ng-template #incrementbuttonicon>
+                    <span class="pi pi-plus"></span>
+                </ng-template>
+                <ng-template #decrementbuttonicon>
+                    <span class="pi pi-minus"></span>
+                </ng-template>
+            </p-inputnumber>
+        </div>
+
+    </div>
+
+    <div class="details-container">
+        <div class="details-left">
+            <h1>Select Seats:</h1>
+            <br>
+            <br>
+
+            <!-- <div class="flex justify-content-evenly flex-wrap" style="max-width: 500px; max-height: 300px;">
+                <div class="flex align-items-center justify-content-center w-4rem h-4rem" *ngFor = "let a of arr(25)">
+                    <p-button (click)="buttonClicked($event)" [ngClass]="{'seatWhite': buttonState}">
+                        <img src="./armchair.png" width="24px" height="24px">
+                    </p-button>
+                </div>
+            </div> -->
+
+            <div class="flex justify-content-evenly flex-wrap" style="max-width: 500px; max-height: 300px;">
+                <div class="flex align-items-center justify-content-center w-4rem h-4rem" *ngFor="let seat of seats">
+                    <p-button (click)="buttonClicked(seat.id)" [ngClass]="{'seatWhite': seat.clicked}">
+                        <img src="./armchair.png" width="24px" height="24px">
+                    </p-button>
+                </div>
+
+            </div>
+            <br>
+            <div class="screen">Screen</div>
+
+            <br>
+            <br>
+
+            <p-button label="Proceed to Checkout" icon="pi pi-ticket"></p-button>
+
+            <br>
+        </div>
+    </div>
+
+</ng-container>
+
+<!-- <p-button styleClass="seatWhite">
+    <img src="./armchair.png" width="24px" height="24px">
+</p-button> -->
+
+<!-- <p-button (onClick)="buttonClicked()" [ngClass]="{'seatWhite': buttonState}">
+    <img src="./armchair.png" width="24px" height="24px">
+</p-button> -->

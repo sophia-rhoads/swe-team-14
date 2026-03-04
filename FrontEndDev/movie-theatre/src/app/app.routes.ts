@@ -6,6 +6,6 @@ import { BookingPage } from './booking-page/booking-page';
 export const routes: Routes = [
     { path: '', component: HomePage },
     { path: 'movie/:id', component: MovieDetails },
-    { path: 'booking/:id', component: BookingPage },
+    { path: 'booking/:id/:showtime', component: BookingPage },
     { path: '**', redirectTo: '' }   // VERY IMPORTANT
 ];

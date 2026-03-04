@@ -46,7 +46,24 @@
             <p><strong>Director:</strong> {{ movie.director }}</p>
             <p><strong>Producer:</strong> {{ movie.producer }}</p>
 
-            <button pButton label="Book Tickets" icon="pi pi-ticket" (click)="goToBooking(movie.id)">
+            <br>
+            <br>
+
+            <h1>Select Show Time:</h1>
+            <br>
+            <p-radiobutton name="showTimes" [(ngModel)]="showTimes" value="10:00 am" inputId="time1"></p-radiobutton>
+            <label for="time1" class="text-lg pr-4">10:00 am</label>
+            <p-radiobutton name="showTimes" [(ngModel)]="showTimes" value="1:45 pm" inputId="time2"></p-radiobutton>
+            <label for="time2" class="text-lg pr-4">1:45 pm</label>
+            <p-radiobutton name="showTimes" [(ngModel)]="showTimes" value="2:30 pm" inputId="time3"></p-radiobutton>
+            <label for="time3" class="text-lg pr-4">2:30 pm</label>
+            <p-radiobutton name="showTimes" [(ngModel)]="showTimes" value="8:00 pm" inputId="time4"></p-radiobutton>
+            <label for="time4" class="text-lg pr-4">8:00 pm</label>
+            <br>
+            <br>
+
+            <button pButton label="Book Tickets" icon="pi pi-ticket" [disabled]="!showTimes"
+                (click)="goToBooking(movie.id)">
             </button>
 
         </div>
