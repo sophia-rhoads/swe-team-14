@@ -72,7 +72,10 @@ export class HomePage {
     this.showAllComing = !this.showAllComing;
   }
 
-  viewDetails(id: number) {
-    this.router.navigate(['/movie', id]);
+  viewDetails(movie: Movie) {
+    this.router.navigate(
+      ['/movie', movie.id],
+      { state: { movieTitle: movie.title } }
+    );
   }
 }

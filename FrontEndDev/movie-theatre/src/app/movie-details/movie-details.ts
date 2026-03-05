@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { map, switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { RadioButton, RadioButtonModule } from 'primeng/radiobutton';
+import { DatePickerModule } from 'primeng/datepicker';
 
 @Component({
   selector: 'app-movie-details',
@@ -21,7 +22,8 @@ import { RadioButton, RadioButtonModule } from 'primeng/radiobutton';
     RatingModule,
     ProgressSpinnerModule,
     FormsModule,
-    RadioButtonModule
+    RadioButtonModule,
+    DatePickerModule
   ],
   templateUrl: './movie-details.html',
   styleUrls: ['./movie-details.scss']
@@ -29,6 +31,10 @@ import { RadioButton, RadioButtonModule } from 'primeng/radiobutton';
 export class MovieDetails {
 
   showTimes!: string;
+  selectedDate!: Date;
+
+  minDate = new Date();
+  maxDate = new Date(new Date().setMonth(new Date().getMonth() + 1));
   movie$!: Observable<Movie>;
   trailerUrl$!: Observable<SafeResourceUrl>;
 
@@ -55,9 +61,20 @@ export class MovieDetails {
   goToBooking(id: number) {
 
     if (!this.showTimes) {
-      return; // prevent navigation if no showtime selected
+      return;
     }
 
-    this.router.navigate(['/booking', id, this.showTimes]);
+    this.movie$.subscribe(movie => {
+
+      this.router.navigate(
+        ['/booking', id, this.showTimes],
+        {
+          queryParams: { date: this.selectedDate },
+          state: { movieTitle: movie.title }
+        }
+      );
+
+    });
+
   }
 }
