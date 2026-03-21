@@ -1,0 +1,20 @@
+.toolbar-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px; // 🔥 THIS creates clean spacing
+}
+
+/* Optional: control widths */
+.toolbar-controls input {
+    width: 220px;
+}
+
+.toolbar-controls p-select {
+    min-width: 160px;
+}
+
+.search-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}

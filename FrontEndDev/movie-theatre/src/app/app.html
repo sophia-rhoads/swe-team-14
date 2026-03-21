@@ -1,0 +1,61 @@
+<p-toolbar>
+
+  <!-- LEFT SIDE -->
+  <ng-template #start>
+
+    <div class="nav-left">
+
+      <a [routerLink]="['']">
+        <p-button icon="pi pi-home"></p-button>
+      </a>
+
+      <p-button *ngIf="showBackButton" icon="pi pi-arrow-left" class="p-button-secondary" (click)="goBack()">
+      </p-button>
+
+    </div>
+
+  </ng-template>
+
+
+  <!-- CENTER TITLE -->
+  <ng-template #center>
+
+    <div class="nav-title">
+      {{ navTitle }}
+    </div>
+
+  </ng-template>
+
+
+  <!-- RIGHT SIDE (YOUR EXISTING SEARCH) -->
+  <ng-template #end>
+
+    <div class="toolbar-controls">
+
+      <div class="search-group">
+
+        <input type="text" pInputText [(ngModel)]="searchTerm" (keyup.enter)="onSearch()"
+          placeholder="Search by title" />
+
+        <button pButton type="button" icon="pi pi-search" class="p-button-primary" (click)="onSearch()">
+        </button>
+
+      </div>
+
+      <p-select [options]="genres" [(ngModel)]="selectedGenre" optionLabel="label" optionValue="value"
+        placeholder="All Genres" (onChange)="onFilter()">
+      </p-select>
+
+      <button pButton icon="pi pi-times" class="p-button-secondary" (click)="clearFilters()">
+      </button>
+
+      <p-button [rounded]="true" icon="pi pi-user">
+      </p-button>
+
+    </div>
+
+  </ng-template>
+
+</p-toolbar>
+
+<router-outlet></router-outlet>
