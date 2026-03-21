@@ -30,6 +30,10 @@ export class App {
 
   searchTerm: string = '';
   selectedGenre: string | null = null;
+  //Hardcoded value (for now)
+  //Change to true to get redirected to log out
+  //Change to false to get redirected to log in
+  public userLoggedIn: boolean = true; 
 
   navTitle: string = 'Browse Catalogue';
   showBackButton: boolean = false;

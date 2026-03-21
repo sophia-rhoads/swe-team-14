@@ -49,9 +49,18 @@
       <button pButton icon="pi pi-times" class="p-button-secondary" (click)="clearFilters()">
       </button>
 
-      <p-button [rounded]="true" icon="pi pi-user">
-      </p-button>
+      <!-- Profile -->
+       <a [routerLink]="['/edit-profile']">
+      <p-button [rounded]="true" icon="pi pi-user" />
+    </a>
 
+    <!-- Login/Logout -->
+     @if (userLoggedIn) {
+      <a [routerLink]="['/logout-page']">Log Out</a>
+     } @else {
+      <a [routerLink]="['/login-page']">Log In</a>
+     }
+     
     </div>
 
   </ng-template>
