@@ -22,13 +22,15 @@ public class Customer extends User{
 }//user
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
-private List<Favorites> favorites;
+private List<Favorites> favorites = new ArrayList<>();
 
 @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PaymentCard> paymentCards;
 
     @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
 private MailingAddr mailingAddr;
+
+    private Customer customer;
 
 
 public List<PaymentCard> getPaymentCards() {
@@ -51,9 +53,18 @@ public List<Favorites> getFavorites() {
     return favorites;
 }
 
-public void setFavorites(List<Favorites> favorites) {
+private void setFavorites(List<Favorites> favorites) {
     this.favorites = favorites;
 }//fav
 
+
+public void addFavMovie(Movie movie) {
+
+    Favorites favorite = new Favorites();
+favorite.setCustomer(this.customer);
+favorite.setMovie(movie);
+favorite.setFavDate(LocalDate.now());
+this.favorites.add(favorite);
+}
 //Add/removie favorites
 }

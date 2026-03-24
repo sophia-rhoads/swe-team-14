@@ -2,10 +2,14 @@ package theatreBooking;
 import jakarta.persistence.*;
 import java.util.List;
 import java.time.LocalDate;
+ 
 
+
+@Entity
 public class Favorites {
 
-   @Id
+   
+  
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long favId;
 
@@ -35,5 +39,15 @@ public Customer getCustomer() {
 public void setCustomer(Customer customer) {
     this.customer = customer;
 }//cust
+
+
+public LocalDate getFavDate() {
+    return favDate;
+}
+
+public void setFavDate(LocalDate favDate) {
+    this.favDate = favDate;
+}//date
+
 
 }

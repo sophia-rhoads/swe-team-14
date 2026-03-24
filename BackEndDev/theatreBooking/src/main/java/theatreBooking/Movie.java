@@ -32,7 +32,7 @@ public class Movie {
     public Movie() {
     }
 
-    public Movie(String title, String genre, String mpaaRating, Double imdbRating,
+    public Movie(Long Id, String title, String genre, String mpaaRating, Double imdbRating,
             String director, String producer,
             String description, String trailerUrl,
             String posterUrl, String status) {
