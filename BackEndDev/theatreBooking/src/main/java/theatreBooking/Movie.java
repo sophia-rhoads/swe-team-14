@@ -1,5 +1,5 @@
 package theatreBooking;
-
+import java.util.List;
 import jakarta.persistence.*;
 
 @Entity
@@ -132,4 +132,10 @@ public class Movie {
     public void setStatus(String status) {
         this.status = status;
     }
+
+
+    //link to favirites list
+
+    @OneToMany(mappedBy = "movie")
+private List<Favorites> favorites;
 }
