@@ -80,4 +80,15 @@ VALUES
  'Carl Fredricksen, a widowed balloon salesman, dreams of fulfilling the promise he once made to his late wife: to travel to the remote Paradise Falls in South America. In a bold move, he ties thousands of balloons to his house and lifts off on an unexpected adventure. Unbeknownst to him, a young Wilderness Explorer named Russell becomes an accidental stowaway. Together, they encounter exotic wildlife, unexpected friendships, and dangerous adversaries. Through humor and heartfelt moments, the film explores grief, adventure, and the importance of human connection, reminding viewers that it is never too late to chase dreams and open one’s heart to new beginnings.',
  'https://www.youtube.com/embed/ORFWdXl_zJ4',
  'https://image.tmdb.org/t/p/w500/vpbaStTMt8qqXaEgnOR2EE4DNJk.jpg',
- 'CURRENTLY_RUNNING');
+ 'CURRENTLY_RUNNING')
+
+ ON DUPLICATE KEY UPDATE
+    genre = VALUES(genre),
+    mpaa_rating = VALUES(mpaa_rating),
+    imdb_rating = VALUES(imdb_rating),
+    director = VALUES(director),
+    producer = VALUES(producer),
+    description = VALUES(description),
+    trailer_url = VALUES(trailer_url),
+    poster_url = VALUES(poster_url),
+    status = VALUES(status);

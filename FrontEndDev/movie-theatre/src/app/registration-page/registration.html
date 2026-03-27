@@ -1,0 +1,36 @@
+<div class="auth-page">
+
+  <div class="auth-card">
+
+    <h2>Create Account</h2>
+    <p class="subtitle">Join us and start booking movies</p>
+
+    <div class="p-fluid">
+
+      <div class="field">
+        <input pInputText [(ngModel)]="name" placeholder="Full Name" />
+      </div>
+
+      <div class="field">
+        <input pInputText [(ngModel)]="email" placeholder="Email" />
+      </div>
+
+      <div class="field">
+        <input pInputText type="password" [(ngModel)]="password" placeholder="Password" />
+      </div>
+
+      <button pButton type="button" label="Register" [loading]="loading" (click)="register() ">
+      </button>
+
+      <p *ngIf="error" class="error-text">{{ error }}</p>
+
+      <div class="auth-switch">
+        <span>Already have an account?</span>
+        <a routerLink="/login">Login</a>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
