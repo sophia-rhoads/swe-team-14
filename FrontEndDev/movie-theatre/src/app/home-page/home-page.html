@@ -54,6 +54,8 @@
                         </ng-template>
                     </div>
 
+
+                    <p-togglebutton [(ngModel)]="liked" onLabel="" offLabel="" [onIcon]="'pi pi-heart-fill'" [offIcon]="'pi pi-heart'"/>
                     <button pButton class="p-button-sm p-button-primary" label="View Details"
                         (click)="viewDetails(movie)">
                     </button>
@@ -89,6 +91,7 @@
                     </ng-template>
                 </div>
 
+                
                 <button pButton class="p-button-sm p-button-primary" label="View Details" (click)="viewDetails(movie)">
                 </button>
 
@@ -132,6 +135,7 @@
                         </span>
                     </div>
 
+                    <p-togglebutton [(ngModel)]="liked" onLabel="" offLabel="" [onIcon]="'pi pi-heart-fill'" [offIcon]="'pi pi-heart'"/>
                     <button pButton class="p-button-sm p-button-primary" label="View Details"
                         (click)="viewDetails(movie)">
                     </button>

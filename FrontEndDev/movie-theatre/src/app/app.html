@@ -56,6 +56,7 @@
 
     <!-- Login/Logout -->
      @if (userLoggedIn) {
+      <a [routerLink]="['/favorites-page']">Your Favorites</a>
       <a [routerLink]="['/logout-page']">Log Out</a>
      } @else {
       <a [routerLink]="['/login-page']">Log In</a>

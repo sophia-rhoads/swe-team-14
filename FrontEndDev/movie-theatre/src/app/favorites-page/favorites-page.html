@@ -1,0 +1,20 @@
+<!-- This is just a layout for how things will look, logic will be implemented later -->
+<div class="favorites">
+    <p-table [value]="favoritesArr">
+    <ng-template #header>
+        <tr>
+            <th>Movie</th>
+            <th></th>
+            <th></th>
+        </tr>
+    
+    </ng-template>
+    <ng-template #body let-favorite>
+        <tr>
+            <td>{{favorite.movie}}</td>
+            <td><p-button label="View Movie"/></td>
+            <td><p-button label="Remove Favorite"/></td>
+        </tr>
+    </ng-template>
+    </p-table>
+</div>
