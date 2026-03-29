@@ -1,0 +1,37 @@
+<div class="auth-page">
+
+  <div class="auth-card">
+
+    <h2>Welcome Back</h2>
+    <p class="subtitle">Login to continue booking your movies</p>
+
+    <div class="p-fluid">
+
+      <div class="field">
+        <input pInputText [(ngModel)]="email" placeholder="Email" />
+      </div>
+
+      <div class="field">
+        <input pInputText type="password" [(ngModel)]="password" placeholder="Password" />
+      </div>
+
+      <button 
+        pButton 
+        type="button" 
+        label="Login"
+        [loading]="loading"
+        (click)="login()">
+      </button>
+
+      <p *ngIf="error" class="error-text">{{ error }}</p>
+
+      <div class="auth-switch">
+        <span>Don't have an account?</span>
+        <a routerLink="/register">Create Account</a>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

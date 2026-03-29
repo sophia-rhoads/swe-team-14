@@ -1,0 +1,71 @@
+<p-toolbar>
+
+  <!-- LEFT -->
+  <ng-template #start>
+    <div class="nav-left">
+
+      <!-- 🏠 Home -->
+      <button pButton icon="pi pi-home" (click)="goHome()"></button>
+
+      <!-- ⬅ Back -->
+      @if (showBackButton) {
+      <p-button icon="pi pi-arrow-left" class="p-button-secondary" (click)="goBack()">
+      </p-button>
+      }
+
+    </div>
+  </ng-template>
+
+  <!-- CENTER -->
+  <ng-template #center>
+    <div class="nav-title">
+      {{ navTitle }}
+    </div>
+  </ng-template>
+
+  <!-- RIGHT -->
+  <ng-template #end>
+
+    <!-- ONLY NON-AUTH PAGES -->
+    @if (!isAuthPage) {
+
+    <div class="toolbar-controls">
+
+      <!-- 🔍 Search (only on home) -->
+      @if (!showBackButton) {
+
+      <div class="search-group">
+
+        <input type="text" pInputText [(ngModel)]="searchTerm" (keyup.enter)="onSearch()"
+          placeholder="Search by title" />
+
+        <button pButton icon="pi pi-search" (click)="onSearch()">
+        </button>
+
+      </div>
+
+      <!-- 🎯 Filter -->
+      <p-select [options]="genres" [(ngModel)]="selectedGenre" optionLabel="label" optionValue="value"
+        placeholder="All Genres" (onChange)="onFilter()">
+      </p-select>
+
+      <button pButton icon="pi pi-times" class="p-button-secondary" (click)="clearFilters()">
+      </button>
+
+      }
+
+      <!-- 👤 PROFILE DROPDOWN (ALWAYS SAME BUTTON) -->
+      <p-menu #menu [popup]="true" [model]="profileMenuItems"></p-menu>
+
+      <button pButton icon="pi pi-user" type="button" (click)="menu.toggle($event)">
+      </button>
+
+    </div>
+
+    }
+
+  </ng-template>
+
+</p-toolbar>
+
+<router-outlet></router-outlet>

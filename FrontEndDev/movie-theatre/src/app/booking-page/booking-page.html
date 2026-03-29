@@ -1,0 +1,167 @@
+<ng-template #loading>
+    <div class="spinner-container">
+        <p-progressSpinner></p-progressSpinner>
+    </div>
+</ng-template>
+
+<ng-container *ngIf="movie$ | async as movie; else loading">
+
+    <!-- Movie Details -->
+    <div class="details-container">
+
+        <div class="details-left">
+            <img [src]="movie.posterUrl" class="poster">
+        </div>
+
+        <div class="details-right">
+
+            <h1>{{ movie.title }}</h1>
+
+            <div class="meta-info">
+                <span class="mpaa-badge">{{ movie.mpaaRating }}</span>
+                <span class="genre">{{ movie.genre }}</span>
+            </div>
+
+            <div *ngIf="movie.imdbRating != null">
+                <p-rating [ngModel]="movie.imdbRating / 2" [readonly]="true"></p-rating>
+                <span>{{ movie.imdbRating }} / 10</span>
+            </div>
+
+            <!-- Main Booking Grid-->
+            <div class="main-booking-grid">
+
+                <!-- Left Side -->
+                <div class="left-column">
+
+                    <div>
+                        <h3>Select Date</h3>
+                        <p-datePicker [(ngModel)]="selectedDate" [minDate]="minDate" [maxDate]="maxDate"
+                            dateFormat="mm/dd/yy" [showIcon]="true">
+                        </p-datePicker>
+                    </div>
+
+                    <div>
+                        <h3>Ticket Types</h3>
+
+                        <div class="ticket-row">
+                            <span class="ticket-label">Adult - $5.00</span>
+                            <p-inputnumber [(ngModel)]="adult" [showButtons]="true" [min]="0"></p-inputnumber>
+                        </div>
+
+                        <div class="ticket-row">
+                            <span class="ticket-label">Child - $2.50</span>
+                            <p-inputnumber [(ngModel)]="child" [showButtons]="true" [min]="0"></p-inputnumber>
+                        </div>
+
+                        <div class="ticket-row">
+                            <span class="ticket-label">Senior - $3.50</span>
+                            <p-inputnumber [(ngModel)]="senior" [showButtons]="true" [min]="0"></p-inputnumber>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Right side-->
+                <div class="right-column">
+
+                    <div>
+                        <h3>Select Show Time</h3>
+                        <div class="showtime-options">
+                            <label class="radio-option">
+                                <p-radiobutton name="showTimes" [(ngModel)]="showTimes"
+                                    value="10:00 am"></p-radiobutton>
+                                <span>10:00 am</span>
+                            </label>
+
+                            <label class="radio-option">
+                                <p-radiobutton name="showTimes" [(ngModel)]="showTimes" value="1:45 pm"></p-radiobutton>
+                                <span>1:45 pm</span>
+                            </label>
+
+                            <label class="radio-option">
+                                <p-radiobutton name="showTimes" [(ngModel)]="showTimes" value="2:30 pm"></p-radiobutton>
+                                <span>2:30 pm</span>
+                            </label>
+
+                            <label class="radio-option">
+                                <p-radiobutton name="showTimes" [(ngModel)]="showTimes" value="8:00 pm"></p-radiobutton>
+                                <span>8:00 pm</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3>Select Seats</h3>
+
+                        <!-- Graphical layout representation -->
+                        <div class="column-numbers">
+                            <span></span>
+                            <span *ngFor="let col of [1,2,3,4,5,6,7]">{{ col }}</span>
+                        </div>
+
+                        <!-- A,B,C -->
+                        <div class="seat-row" *ngFor="let row of ['A','B','C']">
+                            <span class="row-label">{{ row }}</span>
+
+                            <div class="seat" *ngFor="let col of [1,2,3,4,5,6,7]"
+                                [class.selected]="isSelected(row + col)" [class.disabled]="isDisabled(row + col)"
+                                (click)="selectSeat(row + col)">
+
+                                <ng-container *ngIf="isSelected(row + col); else seatIcon">
+                                    {{ row + col }}
+                                </ng-container>
+
+                                <ng-template #seatIcon>
+                                    <img src="./armchair.png" class="seat-icon">
+                                </ng-template>
+
+                            </div>
+                        </div>
+
+                        <!-- D,E -->
+                        <div class="seat-row" *ngFor="let row of ['D','E']">
+                            <span class="row-label">{{ row }}</span>
+
+                            <div class="seat placeholder"></div>
+
+                            <div class="seat" *ngFor="let col of [1,2,3,4,5]"
+                                [class.selected]="isSelected(row + col)" [class.disabled]="isDisabled(row + col)"
+                                (click)="selectSeat(row + col)">
+
+                                <ng-container *ngIf="isSelected(row + col); else seatIcon">
+                                    {{ row + col }}
+                                </ng-container>
+
+                                <ng-template #seatIcon>
+                                    <img src="./armchair.png" class="seat-icon">
+                                </ng-template>
+
+                            </div>
+
+                            <div class="seat placeholder"></div>
+                        </div>
+
+                        <!-- SCREEN -->
+                        <div class="screen-wrapper">
+                            <div class="screen-curve">
+                                <div class="screen-text">SCREEN</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="checkout-wrapper">
+                    <p-button label="Proceed to Checkout" icon="pi pi-ticket" (click)="proceedToCheckout()">
+                    </p-button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</ng-container>
+
+<p-dialog header="Booking Confirmed" [(visible)]="displayDialog" [modal]="true" [closable]="true">
+    <p>
+        🎉 {{ totalTickets }} tickets successfully booked!
+    </p>
+</p-dialog>
