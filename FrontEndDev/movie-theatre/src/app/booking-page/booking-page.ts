@@ -53,6 +53,7 @@ export class BookingPage {
     private route: ActivatedRoute,
     private movieService: MovieService
   ) {
+    // ✅ Fetch movie
     this.movie$ = this.route.paramMap.pipe(
       switchMap(params => {
         const id = Number(params.get('id'));
@@ -60,24 +61,47 @@ export class BookingPage {
       })
     );
   }
+
   ngOnInit() {
+
+    // Get showtime from route params
     this.route.paramMap.subscribe(params => {
       const passedShowtime = params.get('showtime');
       if (passedShowtime) {
         this.showTimes = passedShowtime;
       }
     });
+
+    // Get date from query params (PRIMARY SOURCE)
     this.route.queryParams.subscribe(params => {
+
       if (params['date']) {
+
+        console.log('RAW DATE FROM URL:', params['date']);
+
         this.selectedDate = new Date(params['date']);
+
+        // Remove timezone offset issues
+        this.selectedDate.setHours(0, 0, 0, 0);
+
+        console.log('PARSED DATE:', this.selectedDate);
       }
     });
+
+    const stateDate = history.state?.date;
+
+    if (!this.selectedDate && stateDate) {
+      this.selectedDate = new Date(stateDate);
+      this.selectedDate.setHours(0, 0, 0, 0);
+    }
   }
 
+  // Ticket count
   get totalTickets(): number {
     return this.adult + this.child + this.senior;
   }
 
+  // Seat selection
   selectSeat(seat: string) {
     if (!this.selectedSeats.includes(seat)) {
       if (this.selectedSeats.length >= this.totalTickets) return;
@@ -96,9 +120,12 @@ export class BookingPage {
       this.selectedSeats.length >= this.totalTickets;
   }
 
+  // Checkout
   proceedToCheckout() {
-    if (this.totalTickets === 0 ||
-      this.selectedSeats.length !== this.totalTickets) return;
+    if (
+      this.totalTickets === 0 ||
+      this.selectedSeats.length !== this.totalTickets
+    ) return;
 
     this.displayDialog = true;
   }

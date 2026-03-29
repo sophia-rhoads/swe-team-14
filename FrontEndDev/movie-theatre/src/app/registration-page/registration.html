@@ -1,36 +1,64 @@
 <div class="auth-page">
-
-  <div class="auth-card">
+  <div class="auth-container">
 
     <h2>Create Account</h2>
-    <p class="subtitle">Join us and start booking movies</p>
+    <p class="subtitle">Join us and start booking tickets</p>
 
-    <div class="p-fluid">
+    <!-- BASIC INFO -->
+    <div class="form-grid">
 
-      <div class="field">
-        <input pInputText [(ngModel)]="name" placeholder="Full Name" />
-      </div>
+      <input pInputText [(ngModel)]="user.username" placeholder="Username" />
+      <input pInputText [(ngModel)]="user.firstName" placeholder="First Name" />
 
-      <div class="field">
-        <input pInputText [(ngModel)]="email" placeholder="Email" />
-      </div>
+      <input pInputText [(ngModel)]="user.lastName" placeholder="Last Name" />
+      <input pInputText [(ngModel)]="user.email" placeholder="Email" />
 
-      <div class="field">
-        <input pInputText type="password" [(ngModel)]="password" placeholder="Password" />
-      </div>
+      <input pInputText type="password" [(ngModel)]="user.password" placeholder="Password" />
+      <input pInputText type="password" [(ngModel)]="user.confirmPassword" placeholder="Retype Password" />
 
-      <button pButton type="button" label="Register" [loading]="loading" (click)="register() ">
-      </button>
-
-      <p *ngIf="error" class="error-text">{{ error }}</p>
-
-      <div class="auth-switch">
-        <span>Already have an account?</span>
-        <a routerLink="/login">Login</a>
-      </div>
+      <input pInputText [(ngModel)]="user.phone" placeholder="Phone Number" />
+      <p-datepicker [(ngModel)]="user.dateOfBirth" placeholder="03-15-1990" dateFormat="mm-dd-yy" [showIcon]="true">
+      </p-datepicker>
 
     </div>
 
-  </div>
+    <!-- PAYMENT -->
+    <h3>Payment Information (Max 3)</h3>
 
+    <div class="card-section">
+      <input #cardInput pInputText placeholder="Enter Card" />
+      <button pButton label="Add Card" (click)="addCard(cardInput.value)"></button>
+    </div>
+
+    <ul>
+      <li *ngFor="let card of user.paymentCards">{{ card }}</li>
+    </ul>
+
+    <!-- ADDRESS -->
+    <h3>Billing Address (Optional)</h3>
+
+    <div class="form-grid">
+
+      <input pInputText [(ngModel)]="user.street" placeholder="Street" />
+      <input pInputText [(ngModel)]="user.city" placeholder="City" />
+
+      <input pInputText [(ngModel)]="user.county" placeholder="County" />
+      <input pInputText [(ngModel)]="user.state" placeholder="State" />
+
+      <input pInputText [(ngModel)]="user.zip" placeholder="Zip Code" />
+
+    </div>
+
+    <!-- ACTION -->
+    <button pButton label="Register" [loading]="loading" (click)="register()"></button>
+
+    <p *ngIf="error" class="error">{{ error }}</p>
+    <p *ngIf="success" class="success">{{ success }}</p>
+
+    <div class="auth-switch">
+      <span>Already have an account?</span>
+      <a routerLink="/login">Login</a>
+    </div>
+
+  </div>
 </div>

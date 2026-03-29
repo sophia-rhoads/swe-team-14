@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterOutlet, RouterLink, Router, NavigationEnd } from '@angular/router';
+import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Location, CommonModule } from '@angular/common';
 import { filter } from 'rxjs/operators';
@@ -53,65 +53,24 @@ export class App {
     { label: 'Adventure', value: 'Adventure' }
   ];
 
-  // Profile Dropdown Menu
-  get profileMenuItems(): MenuItem[] {
-
-    // NOT LOGGED IN
-    if (!this.isLoggedIn) {
-      return [
-        {
-          label: 'Login',
-          icon: 'pi pi-sign-in',
-          command: () => this.router.navigate(['/login'])
-        },
-        {
-          label: 'Register',
-          icon: 'pi pi-user-plus',
-          command: () => this.router.navigate(['/register'])
-        }
-      ];
-    }
-
-    // LOGGED IN
-    return [
-      {
-        label: 'Edit Profile',
-        icon: 'pi pi-user-edit',
-        command: () => {
-          console.log('Edit Profile clicked'); // placeholder
-        }
-      },
-      {
-        label: 'Add Payment Cards',
-        icon: 'pi pi-credit-card',
-        command: () => {
-          console.log('Add Payment clicked'); // placeholder
-        }
-      },
-      {
-        label: 'Logout',
-        icon: 'pi pi-sign-out',
-        command: () => this.logout()
-      }
-    ];
-  }
-
   constructor(
     private router: Router,
-    private location: Location,
-
+    private location: Location
   ) {
+    // Initial login check
+    this.checkLoginStatus();
 
     window.addEventListener('storage', () => {
       this.checkLoginStatus();
     });
-    this.checkLoginStatus();
 
+    // Router event handling
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: any) => {
 
         const url = event.url;
+
         this.checkLoginStatus();
 
         // Detect auth pages
@@ -123,7 +82,7 @@ export class App {
           this.showBackButton = false;
         }
 
-        // Movie Details
+        // Movie
         else if (url.includes('/movie')) {
           const state = history.state;
           this.navTitle = state?.movieTitle || 'Movie Details';
@@ -164,7 +123,7 @@ export class App {
 
   // Home
   goHome() {
-    this.router.navigateByUrl('/')
+    this.router.navigate(['/']);
   }
 
   // Search
@@ -193,6 +152,47 @@ export class App {
   logout() {
     localStorage.removeItem('user');
     this.isLoggedIn = false;
+
+    // trigger UI update
+    window.dispatchEvent(new Event('storage'));
+
     this.router.navigate(['/login']);
+  }
+
+  // Dynamic Profile Menu
+  get profileMenuItems(): MenuItem[] {
+
+    if (!this.isLoggedIn) {
+      return [
+        {
+          label: 'Login',
+          icon: 'pi pi-sign-in',
+          command: () => this.router.navigate(['/login'])
+        },
+        {
+          label: 'Register',
+          icon: 'pi pi-user-plus',
+          command: () => this.router.navigate(['/register'])
+        }
+      ];
+    }
+
+    return [
+      {
+        label: 'Edit Profile',
+        icon: 'pi pi-user-edit',
+        command: () => console.log('Edit Profile')
+      },
+      {
+        label: 'Add Payment Cards',
+        icon: 'pi pi-credit-card',
+        command: () => console.log('Add Payment')
+      },
+      {
+        label: 'Logout',
+        icon: 'pi pi-sign-out',
+        command: () => this.logout()
+      }
+    ];
   }
 }

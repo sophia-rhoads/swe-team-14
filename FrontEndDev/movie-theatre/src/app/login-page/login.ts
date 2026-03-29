@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../services/auth.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -21,7 +21,7 @@ export class LoginPage {
   error = '';
   loading = false;
 
-  constructor(private auth: AuthService, private router: Router) { }
+  constructor(private auth: AuthService, private router: Router, private route: ActivatedRoute) { }
 
   login() {
     this.error = '';
@@ -39,9 +39,20 @@ export class LoginPage {
     }).subscribe({
       next: (res) => {
         localStorage.setItem('user', JSON.stringify(res));
-        this.router.navigate(['/']).then(() => {
-          window.dispatchEvent(new Event('storage'));
-        });;
+
+        const returnUrl = this.route.snapshot.queryParams['returnUrl'];
+        const date = this.route.snapshot.queryParams['date'];
+
+        console.log('RETURN URL:', returnUrl);
+        console.log('DATE:', date);
+
+        if (returnUrl) {
+          this.router.navigate([returnUrl], { queryParams: { date: date } });
+        } else {
+          this.router.navigateByUrl('/').then(() => {
+            window.dispatchEvent(new Event('storage'));
+          });
+        }
       },
       error: () => {
         this.error = 'Invalid credentials';

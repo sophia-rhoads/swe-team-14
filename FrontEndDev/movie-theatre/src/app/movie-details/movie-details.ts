@@ -10,7 +10,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { map, switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { RadioButton, RadioButtonModule } from 'primeng/radiobutton';
+import { RadioButtonModule } from 'primeng/radiobutton';
 import { DatePickerModule } from 'primeng/datepicker';
 
 @Component({
@@ -35,6 +35,7 @@ export class MovieDetails {
 
   minDate = new Date();
   maxDate = new Date(new Date().setMonth(new Date().getMonth() + 1));
+
   movie$!: Observable<Movie>;
   trailerUrl$!: Observable<SafeResourceUrl>;
 
@@ -60,21 +61,32 @@ export class MovieDetails {
 
   goToBooking(id: number) {
 
-    if (!this.showTimes) {
+    const isLoggedIn = !!localStorage.getItem('user');
+
+    // not logged-in flow
+    if (!isLoggedIn) {
+
+      const date = this.selectedDate?.toISOString();
+
+      this.router.navigate(['/login'], {
+        queryParams: {
+          returnUrl: `/booking/${id}/${this.showTimes}`,
+          date: date
+        }
+      });
+
       return;
     }
 
+    // logged-in flow
     this.movie$.subscribe(movie => {
-
       this.router.navigate(
         ['/booking', id, this.showTimes],
         {
-          queryParams: { date: this.selectedDate },
+          queryParams: { date: this.selectedDate?.toISOString() },
           state: { movieTitle: movie.title }
         }
       );
-
     });
-
   }
 }

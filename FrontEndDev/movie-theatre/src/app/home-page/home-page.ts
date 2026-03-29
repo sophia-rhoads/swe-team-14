@@ -78,10 +78,4 @@ export class HomePage {
       { state: { movieTitle: movie.title } }
     );
   }
-
-  ngOnInit(): void {
-    if (!localStorage.getItem('user')) {
-      this.router.navigate(['/login']);
-    }
-  }
 }
