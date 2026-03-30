@@ -47,7 +47,7 @@ public class PaymentCard {
         this.expirationDate = expirationDate;
     }
 
-    public Customer getUser() {
+    public Customer getCustomer() {
         return customer;
     }
 

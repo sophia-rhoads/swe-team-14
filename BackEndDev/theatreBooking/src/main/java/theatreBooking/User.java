@@ -36,7 +36,7 @@ public class User {
     // Payment cards (max 3)
     @ElementCollection
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private List<PaymentCard> cards;
 
     private String role; // CUSTOMER or ADMIN

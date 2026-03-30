@@ -68,32 +68,32 @@ public class UserService {
         // Save user first
         User savedUser = userRepo.save(user);
 
-        // save payment cards if provided
-        if (request.paymentCards != null) {
+        // // save payment cards if provided
+        // if (request.paymentCards != null) {
 
-            for (PaymentCardRequest cardReq : request.paymentCards) {
+        //     for (PaymentCardRequest cardReq : request.paymentCards) {
 
-                // Skip invalid cards
-                if (cardReq.cardNumber == null || cardReq.cardNumber.length() < 4) {
-                    continue;
-                }
+        //         // Skip invalid cards
+        //         if (cardReq.cardNumber == null || cardReq.cardNumber.length() < 4) {
+        //             continue;
+        //         }
 
-                PaymentCard card = new PaymentCard();
+        //         PaymentCard card = new PaymentCard();
 
-                card.setCardType(cardReq.cardType);
+        //         card.setCardType(cardReq.cardType);
 
-                // Store ONLY last 4 digits
-                String last4 = cardReq.cardNumber.substring(cardReq.cardNumber.length() - 4);
-                card.setLast4Digits(last4);
+        //         // Store ONLY last 4 digits
+        //         String last4 = cardReq.cardNumber.substring(cardReq.cardNumber.length() - 4);
+        //         card.setLast4Digits(last4);
 
-                card.setExpirationDate(cardReq.expirationDate);
+        //         card.setExpirationDate(cardReq.expirationDate);
 
-                // Link to user
-                card.setUser(savedUser);
+        //         // Link to user
+        //         card.setUser(savedUser);
 
-                paymentCardRepository.save(card);
-            }
-        }
+        //         paymentCardRepository.save(card);
+        //     }
+        // }//req payment cars
 
         return savedUser;
     }
