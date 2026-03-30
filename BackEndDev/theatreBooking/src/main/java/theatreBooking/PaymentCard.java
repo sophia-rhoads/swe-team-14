@@ -1,62 +1,57 @@
 package theatreBooking;
+
 import jakarta.persistence.*;
-import java.time.LocalDate;
 
 @Entity
 public class PaymentCard {
 
-@Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long cardNum;
-    private String billingAddr;
-    private LocalDate expDate;
     private String cardType;
+    private String last4Digits;
+    private String expirationDate;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
+    @JoinColumn(name = "user_id")
+    private User user;
 
+    // ===== Getters & Setters =====
 
-    
-    public void setCardNum(Long cardNum) {
-        this.cardNum = cardNum;
-    }
-
-    public Long getCardNum() {
-        return cardNum;
-    }//cardnum
-
-
-
-    private void setAddr(String billingAddr) {
-        this.billingAddr = billingAddr;
-    }
-
-    public String getAddr() {
-        return billingAddr;
-    }//addr
-
-    private void setExpDate(LocalDate expDate) {
-        this.expDate = expDate;
-    }
-
-    public LocalDate getExpDate() {
-        return expDate;
-    }//expdate
-
-    private void setCardType(String cardType) {
-        this.cardType = cardType;
+    public Long getId() {
+        return id;
     }
 
     public String getCardType() {
         return cardType;
-    }//cardtype
-
-    public void setCustomer(Customer customer2) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setCustomer'");
     }
 
+    public void setCardType(String cardType) {
+        this.cardType = cardType;
+    }
+
+    public String getLast4Digits() {
+        return last4Digits;
+    }
+
+    public void setLast4Digits(String last4Digits) {
+        this.last4Digits = last4Digits;
+    }
+
+    public String getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setExpirationDate(String expirationDate) {
+        this.expirationDate = expirationDate;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

@@ -1,4 +1,4 @@
-<!-- ================= LOADING TEMPLATE ================= -->
+<!-- LOADING TEMPLATE -->
 <ng-template #loadingTemplate>
     <div class="spinner-container">
         <p-progressSpinner></p-progressSpinner>
@@ -6,10 +6,10 @@
 </ng-template>
 
 
-<!-- ================= MAIN CONTENT ================= -->
+<!-- MAIN CONTENT -->
 <ng-container *ngIf="movies$ | async; else loadingTemplate">
 
-    <!-- ================= CURRENTLY RUNNING ================= -->
+    <!-- CURRENTLY RUNNING -->
     <div class="section-header">
         <h2>Currently Running</h2>
 

@@ -1,10 +1,9 @@
 .toolbar-controls {
     display: flex;
     align-items: center;
-    gap: 16px; // 🔥 THIS creates clean spacing
+    gap: 16px;
 }
 
-/* Optional: control widths */
 .toolbar-controls input {
     width: 220px;
 }
@@ -17,4 +16,8 @@
     display: flex;
     align-items: center;
     gap: 8px;
+}
+
+.auth-toolbar-spacer {
+    width: 120px;
 }
