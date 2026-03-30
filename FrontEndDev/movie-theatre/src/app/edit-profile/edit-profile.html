@@ -150,63 +150,12 @@
         <input id="cardZip" type="text" pInputText [disabled]="true"/>
         <br>
         <br>
-        <p-button (click)="editPaymentCard(card.id)">Edit Card Info</p-button>
+        <p-button (click)="showEditModal()">Edit Card Info</p-button>
         <br>
         <br>
         <p-button (click)="removePaymentCard(card.id)">Remove Card</p-button>
     }
- 
-    <!-- @for (card of cardArr; track card.id) {
-        @if (cardShow) {
-            <h3>Cardholder Name</h3>
-            <input id="cardName" type="text" pInputText [disabled]="true"/>
-            <h3>Card Number</h3>
-            <input id="cardNum" type="text" pInputText [disabled]="true"/>
-            <h3>Expiration Date</h3>
-             <input id="cardDate" type="text" pInputText [disabled]="true"/>
-            <h2>Billing Address:</h2>
-            <h3>Street Address</h3>
-            <input id="cardAdd" type="text" pInputText [disabled]="true"/>
-            <h3>County</h3>
-            <input id="cardCounty" type="text" pInputText [disabled]="true"/>
-            <h3>State</h3>
-            <input id="cardState" type="text" pInputText [disabled]="true"/>
-            <h3>Zip Code</h3>
-            <input id="cardZip" type="text" pInputText [disabled]="true"/>
-            <br>
-            <br>
-            <p-button (click)="editPaymentCard(card.id)">Edit Card Info</p-button>
-            <br>
-            <br>
-            <p-button (click)="removePaymentCard(card.id)">Remove Card</p-button>
-        } @else {
-            <h3>Cardholder Name</h3>
-            <input id="cardName" type="text" pInputText [disabled]="false"/>
-            <h3>Card Number</h3>
-            <input id="cardNum" type="text" pInputText [disabled]="false"/>
-            <h3>Expiration Date</h3>
-             <input id="cardDate" type="text" pInputText [disabled]="false"/>
-            <h2>Billing Address:</h2>
-            <h3>Street Address</h3>
-            <input id="cardAdd" type="text" pInputText [disabled]="false"/>
-            <h3>County</h3>
-            <input id="cardCounty" type="text" pInputText [disabled]="false"/>
-            <h3>State</h3>
-            <input id="cardState" type="text" pInputText [disabled]="false"/>
-            <h3>Zip Code</h3>
-            <input id="cardZip" type="text" pInputText [disabled]="false"/>
-            <br>
-            <br>
-            <p-button>Edit Card Info</p-button>
-            <br>
-            <br>
-            <p-button (click)="removePaymentCard(card.id)">Remove Card</p-button>
-        }
-   
-    <br>
-    <br>
-    <p-button (click)="addPaymentCard()">Save New Card</p-button> -->
-    
+     
     
     @if (clickCard) {
     <!-- <h3>Card Type</h3> -->
@@ -228,10 +177,58 @@
     <br>
     <br>
     <p-button (click)="addPaymentCard()">Save Card</p-button>
+    } @else if (cardLimit) {
+        <p-dialog [(visible)]="cardLimit" [modal]="true" [closable]="true">
+            <p>
+                You have reached the limit of 3 cards that can be saved.
+            </p>
+        </p-dialog>
     }
     <br>
     <br>
     <p-button (click)="clickNewCard()">Add New Card</p-button> 
+
+    <!--Edit Dialog Modal-->
+    <div class="card flex flex-column justify-center">
+    <p-dialog [(visible)]="showModal" [modal]="true" [closable]="true" [style]="{ width: '35rem'}">
+        <ng-template #header>
+            <p class="mb-5">Edit Your Card Info</p>
+        </ng-template>
+        <div class="flex flex-column gap-4 mb-4">
+            <div class="flex align-items-center gap-4 mb-4">
+            <label for="cardName" class="font-semibold w-24">Cardholder Name</label>
+            <input id="cardName" type="text" pInputText [disabled]="false"/>
+            </div>
+            <div class="flex align-items-center gap-4 mb-4">
+            <label for="cardNum" class="font-semibold w-24">Card Number</label>
+            <input id="cardNum" type="text" pInputText [disabled]="false"/>
+            </div>
+            <div class="flex items-center gap-4 mb-4">
+            <label for="cardDate" class="font-semibold w-24">Expiration Date</label>
+            <input id="cardDate" type="text" pInputText [disabled]="false"/>
+            </div>
+            <div class="flex items-center gap-4 mb-4">
+            <label for="cardAdd" class="font-semibold w-24">Street Address</label>
+            <input id="cardAdd" type="text" pInputText [disabled]="false"/>
+            </div>  
+            <div class="flex items-center gap-4 mb-4">
+            <label for="cardCountry" class="font-semibold w-24">County</label>
+            <input id="cardCounty" type="text" pInputText [disabled]="false"/>
+            </div>  
+            <div class="flex items-center gap-4 mb-4">
+            <label for="cardState" class="font-semibold w-24">State</label>
+            <input id="cardState" type="text" pInputText [disabled]="false"/>
+            </div>
+            <div class="flex items-center gap-4 mb-4">
+            <label for="cardZip" class="font-semibold w-24">Zip Code</label>
+            <input id="cardZip" type="text" pInputText [disabled]="false"/>
+            </div> 
+        </div>
+        <ng-template #footer>
+            <p-button (click)="editCard()" label="Update Card Info"/>
+        </ng-template>
+    </p-dialog>
+</div>
     
     <br>
     <br>

@@ -93,7 +93,7 @@ public class UserService {
 
         //         paymentCardRepository.save(card);
         //     }
-        // }//req payment cars
+        // }//req payment cards
 
         return savedUser;
     }

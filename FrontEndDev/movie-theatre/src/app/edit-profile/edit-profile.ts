@@ -28,6 +28,8 @@ interface PaymentCard {
 })
 
 export class EditProfile {
+  showModal: boolean = false;
+  cardLimit: boolean = false;
   cardShow: boolean = false;
   clickCard: boolean = false;
   numCards: number = 0;
@@ -69,13 +71,24 @@ export class EditProfile {
   clickNewCard() {
     if (this.numCards < 3) {
       this.clickCard = true;
+      this.cardLimit = false;
     } else {
-
+      this.cardLimit = true;
     }
   }
 
-  editPaymentCard(index: number) {
-    console.log(this.cardArr[index]);
+  // editPaymentCard(index: number) {
+  //   console.log(this.cardArr[index]);
+  //   this.showModal = true;
+  // }
+
+  showEditModal() {
+    this.showModal = true;
+    console.log("Help??", this.showModal);
+  }
+
+  editCard() {
+    console.log("yeah");
   }
 
   addPaymentCard() {
