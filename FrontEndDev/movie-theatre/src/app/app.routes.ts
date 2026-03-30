@@ -5,7 +5,6 @@ import { BookingPage } from './booking-page/booking-page';
 import { LoginPage } from './login-page/login';
 import { RegisterPage } from './registration-page/registration';
 import { EditProfile } from './edit-profile/edit-profile';
-import { LoginPage } from './login-page/login-page';
 import { LogoutPage } from './logout-page/logout-page';
 import { CreateAccount } from './create-account/create-account';
 import { FavoritesPage } from './favorites-page/favorites-page';

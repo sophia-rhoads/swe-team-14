@@ -15,7 +15,7 @@ public class PaymentCard {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private Customer customer;
 
     // ===== Getters & Setters =====
 
@@ -47,11 +47,16 @@ public class PaymentCard {
         this.expirationDate = expirationDate;
     }
 
-    public User getUser() {
-        return user;
+    public Customer getUser() {
+        return customer;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
+
+    // public void setCustomer(Customer customer) {
+    //     // TODO Auto-generated method stub
+    //     throw new UnsupportedOperationException("Unimplemented method 'setCustomer'");
+    // }
 }
