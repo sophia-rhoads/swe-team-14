@@ -81,7 +81,19 @@ export class App {
           this.showBackButton = true;
 
         }
+        
+        else if (url.includes('/order-history')) {
+          this.navTitle = 'Order History';
+        }
 
+        else if (url.includes('/edit-profile')) {
+          this.navTitle = 'Your Account';
+        }
+
+        else if (url.includes('/favorites-page')) {
+          this.navTitle = 'Your Favorites'
+        }
+        
       });
 
   }

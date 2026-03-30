@@ -1,1 +1,104 @@
-<p>admin works!</p>
+<h1>Admin Menu</h1>
+
+
+<p-select [options]="tables" [(ngModel)]="viewTable" optionLabel="name" placeholder="Select a Table"/>
+
+@if (viewTable?.name === 'Movies') {
+    <br>
+    <br>
+    <p-table [value]="dataArr">
+        <ng-template #header>
+            <tr>
+                <th>Movie</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </ng-template>
+        <ng-template #body let-favorite>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td><p-button label="Edit Movie Details"/></td>
+                <td><p-button label="Remove Movie"/></td>
+            </tr>
+        </ng-template>
+    </p-table>
+    <br>
+    <br>
+    <p-button label="Add Movie"/>
+}
+
+@if (viewTable?.name === 'Users') {
+    <br>
+    <br>
+    <p-table [value]="dataArr">
+        <ng-template #header>
+            <tr>
+                <th>Username</th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        
+        </ng-template>
+        <ng-template #body let-favorite>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td><p-button label="Edit User Details"/></td>
+                <td><p-button label="Suspend User"/></td>
+                <td><p-button label="Remove User"/></td>
+            </tr>
+        </ng-template>
+    </p-table>
+}
+
+@if (viewTable?.name === 'Showtimes') {
+<br>
+<br>
+    <p-table [value]="dataArr">
+        <ng-template #header>
+            <tr>
+                <th>Show Time</th>
+                <th>Theatre Room #</th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </ng-template>
+        <ng-template #body let-favorite>
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td><p-button label="Edit User Details"/></td>
+                <td><p-button label="Suspend User"/></td>
+                <td><p-button label="Remove User"/></td>
+            </tr>
+        </ng-template>
+    </p-table>
+}
+
+@if (viewTable?.name === 'Promotions') {
+    <br>
+    <br>
+        <p-table [value]="dataArr">
+            <ng-template #header>
+                <tr>
+                    <th>Promotion Type</th>
+                    <th>Discount</th>
+                    <th>Duration</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-favorite>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td><p-button label="Edit Promotion Details"/></td>
+                    <td><p-button label="Remove Promotion"/></td>
+                </tr>
+            </ng-template>
+        </p-table>
+    }

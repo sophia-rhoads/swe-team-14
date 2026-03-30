@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { CarouselModule } from 'primeng/carousel';
 import { switchMap, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { ToggleButtonModule } from 'primeng/togglebutton';
 
 @Component({
   selector: 'app-home-page',
@@ -20,7 +21,8 @@ import { Observable } from 'rxjs';
     ButtonModule,
     RatingModule,
     FormsModule,
-    CarouselModule
+    CarouselModule,
+    ToggleButtonModule
   ],
   templateUrl: './home-page.html',
   styleUrls: ['./home-page.scss']
@@ -33,6 +35,9 @@ export class HomePage {
 
   showAllRunning = false;
   showAllComing = false;
+
+  //Toggle variable for like button
+  liked = false;
 
   constructor(
     private movieService: MovieService,
