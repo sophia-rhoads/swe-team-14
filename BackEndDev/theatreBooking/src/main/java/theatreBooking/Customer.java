@@ -45,7 +45,7 @@ public void setPaymentCards(List<PaymentCard> paymentCards) {
 
 public MailingAddr getMailingAddr() {
     return mailingAddr;
-}
+}//mailing
 
 public void setMailingAddr(MailingAddr mailingAddr) {
     this.mailingAddr = mailingAddr;
