@@ -8,20 +8,15 @@ import java.util.List;
 
 @Entity
 @DiscriminatorValue("CUSTOMER")
+//@Table(name = "Customer")
 
 public class Customer extends User{
+
 
     @Enumerated(EnumType.STRING)
     private UserState userState;
 
-    public void addPaymentCard(PaymentCard card) {
-    card.setCustomer(this);
-    this.paymentCards.add(card);
-//Logic to limit num f cards
-    
-}//user
-
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
 private List<Favorites> favorites = new ArrayList<>();
 
 @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -30,34 +25,23 @@ private List<Favorites> favorites = new ArrayList<>();
     @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
 private MailingAddr mailingAddr;
 
-   // private Customer customer;
+
+    // private String street;
+    // private String city;
+    // private String county;
+    // private String state;
+    // private String zipCode;
+
+    
+ //private String role; // CUSTOMER or ADMIN
 
 
-public List<PaymentCard> getPaymentCards() {
-    return paymentCards;
+  public void addPaymentCard(PaymentCard card) {
+    card.setCustomer(this);
+    this.paymentCards.add(card);
+//Logic to limit num f cards 
 }
 
-public void setPaymentCards(List<PaymentCard> paymentCards) {
-    this.paymentCards = paymentCards;
-}//paycards
-
-
-
-public MailingAddr getMailingAddr() {
-    return mailingAddr;
-}//mailing
-
-public void setMailingAddr(MailingAddr mailingAddr) {
-    this.mailingAddr = mailingAddr;
-}//addr
-
-public List<Favorites> getFavorites() {
-    return favorites;
-}
-
-private void setFavorites(List<Favorites> favorites) {
-    this.favorites = favorites;
-}//fav
 
 public void addFavMovie(Movie movie) {
 
@@ -69,4 +53,75 @@ public void addFavMovie(Movie movie) {
     this.favorites.add(favorite);
 }
 //Add/removie favorites
+public List<PaymentCard> getPaymentCards() {
+    return paymentCards;
 }
+
+public void setPaymentCards(List<PaymentCard> paymentCards) {
+    this.paymentCards = paymentCards;
+}//paycards
+
+public MailingAddr getMailingAddr() {
+    return mailingAddr;
+}//mailing
+
+public void setMailingAddr(MailingAddr mailingAddr) {
+    this.mailingAddr = mailingAddr;
+    
+}
+public List<Favorites> getFavorites() {
+    return favorites;
+}
+private void setFavorites(List<Favorites> favorites) {
+    this.favorites = favorites; }
+
+// public String getStreet() {
+//         return street;
+//     }
+
+//     public void setStreet(String street) {
+//         this.street = street;
+//     }
+
+//     public String getCity() {
+//         return city;
+//     }
+
+//     public void setCity(String city) {
+//         this.city = city;
+//     }
+
+//     public String getCounty() {
+//         return county;
+//     }
+
+//     public void setCounty(String county) {
+//         this.county = county;
+//     }
+
+//     public String getState() {
+//         return state;
+//     }
+
+//     public void setState(String state) {
+//         this.state = state;
+//     }
+
+//     public String getZipCode() {
+//         return zipCode;
+//     }
+
+//     public void setZipCode(String zipCode) {
+//         this.zipCode = zipCode;
+//     }
+
+    public List<PaymentCard> getCards() {
+        return paymentCards;
+    }
+
+    public void setCards(List<PaymentCard> cards) {
+        this.paymentCards = cards;
+    }
+
+}
+

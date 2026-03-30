@@ -16,7 +16,7 @@ public class AuthController {
 
     // Register User
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<?> register(@RequestBody theatreBooking.UserService.RegisterRequest request) {
 
         try {
             userService.register(request);

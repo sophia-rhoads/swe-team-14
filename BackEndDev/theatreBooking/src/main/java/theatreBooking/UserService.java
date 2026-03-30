@@ -25,6 +25,22 @@ public class UserService {
         return userRepo.findByEmail(email);
     }
 
+    public class RegisterRequest {
+        public String username;
+        public String firstName;
+        public String lastName;
+        public String email;
+        public String password;
+        public String phone;
+        public String dateOfBirth;
+
+        public String street;
+        public String city;
+        public String state;
+        public int zipCode;
+        public PaymentCard paymentCards;
+    }// regreq
+
     public User register(RegisterRequest request) {
 
         // Email uniqueness check
@@ -33,67 +49,74 @@ public class UserService {
         }
 
         // Payment card limit
-        if (request.paymentCards != null && request.paymentCards.size() > 3) {
-            throw new RuntimeException("Maximum 3 payment cards allowed");
-        }
+        // if (request.paymentCards != null && request.paymentCards.size() > 3) {
+        // throw new RuntimeException("Maximum 3 payment cards allowed");
+        // }
 
         // Create user
-        User user = new User();
+        Customer customer = new Customer();
 
-        user.setUsername(request.username);
-        user.setFirstName(request.firstName);
-        user.setLastName(request.lastName);
-        user.setEmail(request.email);
+        customer.setUsername(request.username);
+        customer.setFirstName(request.firstName);
+        customer.setLastName(request.lastName);
+        customer.setEmail(request.email);
 
         // Encrypt password
-        user.setPassword(encoder.encode(request.password));
+        customer.setPassword(encoder.encode(request.password));
 
-        user.setPhoneNumber(request.phone);
+        customer.setPhoneNumber(request.phone);
 
         if (request.dateOfBirth != null) {
-            user.setDateOfBirth(LocalDate.parse(request.dateOfBirth));
+            customer.setDateOfBirth(LocalDate.parse(request.dateOfBirth));
         }
 
-        user.setStreet(request.street);
-        user.setCity(request.city);
-        user.setCounty(request.county);
-        user.setState(request.state);
-        user.setZipCode(request.zip);
+        MailingAddr addr = new MailingAddr();
+        addr.setStreet(request.street);
+        addr.setCity(request.city);
+        addr.setState(request.state);
+        addr.setZip(request.zipCode);
+        customer.setMailingAddr(addr);
 
-        user.setRole("CUSTOMER");
+        // customer.setRole("CUSTOMER");
 
         // ACTIVE by default (you can change later for email verification)
-        user.setStatus("ACTIVE");
+        customer.setStatus("ACTIVE");
 
         // Save user first
-        User savedUser = userRepo.save(user);
+        User savedUser = userRepo.save(customer);
 
         // // save payment cards if provided
         // if (request.paymentCards != null) {
 
-        //     for (PaymentCardRequest cardReq : request.paymentCards) {
+        // for (PaymentCardRequest cardReq : request.paymentCards) {
 
-        //         // Skip invalid cards
-        //         if (cardReq.cardNumber == null || cardReq.cardNumber.length() < 4) {
-        //             continue;
-        //         }
+        // // Skip invalid cards
+        // if (cardReq.cardNumber == null || cardReq.cardNumber.length() < 4) {
+        // continue;
+        // }
 
-        //         PaymentCard card = new PaymentCard();
+        // PaymentCard card = new PaymentCard();
 
-        //         card.setCardType(cardReq.cardType);
+        // card.setCardType(cardReq.cardType);
 
-        //         // Store ONLY last 4 digits
-        //         String last4 = cardReq.cardNumber.substring(cardReq.cardNumber.length() - 4);
-        //         card.setLast4Digits(last4);
+        // // Store ONLY last 4 digits
+        // String last4 = cardReq.cardNumber.substring(cardReq.cardNumber.length() - 4);
+        // card.setLast4Digits(last4);
 
-        //         card.setExpirationDate(cardReq.expirationDate);
+        // card.setExpirationDate(cardReq.expirationDate);
 
-        //         // Link to user
-        //         card.setUser(savedUser);
+        // // Link to user
+        // card.setUser(savedUser);
 
+<<<<<<< Updated upstream
         //         paymentCardRepository.save(card);
         //     }
         // }//req payment cards
+=======
+        // paymentCardRepository.save(card);
+        // }
+        // }//req payment cars
+>>>>>>> Stashed changes
 
         return savedUser;
     }

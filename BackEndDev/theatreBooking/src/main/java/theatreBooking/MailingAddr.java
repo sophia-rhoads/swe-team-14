@@ -37,7 +37,7 @@ public class MailingAddr {
         return city;
     }//city
 
-     public void setStatet(String state) {
+     public void setState(String state) {
         this.state = street;
     }
 
