@@ -3,7 +3,7 @@ import jakarta.persistence.*;
 
 @Entity
 @DiscriminatorValue("ADMIN")
-//@Table(name = "Admin")
+@SecondaryTable(name = "Admin")
 
 public class Admin extends User {
 

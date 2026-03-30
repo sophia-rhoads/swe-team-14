@@ -108,15 +108,9 @@ public class UserService {
         // // Link to user
         // card.setUser(savedUser);
 
-<<<<<<< Updated upstream
         //         paymentCardRepository.save(card);
         //     }
         // }//req payment cards
-=======
-        // paymentCardRepository.save(card);
-        // }
-        // }//req payment cars
->>>>>>> Stashed changes
 
         return savedUser;
     }
