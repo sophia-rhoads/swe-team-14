@@ -30,7 +30,7 @@ private List<Favorites> favorites = new ArrayList<>();
     @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
 private MailingAddr mailingAddr;
 
-    private Customer customer;
+   // private Customer customer;
 
 
 public List<PaymentCard> getPaymentCards() {
@@ -57,14 +57,14 @@ private void setFavorites(List<Favorites> favorites) {
     this.favorites = favorites;
 }//fav
 
-
 public void addFavMovie(Movie movie) {
 
     Favorites favorite = new Favorites();
-favorite.setCustomer(this.customer);
-favorite.setMovie(movie);
-favorite.setFavDate(LocalDate.now());
-this.favorites.add(favorite);
+    favorite.setCustomer(this); 
+    favorite.setMovie(movie);
+    favorite.setFavDate(LocalDate.now());
+
+    this.favorites.add(favorite);
 }
 //Add/removie favorites
 }

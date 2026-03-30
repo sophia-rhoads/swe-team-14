@@ -2,6 +2,7 @@ package theatreBooking;
 import jakarta.persistence.*;
 import java.util.List;
 
+@Entity
 public class MailingAddr {
 
 @Id

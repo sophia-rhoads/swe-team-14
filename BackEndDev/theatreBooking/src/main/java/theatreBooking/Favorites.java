@@ -9,7 +9,7 @@ import java.time.LocalDate;
 public class Favorites {
 
    
-  
+  @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long favId;
 
