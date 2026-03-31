@@ -9,6 +9,8 @@ import { LogoutPage } from './logout-page/logout-page';
 import { FavoritesPage } from './favorites-page/favorites-page';
 import { OrderHistory } from './order-history/order-history';
 import { Admin } from './admin/admin';
+import { PasswordChange } from './password-change/password-change';
+import { RouterLink } from '@angular/router';
 
 export const routes: Routes = [
     { path: '', component: HomePage },
@@ -16,6 +18,7 @@ export const routes: Routes = [
     { path: 'booking/:id/:showtime', component: BookingPage },
     { path: 'login', component: LoginPage },
     { path: 'register', component: RegisterPage },
+    { path: 'password', component: PasswordChange},
     { path: 'edit-profile', component: EditProfile},
     { path: 'logout-page', component: LogoutPage},
     { path: 'favorites-page', component: FavoritesPage},
