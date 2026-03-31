@@ -21,34 +21,7 @@
       </p-datepicker>
 
     </div>
-
-    <!-- PAYMENT -->
-    <h3>Payment Information (Max 3)</h3>
-
-    <div class="card-section">
-      <input #cardInput pInputText placeholder="Enter Card" />
-      <button pButton label="Add Card" (click)="addCard(cardInput.value)"></button>
-    </div>
-
-    <ul>
-      <li *ngFor="let card of user.paymentCards">{{ card }}</li>
-    </ul>
-
-    <!-- ADDRESS -->
-    <h3>Billing Address (Optional)</h3>
-
-    <div class="form-grid">
-
-      <input pInputText [(ngModel)]="user.street" placeholder="Street" />
-      <input pInputText [(ngModel)]="user.city" placeholder="City" />
-
-      <input pInputText [(ngModel)]="user.county" placeholder="County" />
-      <input pInputText [(ngModel)]="user.state" placeholder="State" />
-
-      <input pInputText [(ngModel)]="user.zip" placeholder="Zip Code" />
-
-    </div>
-
+    
     <!-- ACTION -->
     <button pButton label="Register" [loading]="loading" (click)="register()"></button>
 
