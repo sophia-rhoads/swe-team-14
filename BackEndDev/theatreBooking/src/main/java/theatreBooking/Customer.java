@@ -8,7 +8,7 @@ import java.util.List;
 
 @Entity
 @DiscriminatorValue("CUSTOMER")
-
+@SecondaryTable(name ="Customer")
 public class Customer extends User{
 
     @Enumerated(EnumType.STRING)
