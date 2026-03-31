@@ -1,0 +1,42 @@
+# ======================
+# Node / Angular
+# ======================
+node_modules/
+dist/
+.angular/
+coverage/
+npm-debug.log
+
+# ======================
+# Java / Spring Boot
+# ======================
+build/
+.gradle/
+out/
+*.class
+*.jar
+*.war
+
+# ======================
+# IDE Files
+# ======================
+.vscode/
+.idea/
+*.iml
+
+# ======================
+# OS Files
+# ======================
+.DS_Store
+Thumbs.db
+
+# ======================
+# Environment / Secrets
+# ======================
+.env
+application-local.properties
+
+# ======================
+# Logs
+# ======================
+*.log
