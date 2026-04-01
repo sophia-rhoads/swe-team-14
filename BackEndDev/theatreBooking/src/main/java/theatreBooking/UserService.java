@@ -126,7 +126,7 @@ public class UserService {
         }
 
         throw new RuntimeException("Invalid email or password");
-    }
+    }//login
 
     public User saveUser(User user) {
         // TODO Auto-generated method stub
