@@ -34,6 +34,7 @@ public class User {
     private String county;
     private String state;
     private String zipCode;
+    private String role;
 
     // @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     // private List<PaymentCard> cards;
@@ -47,7 +48,7 @@ public class User {
 
     public User(String username, String firstName, String lastName, String email, String password,
                 String status, String phoneNumber, LocalDate dateOfBirth,
-                String street, String city, String county, String state, String zipCode) {
+                String street, String city, String county, String state, String zipCode, String role) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -61,6 +62,7 @@ public class User {
         this.county = county;
         this.state = state;
         this.zipCode = zipCode;
+        this.role = role;
     }
 
     public Long getId() {
@@ -175,4 +177,13 @@ this.id = id;
     public void setStatus(String status) {
         this.status = status;
     }
+
+
+     public String getRole() {
+        return role;
+    }
+    public void setRole(String role) {
+this.role = role;
+    }
+
 }

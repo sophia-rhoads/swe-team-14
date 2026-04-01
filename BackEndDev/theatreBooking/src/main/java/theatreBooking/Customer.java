@@ -7,7 +7,9 @@ import java.util.List;
 
 @Entity
 @DiscriminatorValue("CUSTOMER")
+
 @SecondaryTable(name = "Customer")
+//@Inheritance(strategy = InheritanceType.JOINED)
 public class Customer extends User {
 
     @Enumerated(EnumType.STRING)

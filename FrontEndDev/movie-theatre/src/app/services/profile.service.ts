@@ -27,7 +27,7 @@ export interface UpdateProfileRequest {
   providedIn: 'root'
 })
 export class ProfileService {
-  private baseUrl = 'http://localhost:8081/api/profile';
+  private baseUrl = 'http://localhost:8080/api/profile';
 
   constructor(private http: HttpClient) {}
 

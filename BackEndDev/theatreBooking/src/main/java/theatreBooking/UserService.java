@@ -59,6 +59,13 @@ public class UserService {
             throw new RuntimeException("This Email is already tied to an account");
         }
 
+    
+        // User newUser;
+
+        // if ("admin".equals(request.role)) {
+
+        // }else 
+
         Customer customer = new Customer();
         customer.setUsername(request.username);
         customer.setFirstName(request.firstName);
@@ -67,79 +74,58 @@ public class UserService {
         customer.setPassword(encoder.encode(request.password));
         customer.setPhoneNumber(request.phone);
         customer.setStatus("ACTIVE");
+       
+        
 
         if (request.dateOfBirth != null && !request.dateOfBirth.isBlank()) {
             customer.setDateOfBirth(LocalDate.parse(request.dateOfBirth));
         }
 
         // Create user
-        User user = new User();
+        //User user = new User();
       // Customer newCustomer = new Customer();
         
-        user.setUsername(request.username);
-        user.setFirstName(request.firstName);
-        user.setLastName(request.lastName);
-        user.setEmail(request.email);
+   
+
         MailingAddr addr = new MailingAddr();
         addr.setStreet(request.street);
         addr.setCity(request.city);
         addr.setState(request.state);
         addr.setZip(request.zip);
 
+             customer.setUsername(request.username);
+        customer.setFirstName(request.firstName);
+        customer.setLastName(request.lastName);
+        customer.setEmail(request.email);
+  customer.setStreet(request.street);
+        customer.setCity(request.city);
+       // customer.setCounty(request.county);
+        customer.setState(request.state);
+        customer.setZipCode(request.zip);
+  customer.setMailingAddr(addr);
+
+        customer.setPhoneNumber(request.phone);
+
         // only keep this if MailingAddr has county field
         // addr.setCounty(request.county);
 
-        customer.setMailingAddr(addr);
-
-        user.setPhoneNumber(request.phone);
+      
 
         if (request.dateOfBirth != null) {
-            user.setDateOfBirth(LocalDate.parse(request.dateOfBirth));
+            customer.setDateOfBirth(LocalDate.parse(request.dateOfBirth));
         }
 
-        user.setStreet(request.street);
-        user.setCity(request.city);
-        user.setCounty(request.county);
-        user.setState(request.state);
-        user.setZipCode(request.zip);
+      
 
         //user.setRole("CUSTOMER");
 
         // ACTIVE by default (you can change later for email verification)
-        user.setStatus("ACTIVE");
+        customer.setStatus("ACTIVE");
 
         // Save user first
-        User savedUser = userRepo.save(user);
-        Long currentUserId = savedUser.getId();
-
-        // // save payment cards if provided
-        // if (request.paymentCards != null) {
-
-        //     for (PaymentCardRequest cardReq : request.paymentCards) {
-
-        //         // Skip invalid cards
-        //         if (cardReq.cardNumber == null || cardReq.cardNumber.length() < 4) {
-        //             continue;
-        //         }
-
-        //         PaymentCard card = new PaymentCard();
-
-        //         card.setCardType(cardReq.cardType);
-
-        //         // Store ONLY last 4 digits
-        //         String last4 = cardReq.cardNumber.substring(cardReq.cardNumber.length() - 4);
-        //         card.setLast4Digits(last4);
-
-        //         card.setExpirationDate(cardReq.expirationDate);
-
-        //         // Link to user
-        //         card.setUser(savedUser);
-
-        //         paymentCardRepository.save(card);
-        //     }
-        // }//req payment cars
-
-        //return savedUser;
+        
+        //customer= userRepo.save(customer);
+        
         return userRepo.save(customer);
     }
 
@@ -168,7 +154,7 @@ public class UserService {
     Customer c = (Customer) userRepo.findById(cId)
         .orElseThrow(()-> new RuntimeException("Error finding User"));
 
-        Movie m = (Movie) movieRepo.findById(cId)
+        Movie m = (Movie) movieRepo.findById(mId)
         .orElseThrow(()-> new RuntimeException("Error finding Movie"));
 
         c.addFavMovie(m);
