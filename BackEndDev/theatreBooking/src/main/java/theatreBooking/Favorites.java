@@ -3,8 +3,10 @@ import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import java.time.LocalDate;
- 
 
 
 @Entity
@@ -24,6 +26,7 @@ public class Favorites {
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
+    @JsonBackReference
     private Customer customer;
   
 
@@ -60,16 +63,7 @@ public void setFavDate(LocalDate favDate) {
     this.favDate = favDate;
 }//date
 
-   
-// public void addFavMovie(Movie movie, List<Favorites> favorites) {
-//     Favorites fav = new Favorites();
 
-//     fav.setCustomer(this.customer);
-//     fav.setMovie(movie);
-//     fav.setFavDate(LocalDate.now());
-
-
-//     favorites.add(fav);
 }//add movie
 
 

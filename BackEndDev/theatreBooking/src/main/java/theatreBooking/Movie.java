@@ -1,5 +1,8 @@
 package theatreBooking;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -9,6 +12,12 @@ public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    
+    @OneToMany(mappedBy = "movie")
+    @JsonIgnore
+private List<Favorites> favorites;
+
 
     private String title;
     private String genre;
@@ -136,6 +145,4 @@ public class Movie {
 
     //link to favirites list
 
-    @OneToMany(mappedBy = "movie")
-private List<Favorites> favorites;
 }

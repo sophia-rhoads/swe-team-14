@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @DiscriminatorValue("CUSTOMER")
 
@@ -16,6 +18,7 @@ public class Customer extends User {
     private UserState userState;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+   @JsonManagedReference
     private List<Favorites> favorites = new ArrayList<>();
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -30,6 +33,16 @@ public class Customer extends User {
     }
 
     public void addFavMovie(Movie movie) {
+
+boolean alreadyFaved = false;
+        alreadyFaved = favorites.stream().anyMatch(fav->fav.getMovie().getId().equals(movie.getId()));
+
+        if (alreadyFaved = true){
+
+//favorites.remove(0);
+            return;
+
+        }
         Favorites favorite = new Favorites();
         favorite.setCustomer(this);
         favorite.setMovie(movie);

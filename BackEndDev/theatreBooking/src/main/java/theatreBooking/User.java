@@ -6,7 +6,10 @@ import java.util.List;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "USER")
+@Table(name = "user")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "user_type")
+
 public class User {
 
     @Id
