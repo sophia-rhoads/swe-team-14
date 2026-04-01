@@ -6,7 +6,6 @@ import { LoginPage } from './login-page/login';
 import { RegisterPage } from './registration-page/registration';
 import { EditProfile } from './edit-profile/edit-profile';
 import { LogoutPage } from './logout-page/logout-page';
-import { CreateAccount } from './create-account/create-account';
 import { FavoritesPage } from './favorites-page/favorites-page';
 import { OrderHistory } from './order-history/order-history';
 import { Admin } from './admin/admin';
@@ -18,9 +17,7 @@ export const routes: Routes = [
     { path: 'login', component: LoginPage },
     { path: 'register', component: RegisterPage },
     { path: 'edit-profile', component: EditProfile},
-    { path: 'login-page', component: LoginPage},
     { path: 'logout-page', component: LogoutPage},
-    { path: 'create-account', component: CreateAccount},
     { path: 'favorites-page', component: FavoritesPage},
     { path: 'order-history', component: OrderHistory},
     { path: 'admin-page', component: Admin},

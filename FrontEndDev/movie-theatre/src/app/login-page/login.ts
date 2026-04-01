@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../services/auth.service';
+import { AuthService, LoginResponse } from '../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +22,11 @@ export class LoginPage {
   error = '';
   loading = false;
 
-  constructor(private auth: AuthService, private router: Router, private route: ActivatedRoute) { }
+  constructor(
+    private auth: AuthService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   login() {
     this.error = '';
@@ -36,27 +41,24 @@ export class LoginPage {
     this.auth.login({
       email: this.email.trim(),
       password: this.password
-    }).subscribe({
-      next: (res) => {
-        localStorage.setItem('user', JSON.stringify(res));
-
+    }).pipe(
+      finalize(() => {
+        this.loading = false;
+      })
+    ).subscribe({
+      next: (res: LoginResponse) => {
         const returnUrl = this.route.snapshot.queryParams['returnUrl'];
         const date = this.route.snapshot.queryParams['date'];
 
-        console.log('RETURN URL:', returnUrl);
-        console.log('DATE:', date);
-
         if (returnUrl) {
-          this.router.navigate([returnUrl], { queryParams: { date: date } });
+          this.router.navigate([returnUrl], { queryParams: { date } });
         } else {
-          this.router.navigateByUrl('/').then(() => {
-            window.dispatchEvent(new Event('storage'));
-          });
+          this.router.navigateByUrl('/');
         }
       },
-      error: () => {
+      error: (err) => {
+        console.error('Login failed', err);
         this.error = 'Invalid credentials';
-        this.loading = false;
       }
     });
   }
