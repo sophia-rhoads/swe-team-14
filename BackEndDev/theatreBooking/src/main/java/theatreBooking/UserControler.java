@@ -33,4 +33,12 @@ public class UserControler {
         return userService.login(email, password);
     }
 
+ @PostMapping("/addFav")
+    public String addFavorite(@RequestParam Long cId, @RequestParam Long mId) {
+        userService.addFavService(cId, mId);
+           System.out.println("Favorite added");
+        return "Favorite added";
+    
+    }
+    
 }
