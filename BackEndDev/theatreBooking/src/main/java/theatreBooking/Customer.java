@@ -59,6 +59,10 @@ private void setFavorites(List<Favorites> favorites) {
     this.favorites = favorites;
 }//fav
 
+
+ 
+
+
 public void addFavMovie(Movie movie) {
 
     Favorites favorite = new Favorites();

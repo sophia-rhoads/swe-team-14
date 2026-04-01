@@ -9,21 +9,33 @@ import java.util.Optional;
 @Service
 public class UserService {
 
+    
+
     private final UserRepo userRepo;
     private final PaymentCardRepo paymentCardRepository;
     private final BCryptPasswordEncoder encoder;
+ private final MovieRepo movieRepo;
+    
 
     public UserService(UserRepo userRepo,
             PaymentCardRepo paymentCardRepository,
-            BCryptPasswordEncoder encoder) {
+            BCryptPasswordEncoder encoder, MovieRepo movieRepo) {
         this.userRepo = userRepo;
         this.paymentCardRepository = paymentCardRepository;
         this.encoder = encoder;
+         this.movieRepo = movieRepo;
     }
 
     public Optional<User> findByEmail(String email) {
         return userRepo.findByEmail(email);
     }
+
+
+      public Optional<User> findById(Long id) {
+        return userRepo.findById(id);
+    }
+ 
+
 
     public User register(RegisterRequest request) {
 
@@ -39,7 +51,8 @@ public class UserService {
 
         // Create user
         User user = new User();
-
+      // Customer newCustomer = new Customer();
+        
         user.setUsername(request.username);
         user.setFirstName(request.firstName);
         user.setLastName(request.lastName);
@@ -67,6 +80,7 @@ public class UserService {
 
         // Save user first
         User savedUser = userRepo.save(user);
+        Long currentUserId = savedUser.getId();
 
         // // save payment cards if provided
         // if (request.paymentCards != null) {
@@ -118,4 +132,19 @@ public class UserService {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'saveUser'");
     }
+
+
+
+   public void addFavService(Long cId, Long mId) {
+
+    Customer c = (Customer) userRepo.findById(cId)
+        .orElseThrow(()-> new RuntimeException("Error finding User"));
+
+        Movie m = (Movie) movieRepo.findById(cId)
+        .orElseThrow(()-> new RuntimeException("Error finding Movie"));
+
+        c.addFavMovie(m);
+        userRepo.save(c);
+   }//addfav
+
 }
