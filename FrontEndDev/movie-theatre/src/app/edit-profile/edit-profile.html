@@ -1,130 +1,124 @@
-<!-- Personal info: username, password, personal information, 
- including name, email address, phone number, and password -->
-
 <ng-container>
+  <h1>User Info</h1>
 
-    <h1>User Info</h1>
+  <div *ngIf="loading">Loading profile...</div>
+  <div *ngIf="errorMessage" style="color: red;">{{ errorMessage }}</div>
+  <div *ngIf="saveMessage" style="color: green;">{{ saveMessage }}</div>
 
-    <br>
-    @if (disableUsrInfo) {
+  <br>
+
+  @if (disableUsrInfo) {
     <div class="card flex flex-wrap justify-center items-end gap-4">
-    <p-floatlabel variant="over">
-    <label for="usrName">User Name</label>
-    <input id="usrName" type="text" pInputText [disabled]="disableUsrInfo" [(ngModel)]= "usrName"/>
-</p-floatlabel>
+      <p-floatlabel variant="over">
+        <label for="usrName">User Name</label>
+        <input id="usrName" type="text" pInputText [disabled]="disableUsrInfo" [(ngModel)]="usrName" />
+      </p-floatlabel>
 
-    <p-floatlabel>
-    <label for="pswd">Password</label>    
-    <input id="pswd" type="text" pInputText [disabled]="disableUsrInfo" [(ngModel)]="password"/>
-</p-floatlabel>
+      <p-floatlabel variant="over">
+        <label for="pswd">Password</label>
+        <input id="pswd" type="password" pInputText [disabled]="disableUsrInfo" [(ngModel)]="password" />
+      </p-floatlabel>
 
-   <p-floatlabel>
-    <label for="email">Email</label>
-    <input id="email" type="text" pInputText [disabled]="true" [(ngModel)]="email"/>
-</p-floatlabel>
+      <p-floatlabel variant="over">
+        <label for="email">Email</label>
+        <input id="email" type="text" pInputText [disabled]="true" [(ngModel)]="email" />
+      </p-floatlabel>
 
-    <p-floatlabel>
-    <label for="phoneNum">Phone Number</label>
-    <input id="phoneNum" type="text" pInputText [disabled]="disableUsrInfo" [(ngModel)]="phoneNum"/>
-</p-floatlabel>
-</div>
-
-    <br>
-    <br>
-    <p-button icon="pi pi-pencil" (click)="editUsrInfo()" label="Edit"/>
-    } @else {
-    <div class="card flex flex-wrap justify-center items-end gap-4">
-    <p-floatlabel variant="over"> 
-    <label for="usrName">User Name</label>
-    <input id="usrName" type="text" pInputText [disabled]="disableUsrInfo" [(ngModel)]= "usrName"/>
-</p-floatlabel>
-
-    <p-floatlabel variant="over"> 
-    <label for="pswd">Password</label>    
-    <input id="pswd" type="text" pInputText [disabled]="disableUsrInfo" [(ngModel)]="password"/>
-</p-floatlabel>
-
-    <p-floatlabel variant="over"> 
-    <label for="email">Email</label>
-    <input id="email" type="text" pInputText [disabled]="true" [(ngModel)]="email"/>
-    </p-floatlabel>
-
-    <p-floatlabel variant="over"> 
-    <label for="phoneNum">Phone Number</label>
-    <input id="phoneNum" type="text" pInputText [disabled]="disableUsrInfo" [(ngModel)]="phoneNum"/>
-</p-floatlabel>
-</div>
-    <br>
-    <br>
-    <p-button (click)="saveUsrInfo()">Save</p-button>
-    }
-    <br>
-    <br>
-    <a [routerLink]="['/order-history']"><p-button>View Order History</p-button></a>
-
-    <br>
-    <br>
-    <br>
-    <h1>Home Address</h1>
-
-    
-    <br>
-
-    @if (disableHomeAdd) {
-    <div class="card flex flex-wrap justify-center items-end gap-4">
-    <p-floatlabel variant="over"> 
-    <label for="streetAdd">Street Address</label>
-    <input id="streetAdd" type="text" pInputText [disabled]="disableHomeAdd" [(ngModel)]= "usrAddress"/>
-    </p-floatlabel>
-
-    <p-floatlabel variant="over"> 
-    <label for="county">County</label>    
-    <input id="county" type="text" pInputText [disabled]="disableHomeAdd" [(ngModel)]="usrCounty"/>
-    </p-floatlabel>
-
-    <p-floatlabel variant="over"> 
-    <label for="state">State</label>
-    <input id="state" type="text" pInputText [disabled]="disableHomeAdd" [(ngModel)]="usrState"/>
-    </p-floatlabel>
-
-    <p-floatlabel variant="over"> 
-    <label for="zip">Zip Code</label>
-    <input id="zip" type="text" pInputText [disabled]="disableHomeAdd" [(ngModel)]="usrZip"/>
-    </p-floatlabel>
+      <p-floatlabel variant="over">
+        <label for="phoneNum">Phone Number</label>
+        <input id="phoneNum" type="text" pInputText [disabled]="disableUsrInfo" [(ngModel)]="phoneNum" />
+      </p-floatlabel>
     </div>
-    
-    <br>
-    <br>
-    <p-button icon="pi pi-pencil" (click)="editAddInfo()" label="Edit"/>
-    
-    } @else {
-        <div class="card flex flex-wrap justify-center items-end gap-4">
-        <p-floatlabel variant="over"> 
+
+    <br><br>
+    <p-button icon="pi pi-pencil" (click)="editUsrInfo()" label="Edit"></p-button>
+  } @else {
+    <div class="card flex flex-wrap justify-center items-end gap-4">
+      <p-floatlabel variant="over">
+        <label for="usrName">User Name</label>
+        <input id="usrName" type="text" pInputText [(ngModel)]="usrName" />
+      </p-floatlabel>
+
+      <p-floatlabel variant="over">
+        <label for="pswd">Password</label>
+        <input id="pswd" type="password" pInputText [(ngModel)]="password" />
+      </p-floatlabel>
+
+      <p-floatlabel variant="over">
+        <label for="email">Email</label>
+        <input id="email" type="text" pInputText [disabled]="true" [(ngModel)]="email" />
+      </p-floatlabel>
+
+      <p-floatlabel variant="over">
+        <label for="phoneNum">Phone Number</label>
+        <input id="phoneNum" type="text" pInputText [(ngModel)]="phoneNum" />
+      </p-floatlabel>
+    </div>
+
+    <br><br>
+    <p-button (click)="saveUsrInfo()" label="Save"></p-button>
+  }
+
+  <br><br>
+  <a [routerLink]="['/order-history']"><p-button label="View Order History"></p-button></a>
+
+  <br><br><br>
+  <h1>Home Address</h1>
+  <br>
+
+  @if (disableHomeAdd) {
+    <div class="card flex flex-wrap justify-center items-end gap-4">
+      <p-floatlabel variant="over">
         <label for="streetAdd">Street Address</label>
-        <input id="streetAdd" type="text" pInputText [disabled]="disableHomeAdd" [(ngModel)]= "usrAddress"/>
-        </p-floatlabel>
+        <input id="streetAdd" type="text" pInputText [disabled]="disableHomeAdd" [(ngModel)]="usrAddress" />
+      </p-floatlabel>
 
-        <p-floatlabel variant="over"> 
-        <label for="county">County</label>    
-        <input id="county" type="text" pInputText [disabled]="disableHomeAdd" [(ngModel)]="usrCounty"/>
-        </p-floatlabel>
-        
-        <p-floatlabel variant="over"> 
+      <p-floatlabel variant="over">
+        <label for="county">County</label>
+        <input id="county" type="text" pInputText [disabled]="disableHomeAdd" [(ngModel)]="usrCounty" />
+      </p-floatlabel>
+
+      <p-floatlabel variant="over">
         <label for="state">State</label>
-        <input id="state" type="text" pInputText [disabled]="disableHomeAdd" [(ngModel)]="usrState"/>
-        </p-floatlabel>
+        <input id="state" type="text" pInputText [disabled]="disableHomeAdd" [(ngModel)]="usrState" />
+      </p-floatlabel>
 
-        <p-floatlabel variant="over"> 
+      <p-floatlabel variant="over">
         <label for="zip">Zip Code</label>
-        <input id="zip" type="text" pInputText [disabled]="disableHomeAdd" [(ngModel)]="usrZip"/>
-        </p-floatlabel>
-        </div>
-        <br>
-        <br>
-        <p-button (click)="saveAddInfo()">Save</p-button>
-    }
+        <input id="zip" type="text" pInputText [disabled]="disableHomeAdd" [(ngModel)]="usrZip" />
+      </p-floatlabel>
+    </div>
 
-    <br>
+    <br><br>
+    <p-button icon="pi pi-pencil" (click)="editAddInfo()" label="Edit"></p-button>
+  } @else {
+    <div class="card flex flex-wrap justify-center items-end gap-4">
+      <p-floatlabel variant="over">
+        <label for="streetAdd">Street Address</label>
+        <input id="streetAdd" type="text" pInputText [(ngModel)]="usrAddress" />
+      </p-floatlabel>
+
+      <p-floatlabel variant="over">
+        <label for="county">County</label>
+        <input id="county" type="text" pInputText [(ngModel)]="usrCounty" />
+      </p-floatlabel>
+
+      <p-floatlabel variant="over">
+        <label for="state">State</label>
+        <input id="state" type="text" pInputText [(ngModel)]="usrState" />
+      </p-floatlabel>
+
+      <p-floatlabel variant="over">
+        <label for="zip">Zip Code</label>
+        <input id="zip" type="text" pInputText [(ngModel)]="usrZip" />
+      </p-floatlabel>
+    </div>
+
+    <br><br>
+    <p-button (click)="saveAddInfo()" label="Save"></p-button>
+  }
+
+  <br>
     <br>
     <br>
     <h1>Payment Info</h1>
@@ -237,6 +231,5 @@
     <br>
     <p-checkbox inputId="check" [(ngModel)]="promotions" [binary]="true"/>
     <label for="check" class="checkboxLabel">Check if you would like to recieve promotions</label>
-
 
 </ng-container>

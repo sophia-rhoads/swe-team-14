@@ -1,59 +1,67 @@
 package theatreBooking;
+
 import jakarta.persistence.*;
-import java.util.List;
 
 @Entity
+@Table(name = "mailing_addr")
 public class MailingAddr {
 
-@Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String street;
     private String city;
     private String state;
-    private int zipCode;
+
+    @Column(name = "zip_code")
+    private String zip;
 
     @OneToOne
     @JoinColumn(name = "customer_id")
-
     private Customer customer;
 
-
- public void setStreet(String street) {
-        this.street = street;
+    public Long getId() {
+        return id;
     }
 
     public String getStreet() {
         return street;
-    }//Street
+    }
 
-
-     public void setCity(String city) {
-        this.city = city;
+    public void setStreet(String street) {
+        this.street = street;
     }
 
     public String getCity() {
         return city;
-    }//city
-
-     public void setState(String state) {
-        this.state = street;
     }
 
+    public void setCity(String city) {
+        this.city = city;
+    }
 
     public String getState() {
         return state;
-    }//State
-
-     public void setZip(int zipCode) {
-        this.zipCode = zipCode;
     }
 
-    public int getZip() {
-        return zipCode;
-    }//zip
+    public void setState(String state) {
+        this.state = state;
+    }
 
+    public String getZip() {
+        return zip;
+    }
 
+    public void setZip(String zip) {
+        this.zip = zip;
+    }
 
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
 }

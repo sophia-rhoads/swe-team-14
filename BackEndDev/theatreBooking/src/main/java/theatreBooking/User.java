@@ -13,14 +13,14 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-     @Column(name = "username", nullable = false, unique = true) 
+    @Column(name = "username", nullable = false, unique = true)
     private String username;
-   
+
     private String firstName;
     private String lastName;
 
-     @Column(name = "email", nullable = false, unique = true) 
-     private String email;
+    @Column(name = "email", nullable = false, unique = true)
+    private String email;
 
     private String password;
 
@@ -28,33 +28,40 @@ public class User {
 
     private LocalDate dateOfBirth;
 
+    private String street;
+    private String city;
+    private String county;
+    private String state;
+    private String zipCode;
 
     // @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     // private List<PaymentCard> cards;
 
-   // private String role; // CUSTOMER or ADMIN
+    // private String role; // CUSTOMER or ADMIN
 
     private String status = "ACTIVE"; // ACTIVE / INACTIVE
 
     public User() {
     }
 
-    public User(String username, String firstName, String lastName, String email, String password, String role,
-            String status, String phoneNumber, LocalDate dateOfBirth,
-            String street, String city, String county, String state, String zipCode, List<String> paymentCards) {
+    public User(String username, String firstName, String lastName, String email, String password,
+                String status, String phoneNumber, LocalDate dateOfBirth,
+                String street, String city, String county, String state, String zipCode) {
         this.username = username;
-        this.email = email;
-        this.password = password;
-     //   this.role = role;
-        this.status = status;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.status = status;
         this.phoneNumber = phoneNumber;
         this.dateOfBirth = dateOfBirth;
-       
+        this.street = street;
+        this.city = city;
+        this.county = county;
+        this.state = state;
+        this.zipCode = zipCode;
     }
 
-    // getters & setters
     public Long getId() {
         return id;
     }
@@ -115,61 +122,46 @@ public class User {
         this.dateOfBirth = dateOfBirth;
     }
 
-    // public String getStreet() {
-    //     return street;
-    // }
+    public String getStreet() {
+        return street;
+    }
 
-    // public void setStreet(String street) {
-    //     this.street = street;
-    // }
+    public void setStreet(String street) {
+        this.street = street;
+    }
 
-    // public String getCity() {
-    //     return city;
-    // }
+    public String getCity() {
+        return city;
+    }
 
-    // public void setCity(String city) {
-    //     this.city = city;
-    // }
+    public void setCity(String city) {
+        this.city = city;
+    }
 
-    // public String getCounty() {
-    //     return county;
-    // }
+    public String getCounty() {
+        return county;
+    }
 
-    // public void setCounty(String county) {
-    //     this.county = county;
-    // }
+    public void setCounty(String county) {
+        this.county = county;
+    }
 
-    // public String getState() {
-    //     return state;
-    // }
+    public String getState() {
+        return state;
+    }
 
-    // public void setState(String state) {
-    //     this.state = state;
-    // }
+    public void setState(String state) {
+        this.state = state;
+    }
 
-    // public String getZipCode() {
-    //     return zipCode;
-    // }
+    public String getZipCode() {
+        return zipCode;
+    }
 
-    // public void setZipCode(String zipCode) {
-    //     this.zipCode = zipCode;
-    // }
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
 
-    // public List<PaymentCard> getCards() {
-    //     return cards;
-    // }
-
-    // public void setCards(List<PaymentCard> cards) {
-    //     this.cards = cards;
-    // }
-
-    // public String getRole() {
-    //     return role;
-    // }
-
-    // public void setRole(String role) {
-    //     this.role = role;
-    // }
 
     public String getStatus() {
         return status;

@@ -197,7 +197,8 @@ export class App {
       {
         label: 'Edit Profile',
         icon: 'pi pi-user-edit',
-        command: () => console.log('Edit Profile')
+        command: () => this.router.navigate(['/edit-profile'])
+       // command: () => console.log('Edit Profile')
       },
       {
         label: 'Add Payment Cards',

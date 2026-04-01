@@ -25,48 +25,38 @@ public class UserService {
         return userRepo.findByEmail(email);
     }
 
-    public class RegisterRequest {
-        public String username;
-        public String firstName;
-        public String lastName;
-        public String email;
-        public String password;
-        public String phone;
-        public String dateOfBirth;
-
-        public String street;
-        public String city;
-        public String state;
-        public int zipCode;
-        public PaymentCard paymentCards;
-    }// regreq
-
     public User register(RegisterRequest request) {
 
-        // Email uniqueness check
+        if (request.email == null || request.email.isBlank()) {
+            throw new RuntimeException("Email is required");
+        }
+
+        if (request.password == null || request.password.isBlank()) {
+            throw new RuntimeException("Password is required");
+        }
+
+        if (request.confirmPassword == null || request.confirmPassword.isBlank()) {
+            throw new RuntimeException("Confirm Password is required");
+        }
+
+        if (!request.password.equals(request.confirmPassword)) {
+            throw new RuntimeException("Passwords do not match");
+        }
+
         if (userRepo.findByEmail(request.email).isPresent()) {
             throw new RuntimeException("This Email is already tied to an account");
         }
 
-        // Payment card limit
-        // if (request.paymentCards != null && request.paymentCards.size() > 3) {
-        // throw new RuntimeException("Maximum 3 payment cards allowed");
-        // }
-
-        // Create user
         Customer customer = new Customer();
-
         customer.setUsername(request.username);
         customer.setFirstName(request.firstName);
         customer.setLastName(request.lastName);
         customer.setEmail(request.email);
-
-        // Encrypt password
         customer.setPassword(encoder.encode(request.password));
-
         customer.setPhoneNumber(request.phone);
+        customer.setStatus("ACTIVE");
 
-        if (request.dateOfBirth != null) {
+        if (request.dateOfBirth != null && !request.dateOfBirth.isBlank()) {
             customer.setDateOfBirth(LocalDate.parse(request.dateOfBirth));
         }
 
@@ -74,50 +64,17 @@ public class UserService {
         addr.setStreet(request.street);
         addr.setCity(request.city);
         addr.setState(request.state);
-        addr.setZip(request.zipCode);
+        addr.setZip(request.zip);
+
+        // only keep this if MailingAddr has county field
+        // addr.setCounty(request.county);
+
         customer.setMailingAddr(addr);
 
-        // customer.setRole("CUSTOMER");
-
-        // ACTIVE by default (you can change later for email verification)
-        customer.setStatus("ACTIVE");
-
-        // Save user first
-        User savedUser = userRepo.save(customer);
-
-        // // save payment cards if provided
-        // if (request.paymentCards != null) {
-
-        // for (PaymentCardRequest cardReq : request.paymentCards) {
-
-        // // Skip invalid cards
-        // if (cardReq.cardNumber == null || cardReq.cardNumber.length() < 4) {
-        // continue;
-        // }
-
-        // PaymentCard card = new PaymentCard();
-
-        // card.setCardType(cardReq.cardType);
-
-        // // Store ONLY last 4 digits
-        // String last4 = cardReq.cardNumber.substring(cardReq.cardNumber.length() - 4);
-        // card.setLast4Digits(last4);
-
-        // card.setExpirationDate(cardReq.expirationDate);
-
-        // // Link to user
-        // card.setUser(savedUser);
-
-        //         paymentCardRepository.save(card);
-        //     }
-        // }//req payment cards
-
-        return savedUser;
+        return userRepo.save(customer);
     }
 
-    // user login
     public User login(String email, String password) {
-
         Optional<User> userOpt = userRepo.findByEmail(email);
 
         if (userOpt.isPresent()) {
@@ -132,7 +89,6 @@ public class UserService {
     }
 
     public User saveUser(User user) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'saveUser'");
+        return userRepo.save(user);
     }
 }

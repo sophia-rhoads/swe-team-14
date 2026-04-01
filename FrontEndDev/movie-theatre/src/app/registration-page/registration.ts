@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
@@ -50,7 +50,7 @@ export class RegisterPage {
     error = '';
     success = '';
 
-    constructor(private auth: AuthService, private router: Router) { }
+    constructor(private auth: AuthService, private router: Router, private cdr: ChangeDetectorRef) { }
 
     register() {
 
@@ -90,13 +90,15 @@ export class RegisterPage {
             next: (res: any) => {
                 this.success = 'Registration successful!';
                 this.loading = false;
+                this.cdr.detectChanges();
 
-                console.log('Sending payload:', payload);
-                this.router.navigate(['/login']);
+                //console.log('Sending payload:', payload);
+                //this.router.navigate(['/login']);
             },
             error: (err) => {
-                this.error = err.error;
                 this.loading = false;
+                this.error = err.error?.message || err.error || 'Registration failed. Please try again.';
+                this.cdr.detectChanges();
             }
         });
     }
