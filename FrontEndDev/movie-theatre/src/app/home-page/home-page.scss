@@ -1,0 +1,106 @@
+.movie-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); // smaller cards
+    gap: 16px; // slightly reduced spacing
+    margin-bottom: 30px;
+}
+
+.movie-card {
+    background: var(--surface-card);
+    padding: 14px; // smaller padding
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    transition: transform 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.movie-card:hover {
+    transform: translateY(-4px);
+}
+
+.movie-card img {
+    width: 100%;
+    height: 240px; // reduced from 300px
+    object-fit: contain; // changed to contain for better aspect ratio handling
+    border-radius: 10px;
+}
+
+.movie-card h3 {
+    margin-top: 10px 6px 0;
+    font-size: 16px; // slightly smaller title
+    font-weight: 600;
+    min-height: 40px;
+}
+
+.not-released {
+    font-size: 14px;
+    font-style: italic;
+    color: #999;
+}
+
+.filter-bar {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.spinner-container {
+    display: flex;
+    justify-content: center;
+    margin: 40px 0;
+}
+
+.section-title {
+    margin-top: 30px;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.empty-message {
+    margin: 20px 0;
+    padding: 20px 0;
+    text-align: center;
+    font-size: 15px;
+    font-style: italic;
+    color: var(--text-color-secondary);
+}
+
+.rating-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 10px;
+}
+
+.rating-number {
+    font-size: 13px;
+    font-weight: 500;
+    color: #444;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+    margin-bottom: 10px;
+}
+
+.carousel-card {
+    text-align: center;
+    padding: 10px;
+}
+
+.carousel-card img {
+    width: 100%;
+    height: 220px;
+    object-fit: contain;
+    border-radius: 10px;
+}

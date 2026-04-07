@@ -1,0 +1,67 @@
+<div class="auth-page">
+  <div class="auth-card">
+
+    <h2>Create Account</h2>
+    <p class="subtitle">Join us and start booking tickets</p>
+
+    <div class="form-grid">
+
+      <input pInputText [(ngModel)]="user.username" placeholder="Username" />
+      <input pInputText [(ngModel)]="user.firstName" placeholder="First Name" />
+
+      <input pInputText [(ngModel)]="user.lastName" placeholder="Last Name" />
+      <input pInputText [(ngModel)]="user.email" placeholder="Email" />
+
+      <!-- PASSWORD -->
+      <div class="password-field">
+        <input pInputText [type]="showPassword ? 'text' : 'password'" [(ngModel)]="user.password"
+          placeholder="Password" />
+        <i class="pi" [ngClass]="showPassword ? 'pi-eye-slash' : 'pi-eye'" (click)="showPassword = !showPassword">
+        </i>
+      </div>
+
+      <!-- CONFIRM PASSWORD -->
+      <div class="password-field">
+        <input pInputText [type]="showConfirmPassword ? 'text' : 'password'" [(ngModel)]="user.confirmPassword"
+          placeholder="Retype Password" />
+        <i class="pi" [ngClass]="showConfirmPassword ? 'pi-eye-slash' : 'pi-eye'"
+          (click)="showConfirmPassword = !showConfirmPassword">
+        </i>
+      </div>
+
+      <!-- PHONE + COUNTRY CODE -->
+      <div class="phone-group">
+        <p-select [options]="countryCodes" [(ngModel)]="user.countryCode" optionLabel="label" optionValue="value">
+        </p-select>
+
+        <input pInputText [(ngModel)]="user.phoneNumber" placeholder="Phone Number" maxlength="10"
+          (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()" />
+      </div>
+
+      <!-- DATE -->
+      <p-datepicker [(ngModel)]="user.dateOfBirth" placeholder="Date of Birth" dateFormat="mm-dd-yy" [showIcon]="true">
+      </p-datepicker>
+
+    </div>
+
+    <!-- PROMOTIONS -->
+    <div class="promo-checkbox">
+      <p-checkbox [(ngModel)]="user.promotions" binary="true" inputId="promo">
+      </p-checkbox>
+      <label for="promo">Receive promotions and offers</label>
+    </div>
+
+    <!-- ACTION -->
+    <button pButton label="Register" [loading]="loading" (click)="register()">
+    </button>
+
+    <p *ngIf="error" class="error">{{ error }}</p>
+    <p *ngIf="success" class="success">{{ success }}</p>
+
+    <div class="auth-switch">
+      <p class="subtitle">Already have an account?</p>
+      <a routerLink="/login">Login</a>
+    </div>
+
+  </div>
+</div>

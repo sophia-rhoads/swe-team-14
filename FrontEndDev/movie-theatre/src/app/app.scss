@@ -1,0 +1,23 @@
+.toolbar-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.toolbar-controls input {
+    width: 220px;
+}
+
+.toolbar-controls p-select {
+    min-width: 160px;
+}
+
+.search-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.auth-toolbar-spacer {
+    width: 120px;
+}

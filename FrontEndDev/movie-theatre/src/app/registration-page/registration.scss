@@ -1,0 +1,135 @@
+.auth-card {
+    position: relative;
+    z-index: 2;
+
+    width: 700px;
+    max-width: 90%;
+
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+
+    padding: 30px;
+    border-radius: 16px;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.auth-page {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #1c1c1c, #2a2a2a);
+}
+
+/* 🎬 BACKGROUND IMAGE */
+.auth-page::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: url('/Movies_Image.png') no-repeat center center/cover;
+    filter: blur(6px);
+    transform: scale(0.95);
+    z-index: 0;
+}
+
+/* 🌑 DARK OVERLAY */
+.auth-page::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 1;
+}
+
+h2 {
+    text-align: center;
+    color: black;
+}
+
+.subtitle {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #666;
+}
+
+/* GRID */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+/* FULL WIDTH INPUTS */
+input {
+    width: 100%;
+}
+
+/* SECTION HEADINGS */
+h3 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+/* PAYMENT SECTION */
+.card-section {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+/* BUTTON */
+button[pButton] {
+    width: 100%;
+    margin-top: 15px;
+}
+
+/* ERROR / SUCCESS */
+.error {
+    color: red;
+    text-align: center;
+}
+
+.success {
+    color: green;
+    text-align: center;
+}
+
+.password-field {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-field i {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    color: #888;
+}
+
+.phone-group {
+    display: flex;
+    gap: 10px;
+}
+
+.phone-group p-dropdown {
+    width: 120px;
+}
+
+.promo-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 10px 0;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}
