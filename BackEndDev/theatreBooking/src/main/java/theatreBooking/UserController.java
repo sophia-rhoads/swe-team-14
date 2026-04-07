@@ -12,19 +12,16 @@ public class UserController {
         this.userService = userService;
     }
 
-    // =========================
-    // ADD FAVORITE
-    // =========================
+    // Add favorites
     @PostMapping("/favorite")
     public String addFavorite(@RequestParam Long customerId,
             @RequestParam String movieName) {
-        userService.addFavorite(customerId, movieName);;
+        userService.addFavorite(customerId, movieName);
+        ;
         return "Favorite added";
     }
 
-    // =========================
-    // ADD PAYMENT CARD
-    // =========================
+    // Add payment card
     @PostMapping("/payment-card")
     public String addPaymentCard(@RequestParam Long customerId,
             @RequestBody PaymentCardRequest request) {

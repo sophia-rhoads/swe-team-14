@@ -78,7 +78,7 @@ public class UserService {
 
         customer.setRole(User.Role.CUSTOMER); // Set the role for the Customer class
 
-        // 🔥 IMPORTANT CHANGE (INACTIVE UNTIL ACTIVATED)
+        // User INACTIVE Until ACTIVATED
         customer.setUserState(UserState.INACTIVE);
 
         if (request.dateOfBirth != null && !request.dateOfBirth.isBlank()) {
@@ -87,7 +87,6 @@ public class UserService {
 
         System.out.println("SETTING ROLE: " + User.Role.CUSTOMER);
 
-        // ✅ ADDRESS LOGIC
         if (request.street != null) {
             MailingAddr addr = new MailingAddr();
             addr.setStreet(request.street);
@@ -99,7 +98,6 @@ public class UserService {
             customer.setMailingAddr(addr);
         }
 
-        // ✅ SAVE USER FIRST
         User savedUser = userRepo.save(customer);
 
         // Activation Token Logic
@@ -108,7 +106,7 @@ public class UserService {
         ActivationToken activationToken = new ActivationToken(token, savedUser);
         tokenRepo.save(activationToken);
 
-        // 💡 Simulated Email using EmailService MailTrap
+        // Simulated Email using EmailService MailTrap
         String activationLink = "http://localhost:8080/api/auth/activate?token=" + token;
 
         String subject = "Activate Your Cinema Booking Account";
@@ -150,13 +148,11 @@ public class UserService {
                     </html>
                 """.formatted(customer.getUsername(), activationLink);
 
-        // ✅ SEND HTML EMAIL
+        // Send Email
         emailService.sendHtmlEmail(customer.getEmail(), subject, htmlBody);
 
-        // Optional fallback (for debugging)
         System.out.println("ACTIVATION LINK: " + activationLink);
 
-        // ✅ fallback for demo safety
         System.out.println("ACTIVATION LINK: " + activationLink);
 
         return savedUser;
@@ -173,7 +169,6 @@ public class UserService {
                 throw new RuntimeException("Invalid email or password");
             }
 
-            // 🔥 NEW CHECK
             if (user instanceof Customer customer) {
                 if (customer.getUserState() == UserState.INACTIVE) {
                     throw new RuntimeException("Please activate your account before logging in");
@@ -268,7 +263,7 @@ public class UserService {
         if (user.getRole() == null) {
             user.setRole(User.Role.CUSTOMER);
         }
-        
+
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
 
         userRepo.save(user);
@@ -296,16 +291,12 @@ public class UserService {
         return userRepo.save(user);
     }
 
-    // ========================
-    // GET FAVORITES
-    // ========================
+    // Get All Favorites
     public List<Favorites> getFavorites(Long userId) {
         return favoriteRepo.findByCustomerId(userId);
     }
 
-    // ========================
-    // ADD FAVORITE
-    // ========================
+    // Add Favorite
     public Favorites addFavorite(Long userId, String movieName) {
 
         Customer customer = customerRepo.findById(userId)
@@ -318,23 +309,17 @@ public class UserService {
         return favoriteRepo.save(fav);
     }
 
-    // ========================
-    // DELETE FAVORITE
-    // ========================
+    // Delete Favorite
     public void deleteFavorite(Long favId) {
         favoriteRepo.deleteById(favId);
     }
 
-    // ========================
-    // GET ALL CARDS
-    // ========================
+    // Get All Payment Cards
     public List<PaymentCard> getCards(Long userId) {
         return paymentCardRepo.findByCustomerId(userId);
     }
 
-    // ========================
-    // ADD CARD
-    // ========================
+    // Add Payment Card
     public PaymentCard addCard(Long userId, PaymentCardRequest request) {
 
         Customer customer = customerRepo.findById(userId)
@@ -356,9 +341,7 @@ public class UserService {
         return paymentCardRepo.save(card);
     }
 
-    // ========================
-    // DELETE CARD
-    // ========================
+    // Delete Payment Card
     public void deleteCard(Long cardId) {
         paymentCardRepo.deleteById(cardId);
     }

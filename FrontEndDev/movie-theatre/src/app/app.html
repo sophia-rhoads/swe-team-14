@@ -4,10 +4,10 @@
   <ng-template #start>
     <div class="nav-left">
 
-      <!-- 🏠 Home -->
+      <!-- Home -->
       <button pButton icon="pi pi-home" (click)="goHome()"></button>
 
-      <!-- ⬅ Back -->
+      <!-- Back -->
       @if (showBackButton) {
       <p-button icon="pi pi-arrow-left" class="p-button-secondary" (click)="goBack()">
       </p-button>
@@ -31,7 +31,7 @@
 
     <div class="toolbar-controls">
 
-      <!-- 🔍 Search (only on home) -->
+      <!-- Search (only on home) -->
       @if (!showBackButton) {
 
       <div class="search-group">
@@ -44,7 +44,7 @@
 
       </div>
 
-      <!-- 🎯 Filter -->
+      <!-- Filter -->
       <p-select [options]="genres" [(ngModel)]="selectedGenre" optionLabel="label" optionValue="value"
         placeholder="All Genres" (onChange)="onFilter()">
       </p-select>
@@ -54,7 +54,7 @@
 
       }
 
-      <!-- 👤 PROFILE DROPDOWN (ALWAYS SAME BUTTON) -->
+      <!-- PROFILE DROPDOWN (ALWAYS SAME BUTTON) -->
       <p-menu #menu [popup]="true" [model]="profileMenuItems"></p-menu>
 
       <button pButton icon="pi pi-user" type="button" (click)="menu.toggle($event)">

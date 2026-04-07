@@ -69,7 +69,7 @@ export class RegisterPage {
         this.success = '';
         this.loading = true;
 
-        // ✅ Email validation
+        // Email validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(this.user.email)) {
             this.error = 'Please enter a valid email address';
@@ -77,14 +77,14 @@ export class RegisterPage {
             return;
         }
 
-        // ✅ Password match
+        // Password match
         if (this.user.password.trim() !== this.user.confirmPassword.trim()) {
             this.error = 'Passwords do not match';
             this.loading = false;
             return;
         }
 
-        // ✅ Phone validation (digits only, max 10)
+        // Phone validation (digits only, max 10)
         const phoneRegex = /^[0-9]{10}$/;
         if (!phoneRegex.test(this.user.phoneNumber)) {
             this.error = 'Phone number must be exactly 10 digits';
@@ -92,7 +92,7 @@ export class RegisterPage {
             return;
         }
 
-        // ✅ Build payload
+        // Build payload
         const payload = {
             username: this.user.username,
             firstName: this.user.firstName,

@@ -12,7 +12,7 @@
       <input pInputText [(ngModel)]="user.lastName" placeholder="Last Name" />
       <input pInputText [(ngModel)]="user.email" placeholder="Email" />
 
-      <!-- PASSWORD -->
+      <!-- Password -->
       <div class="password-field">
         <input pInputText [type]="showPassword ? 'text' : 'password'" [(ngModel)]="user.password"
           placeholder="Password" />
@@ -20,7 +20,7 @@
         </i>
       </div>
 
-      <!-- CONFIRM PASSWORD -->
+      <!-- Confirm Password -->
       <div class="password-field">
         <input pInputText [type]="showConfirmPassword ? 'text' : 'password'" [(ngModel)]="user.confirmPassword"
           placeholder="Retype Password" />
@@ -29,7 +29,7 @@
         </i>
       </div>
 
-      <!-- PHONE + COUNTRY CODE -->
+      <!-- Phone + Country Code -->
       <div class="phone-group">
         <p-select [options]="countryCodes" [(ngModel)]="user.countryCode" optionLabel="label" optionValue="value">
         </p-select>
@@ -38,13 +38,13 @@
           (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()" />
       </div>
 
-      <!-- DATE -->
+      <!-- Date -->
       <p-datepicker [(ngModel)]="user.dateOfBirth" placeholder="Date of Birth" dateFormat="mm-dd-yy" [showIcon]="true">
       </p-datepicker>
 
     </div>
 
-    <!-- PROMOTIONS -->
+    <!-- Promotions -->
     <div class="promo-checkbox">
       <p-checkbox [(ngModel)]="user.promotions" binary="true" inputId="promo">
       </p-checkbox>
