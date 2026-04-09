@@ -52,7 +52,11 @@ export class App {
     { label: 'Romance', value: 'Romance' },
     { label: 'Horror', value: 'Horror' },
     { label: 'Drama', value: 'Drama' },
-    { label: 'Adventure', value: 'Adventure' }
+    { label: 'Adventure', value: 'Adventure' },
+    { label: 'Comedy', value: 'Comedy' },
+    { label: 'Family', value: 'Family' },
+    { label: 'War', value: 'War' },
+    { label: 'Fantasy', value: 'Fantasy' }
   ];
 
   constructor(

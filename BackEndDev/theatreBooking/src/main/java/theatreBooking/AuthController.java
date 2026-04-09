@@ -132,15 +132,20 @@ public class AuthController {
     // Add Favorite Endpoint
     @PostMapping("/favorites/{userId}")
     public ResponseEntity<?> addFavorite(@PathVariable Long userId,
-            @RequestBody Map<String, String> body) {
+            @RequestBody Map<String, Long> body) {
+
+        Long movieId = body.get("movieId");
+
         return ResponseEntity.ok(
-                userService.addFavorite(userId, body.get("movieName")));
+                userService.addFavorite(userId, movieId));
     }
 
     // Delete Favorite Endpoint
     @DeleteMapping("/favorites/{id}")
-    public ResponseEntity<?> deleteFavorite(@PathVariable Long id) {
-        userService.deleteFavorite(id);
+    public ResponseEntity<?> deleteFavorite(@RequestParam Long userId,
+            @RequestParam Long movieId) {
+
+        userService.deleteFavorite(userId, movieId);
         return ResponseEntity.ok("Deleted");
     }
 }

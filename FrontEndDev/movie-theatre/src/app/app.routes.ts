@@ -10,7 +10,7 @@ import { FavoritesPage } from './edit-profile/favorites-page/favorites-page';
 import { OrderHistory } from './order-history/order-history';
 import { Admin } from './admin/admin';
 import { ResetPasswordPage } from './reset-password/reset-password';
-import { adminGuard } from './admin/admin.gaurd';
+import { adminGuard } from './admin/admin.guard';
 
 export const routes: Routes = [
     { path: '', component: HomePage },

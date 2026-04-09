@@ -9,13 +9,17 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
+
 import java.util.List;
 
 @Service
 public class UserService {
 
     private final UserRepo userRepo;
-    // private final MovieRepo movieRepo;
+
+    @Autowired
+    private MovieRepo movieRepo;
+
     private final BCryptPasswordEncoder encoder;
     private final ActivationTokenRepo tokenRepo;
     @Autowired
@@ -40,7 +44,7 @@ public class UserService {
             PasswordResetTokenRepo passwordResetTokenRepo,
             EmailService emailService) {
         this.userRepo = userRepo;
-        // this.movieRepo = movieRepo;
+        this.movieRepo = movieRepo;
         this.encoder = encoder;
         this.tokenRepo = tokenRepo;
         this.passwordEncoder = passwordEncoder;
@@ -78,7 +82,7 @@ public class UserService {
 
         customer.setRole(User.Role.CUSTOMER); // Set the role for the Customer class
 
-        // User INACTIVE Until ACTIVATED
+        // INACTIVE until ACTIVATED
         customer.setUserState(UserState.INACTIVE);
 
         if (request.dateOfBirth != null && !request.dateOfBirth.isBlank()) {
@@ -87,6 +91,7 @@ public class UserService {
 
         System.out.println("SETTING ROLE: " + User.Role.CUSTOMER);
 
+        // Address Logic
         if (request.street != null) {
             MailingAddr addr = new MailingAddr();
             addr.setStreet(request.street);
@@ -98,6 +103,7 @@ public class UserService {
             customer.setMailingAddr(addr);
         }
 
+        // Save User First
         User savedUser = userRepo.save(customer);
 
         // Activation Token Logic
@@ -148,11 +154,13 @@ public class UserService {
                     </html>
                 """.formatted(customer.getUsername(), activationLink);
 
-        // Send Email
+        // Send Html Email
         emailService.sendHtmlEmail(customer.getEmail(), subject, htmlBody);
 
+        // Optional fallback (for debugging)
         System.out.println("ACTIVATION LINK: " + activationLink);
 
+        // fallback for demo safety
         System.out.println("ACTIVATION LINK: " + activationLink);
 
         return savedUser;
@@ -169,6 +177,7 @@ public class UserService {
                 throw new RuntimeException("Invalid email or password");
             }
 
+            // Account Status Check
             if (user instanceof Customer customer) {
                 if (customer.getUserState() == UserState.INACTIVE) {
                     throw new RuntimeException("Please activate your account before logging in");
@@ -291,35 +300,43 @@ public class UserService {
         return userRepo.save(user);
     }
 
-    // Get All Favorites
+    // Get Favorites
     public List<Favorites> getFavorites(Long userId) {
-        return favoriteRepo.findByCustomerId(userId);
+        return favoriteRepo.findByCustomer_Id(userId);
     }
 
-    // Add Favorite
-    public Favorites addFavorite(Long userId, String movieName) {
+    // Add Favorites
+    public Favorites addFavorite(Long userId, Long movieId) {
 
         Customer customer = customerRepo.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        Movie movie = movieRepo.findById(movieId)
+                .orElseThrow(() -> new RuntimeException("Movie not found"));
+
+        boolean exists = favoriteRepo.existsByCustomer_IdAndMovie_Id(userId, movieId);
+        if (exists) {
+            throw new RuntimeException("Already in Favourites");
+        }
+
         Favorites fav = new Favorites();
-        fav.setMovieName(movieName);
+        fav.setMovie(movie);
         fav.setCustomer(customer);
 
         return favoriteRepo.save(fav);
     }
 
     // Delete Favorite
-    public void deleteFavorite(Long favId) {
-        favoriteRepo.deleteById(favId);
+    public void deleteFavorite(Long userId, Long movieId) {
+        favoriteRepo.deleteByCustomer_IdAndMovie_Id(userId, movieId);
     }
 
-    // Get All Payment Cards
+    // Get all Cards
     public List<PaymentCard> getCards(Long userId) {
         return paymentCardRepo.findByCustomerId(userId);
     }
 
-    // Add Payment Card
+    // Add Card
     public PaymentCard addCard(Long userId, PaymentCardRequest request) {
 
         Customer customer = customerRepo.findById(userId)
@@ -341,7 +358,7 @@ public class UserService {
         return paymentCardRepo.save(card);
     }
 
-    // Delete Payment Card
+    // Delete Card
     public void deleteCard(Long cardId) {
         paymentCardRepo.deleteById(cardId);
     }

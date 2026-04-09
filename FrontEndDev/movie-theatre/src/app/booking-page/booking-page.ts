@@ -13,6 +13,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DatePickerModule } from 'primeng/datepicker';
 import { DialogModule } from 'primeng/dialog';
+
 @Component({
   selector: 'app-booking-page',
   standalone: true,
@@ -45,7 +46,7 @@ export class BookingPage {
     private route: ActivatedRoute,
     private movieService: MovieService
   ) {
-    // ✅ Fetch movie
+    // Fetch movie
     this.movie$ = this.route.paramMap.pipe(
       switchMap(params => {
         const id = Number(params.get('id'));

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { Movie } from '../models/movie';
 
 export interface Address {
   homeAddress: string;
@@ -37,14 +38,21 @@ export interface UpdateProfileRequest {
 export class ProfileService {
 
   private baseUrl = 'http://localhost:8080/api/profile';
+  private favUrl = 'http://localhost:8080/api/favorites';
+  private favoritesChangedSubject = new Subject<void>();
+  favoritesChanged$ = this.favoritesChangedSubject.asObservable();
+
   constructor(private http: HttpClient) { }
+
   getProfile(userId: number): Observable<UserProfile> {
     return this.http.get<UserProfile>(`${this.baseUrl}/${userId}`);
   }
+
   updateProfile(userId: number, payload: UpdateProfileRequest): Observable<UserProfile> {
     return this.http.put<UserProfile>(`${this.baseUrl}/${userId}`, payload);
   }
-  // CARDS
+
+  // Cards
   getCards(userId: number) {
     return this.http.get<any[]>(`/api/auth/cards/${userId}`);
   }
@@ -57,16 +65,23 @@ export class ProfileService {
     return this.http.delete(`/api/auth/cards/${cardId}`);
   }
 
-  // FAVORITES
-  getFavorites(userId: number) {
-    return this.http.get<any[]>(`/api/auth/favorites/${userId}`);
+  // Favorites
+  getFavorites(userId: number): Observable<Movie[]> {
+    return this.http.get<Movie[]>(`${this.favUrl}/${userId}`);
   }
 
-  addFavorite(userId: number, movieName: string) {
-    return this.http.post(`/api/auth/favorites/${userId}`, { movieName });
+  toggleFavorite(userId: number, movieId: number): Observable<{ favorite: Boolean }> {
+    return this.http.post<{ favorite: Boolean }>(
+      `${this.favUrl}/toggle?userId=${userId}&movieId=${movieId}`,
+      {}
+    );
   }
 
-  deleteFavorite(id: number) {
-    return this.http.delete(`/api/auth/favorites/${id}`);
+  removeFavorite(userId: number, movieId: number) {
+    return this.http.delete(`${this.favUrl}/${userId}/${movieId}`);
+  }
+
+  notifyFavoritesChanged() {
+    this.favoritesChangedSubject.next();
   }
 }

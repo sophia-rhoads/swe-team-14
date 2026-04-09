@@ -30,11 +30,11 @@ export class RegisterPage {
 
     loading: boolean = false;
 
-    // 👁️ password toggle
+    // password toggle
     showPassword = false;
     showConfirmPassword = false;
 
-    // 🌍 Country codes
+    // Country codes
     countryCodes = [
         { label: '+1 (USA)', value: '+1' },
         { label: '+91 (India)', value: '+91' },

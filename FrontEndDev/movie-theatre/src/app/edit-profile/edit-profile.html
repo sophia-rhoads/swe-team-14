@@ -1,6 +1,6 @@
 <p-tabs>
 
-  <!-- Header Tabs -->
+  <!-- TAB HEADERS -->
   <p-tablist>
     <p-tab value="profile">My Profile</p-tab>
     <p-tab value="favorites">My Favorites</p-tab>
@@ -48,26 +48,57 @@
 
     </p-tabpanel>
 
-    <!-- FAVORITES TAB -->
+    <!-- FAVORITES -->
     <p-tabpanel value="favorites">
-      <h2>My Favorites</h2>
 
-      <div *ngIf="favoriteMovies.length === 0">
-        No favorites yet.
+      <h2>❤️ My Favorites</h2>
+
+      <div *ngIf="favoriteMovies.length === 0" class="empty-message">
+        No favorite movies yet.
       </div>
 
-      <div *ngFor="let movie of favoriteMovies">
-        {{ movie.title || movie }}
+      <div class="movie-grid" *ngIf="favoriteMovies.length > 0">
+
+        <div class="movie-card" *ngFor="let movie of favoriteMovies">
+
+          <img [src]="movie.posterUrl" />
+
+          <h3>{{ movie.title }}</h3>
+
+          <div class="rating-section">
+            <ng-container *ngIf="movie.imdbRating; else notReleasedFavorite">
+              <p-rating [ngModel]="movie.imdbRating / 2" [readonly]="true"></p-rating>
+              <span class="rating-number">
+                {{ movie.imdbRating }} / 10
+              </span>
+            </ng-container>
+            <ng-template #notReleasedFavorite>
+              <span class="not-released">
+                Not yet Released
+              </span>
+            </ng-template>
+          </div>
+
+          <div class="favorite-actions">
+            <button pButton class="p-button-sm p-button-primary" label="View Details" (click)="viewDetails(movie)">
+            </button>
+            <button pButton class="p-button-sm p-button-danger" label="Remove" (click)="removeFavorite(movie.id)">
+            </button>
+          </div>
+
+        </div>
+
       </div>
+
     </p-tabpanel>
 
-    <!-- ORDERS TAB -->
+    <!-- ORDERS -->
     <p-tabpanel value="orders">
       <h2>Booking History</h2>
       <p>Coming soon...</p>
     </p-tabpanel>
 
-    <!-- PAYMENTS TAB-->
+    <!-- PAYMENTS -->
     <p-tabpanel value="payments">
       <h2>Payment Methods</h2>
       <p>Coming soon...</p>

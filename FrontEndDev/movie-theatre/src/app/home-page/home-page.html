@@ -40,8 +40,12 @@
                             </span>
                         </ng-template>
                     </div>
-                    <p-togglebutton (onChange)="addFavorite(movie.id)" onLabel="" offLabel=""
-                        [onIcon]="'pi pi-heart-fill'" [offIcon]="'pi pi-heart'"></p-togglebutton>
+                    <button (click)="toggleFavorite(movie.id)" class="favorite-btn">
+
+                        <i *ngIf="favoriteMap.has(movie.id)" class="pi pi-heart-fill liked"></i>
+                        <i *ngIf="!favoriteMap.has(movie.id)" class="pi pi-heart"></i>
+
+                    </button>
                     <button pButton class="p-button-sm p-button-primary" label="View Details"
                         (click)="viewDetails(movie)">
                     </button>
@@ -67,8 +71,12 @@
                         </span>
                     </ng-template>
                 </div>
-                <p-togglebutton (onChange)="addFavorite(movie.id)" onLabel="" offLabel="" [onIcon]="'pi pi-heart-fill'"
-                    [offIcon]="'pi pi-heart'"></p-togglebutton>
+                <button (click)="toggleFavorite(movie.id)" class="favorite-btn">
+
+                    <i *ngIf="favoriteMap.has(movie.id)" class="pi pi-heart-fill liked"></i>
+                    <i *ngIf="!favoriteMap.has(movie.id)" class="pi pi-heart"></i>
+
+                </button>
                 <button pButton class="p-button-sm p-button-primary" label="View Details" (click)="viewDetails(movie)">
                 </button>
             </div>
@@ -98,8 +106,12 @@
                             Not yet Released
                         </span>
                     </div>
-                    <p-togglebutton (onChange)="addFavorite(movie.id)" onLabel="" offLabel=""
-                        [onIcon]="'pi pi-heart-fill'" [offIcon]="'pi pi-heart'"></p-togglebutton>
+                    <button (click)="toggleFavorite(movie.id)" class="favorite-btn">
+
+                        <i *ngIf="favoriteMap.has(movie.id)" class="pi pi-heart-fill liked"></i>
+                        <i *ngIf="!favoriteMap.has(movie.id)" class="pi pi-heart"></i>
+
+                    </button>
                     <button pButton class="p-button-sm p-button-primary" label="View Details"
                         (click)="viewDetails(movie)">
                     </button>
@@ -116,8 +128,12 @@
                         Not yet Released
                     </span>
                 </div>
-                <p-togglebutton (onChange)="addFavorite(movie.id)" onLabel="" offLabel="" [onIcon]="'pi pi-heart-fill'"
-                    [offIcon]="'pi pi-heart'"></p-togglebutton>
+                <button (click)="toggleFavorite(movie.id)" class="favorite-btn">
+
+                    <i *ngIf="favoriteMap.has(movie.id)" class="pi pi-heart-fill liked"></i>
+                    <i *ngIf="!favoriteMap.has(movie.id)" class="pi pi-heart"></i>
+
+                </button>
                 <button pButton class="p-button-sm p-button-primary" label="View Details" (click)="viewDetails(movie)">
                 </button>
             </div>

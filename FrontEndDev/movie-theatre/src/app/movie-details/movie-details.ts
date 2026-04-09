@@ -12,6 +12,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { DatePickerModule } from 'primeng/datepicker';
+
 @Component({
   selector: 'app-movie-details',
   standalone: true,
@@ -27,6 +28,7 @@ import { DatePickerModule } from 'primeng/datepicker';
   templateUrl: './movie-details.html',
   styleUrls: ['./movie-details.scss']
 })
+
 export class MovieDetails {
   showTimes!: string;
   selectedDate!: Date;
@@ -34,6 +36,7 @@ export class MovieDetails {
   maxDate = new Date(new Date().setMonth(new Date().getMonth() + 1));
   movie$!: Observable<Movie>;
   trailerUrl$!: Observable<SafeResourceUrl>;
+
   constructor(
     private route: ActivatedRoute,
     private movieService: MovieService,

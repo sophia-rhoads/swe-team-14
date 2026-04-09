@@ -9,11 +9,13 @@ public class Favorites {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String movieName;
+    @ManyToOne
+    @JoinColumn(name = "customer_id", nullable = false)
+    private Customer customer;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
+    @JoinColumn(name = "movie_id", nullable = false)
+    private Movie movie;
 
     // Default constructor
     public Favorites() {
@@ -24,12 +26,12 @@ public class Favorites {
         return id;
     }
 
-    public String getMovieName() {
-        return movieName;
+    public Movie getMovie() {
+        return movie;
     }
 
-    public void setMovieName(String movieName) {
-        this.movieName = movieName;
+    public void setMovie(Movie movie) {
+        this.movie = movie;
     }
 
     public Customer getCustomer() {

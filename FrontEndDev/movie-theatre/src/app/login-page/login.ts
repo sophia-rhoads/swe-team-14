@@ -88,7 +88,7 @@ export class LoginPage {
         const returnUrl = this.route.snapshot.queryParams['returnUrl'];
         const date = this.route.snapshot.queryParams['date'];
 
-        // ROLE-BASED ROUTING
+        // Role based routing
         if (res.role === 'ADMIN') {
           this.router.navigateByUrl('/admin-page');
         } else if (returnUrl) {

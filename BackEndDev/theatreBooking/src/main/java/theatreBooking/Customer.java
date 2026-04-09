@@ -47,13 +47,13 @@ public class Customer extends User {
         paymentCards.add(card);
     }
 
-    public void addFavorites(String movieName) {
+    public void addFavorites(Movie movie) {
         boolean exists = favorites.stream()
-                .anyMatch(f -> f.getMovieName().equalsIgnoreCase(movieName));
+                .anyMatch(f -> f.getMovie().getId().equals(movie.getId()));
 
         if (!exists) {
             Favorites fav = new Favorites();
-            fav.setMovieName(movieName);
+            fav.setMovie(movie);
             fav.setCustomer(this);
             favorites.add(fav);
         }

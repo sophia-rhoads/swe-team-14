@@ -1,14 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { TabsModule } from 'primeng/tabs';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
-import { ChangeDetectorRef } from '@angular/core';
+import { RatingModule } from 'primeng/rating';
 
 import { ProfileService, UpdateProfileRequest, UserProfile } from '../services/profile.service';
 import { AuthService } from '../services/auth.services';
+import { Movie } from '../models/movie';
+import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-edit-profile',
@@ -18,12 +22,13 @@ import { AuthService } from '../services/auth.services';
     FormsModule,
     TabsModule,
     InputTextModule,
-    ButtonModule
+    ButtonModule,
+    RatingModule
   ],
   templateUrl: './edit-profile.html',
   styleUrls: ['./edit-profile.scss']
 })
-export class EditProfile implements OnInit {
+export class EditProfile implements OnInit, OnDestroy {
 
   userId!: number;
 
@@ -48,18 +53,29 @@ export class EditProfile implements OnInit {
   saveMessage = '';
   errorMessage = '';
 
-  // FAVORITES (placeholder)
-  favoriteMovies: any[] = [];
+  // FAVORITES
+  favoriteMovies: Movie[] = [];
+  private destroy$ = new Subject<void>();
 
   constructor(
     private profileService: ProfileService,
     private authService: AuthService,
-    private cdr: ChangeDetectorRef
+    private router: Router
   ) { }
 
   ngOnInit(): void {
     this.userId = this.authService.getUserId()!;
     this.loadProfile();
+    this.loadFavorites();
+
+    this.profileService.favoritesChanged$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => this.loadFavorites());
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   loadProfile() {
@@ -84,8 +100,19 @@ export class EditProfile implements OnInit {
       error: () => {
         this.errorMessage = 'Failed to load profile';
         this.loading = false;
-        this.cdr.detectChanges();
       }
+    });
+  }
+  loadFavorites() {
+    this.profileService.getFavorites(this.userId).subscribe(res => {
+
+      const uniqueMap = new Map<number, Movie>();
+
+      res.forEach(movie => {
+        uniqueMap.set(movie.id, movie);
+      });
+
+      this.favoriteMovies = Array.from(uniqueMap.values());
     });
   }
 
@@ -117,6 +144,21 @@ export class EditProfile implements OnInit {
         this.errorMessage = 'Update failed';
         this.saveMessage = '';
       }
+    });
+  }
+  removeFavorite(movieId: number) {
+    const userId = this.userId;
+
+    this.profileService.removeFavorite(userId, movieId)
+      .subscribe(() => {
+        this.favoriteMovies = this.favoriteMovies.filter(movie => movie.id !== movieId);
+        this.profileService.notifyFavoritesChanged();
+      });
+  }
+
+  viewDetails(movie: Movie) {
+    this.router.navigate(['/movie', movie.id], {
+      state: { movieTitle: movie.title }
     });
   }
 }
