@@ -1,5 +1,7 @@
 package theatreBooking;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -22,6 +24,8 @@ public class Movie {
     private String trailerUrl;
     private String posterUrl;
 
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
+private List<Showtime> showtimes;
     // @OneToMany(mappedBy = "movie")
 
     // private List<Favorites> favorites;
