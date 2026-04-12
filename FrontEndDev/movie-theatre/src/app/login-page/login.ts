@@ -23,6 +23,7 @@ export class LoginPage {
   error = '';
   successMessage = '';
   loading = false;
+  reseting = false;
 
   showPassword: boolean = false;
 
@@ -39,10 +40,10 @@ export class LoginPage {
       return;
     }
 
-    this.loading = true;
+    this.reseting = true;
 
     this.auth.forgotPassword(this.email.trim())
-      .pipe(finalize(() => this.loading = false))
+      .pipe(finalize(() => this.reseting = false))
       .subscribe({
         next: () => {
           this.successMessage =

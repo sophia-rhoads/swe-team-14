@@ -3,7 +3,57 @@
 @if (viewTable?.name === 'Movies') {
 <br>
 <br>
-<p-table [value]="dataArr">
+<div class="card flex justify-center">
+    <p-button label="Add Movie" (click)="showDialog()"/>
+    <p-dialog header="Add Movie" [modal]="true" [(visible)]="visible" [style]="{width: '25rem'}">
+       <form [formGroup]="addMovieForm" (ngSubmit)="submitMovie()">
+        <div class="flex items-center gap-4 mb-4">
+            <label for="title">Title</label>
+            <input id="title" type="text" pInputText formControlName="title"/>
+        </div>
+        <div class="flex items-center gap-4 mb-4">
+            <label for="genre">Genre</label>
+            <input id="genre" type="text" pInputText formControlName="genre"/>
+        </div>
+        <div class="flex items-center gap-4 mb-4">
+            <label for="mpaa">MPAA Rating</label>
+            <input id="mpaa" type="text" pInputText formControlName="mpaaRating"/>
+        </div> <div class="flex items-center gap-4 mb-4">
+            <label for="imbd">IMDB Rating</label>
+            <input id="imbd" type="number" pInputText formControlName="imdbRating"/>
+        </div>
+        <div class="flex items-center gap-4 mb-4">
+            <label for="director">Director</label>
+            <input id="director" type="text" pInputText formControlName="director"/>
+        </div>
+        <div class="flex items-center gap-4 mb-4">
+            <label for="producer">Producer</label>
+            <input id="producer" type="text" pInputText formControlName="producer"/>
+        </div>
+        <div class="flex items-center gap-4 mb-4">
+            <label for="description">Description</label>
+            <input id="description" type="text" pInputText formControlName="description"/>
+        </div>
+        <div class="flex items-center gap-4 mb-4">
+            <label for="trailer">Trailer URL</label>
+            <input id="trailer" type="text" pInputText formControlName="trailerUrl"/>
+        </div>
+        <div class="flex items-center gap-4 mb-4">
+            <label for="poster">Poster URL</label>
+            <input id="poster" type="text" pInputText formControlName="posterUrl"/>
+        </div>
+        <div class="flex items-center gap-4 mb-4">
+            <label for="status">Status</label>
+            <input id="status" type="text" pInputText formControlName="status"/>
+        </div>
+        <p-button type="submit" label="Submit"/>
+    </form>
+    </p-dialog>
+
+</div>
+<br>
+<br>
+<p-table [value]="movies">
     <ng-template #header>
         <tr>
             <th>Movie</th>
@@ -11,18 +61,17 @@
             <th></th>
         </tr>
     </ng-template>
-    <ng-template #body let-favorite>
+    <ng-template #body let-movie>
         <tr>
+            <td>{{movie.title}}</td>
             <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td><p-button label="Edit Movie Details" /></td>
+            <td><p-button label="Edit Movie Details"/></td>
             <td><p-button label="Remove Movie" /></td>
         </tr>
     </ng-template>
 </p-table>
 <br>
 <br>
-<p-button label="Add Movie" />
 }
 @if (viewTable?.name === 'Users') {
 <br>
@@ -36,7 +85,7 @@
             <th></th>
         </tr>
     </ng-template>
-    <ng-template #body let-favorite>
+    <ng-template #body let-movie>
         <tr>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
@@ -64,12 +113,12 @@
         <tr>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
-            <td><p-button label="Edit User Details" /></td>
-            <td><p-button label="Suspend User" /></td>
-            <td><p-button label="Remove User" /></td>
+            <td><p-button label="Edit Show Time" /></td>
+            <td><p-button label="Remove Show Time" /></td>
         </tr>
     </ng-template>
 </p-table>
+<p-button label="Add Show Time"/>
 }
 @if (viewTable?.name === 'Promotions') {
 <br>
@@ -95,3 +144,4 @@
     </ng-template>
 </p-table>
 }
+

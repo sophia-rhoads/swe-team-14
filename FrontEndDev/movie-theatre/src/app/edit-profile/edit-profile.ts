@@ -109,7 +109,7 @@ export class EditProfile implements OnInit, OnDestroy {
       const uniqueMap = new Map<number, Movie>();
 
       res.forEach(movie => {
-        uniqueMap.set(movie.id, movie);
+        uniqueMap.set(movie.id!, movie);
       });
 
       this.favoriteMovies = Array.from(uniqueMap.values());

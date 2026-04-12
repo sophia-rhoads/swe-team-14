@@ -40,7 +40,7 @@
                             </span>
                         </ng-template>
                     </div>
-                    <button (click)="toggleFavorite(movie.id)" class="favorite-btn">
+                    <button (click)="toggleFavorite(movie.id!)" class="favorite-btn">
 
                         <i *ngIf="favoriteMap.has(movie.id)" class="pi pi-heart-fill liked"></i>
                         <i *ngIf="!favoriteMap.has(movie.id)" class="pi pi-heart"></i>
@@ -71,7 +71,7 @@
                         </span>
                     </ng-template>
                 </div>
-                <button (click)="toggleFavorite(movie.id)" class="favorite-btn">
+                <button (click)="toggleFavorite(movie.id!)" class="favorite-btn">
 
                     <i *ngIf="favoriteMap.has(movie.id)" class="pi pi-heart-fill liked"></i>
                     <i *ngIf="!favoriteMap.has(movie.id)" class="pi pi-heart"></i>
@@ -106,7 +106,7 @@
                             Not yet Released
                         </span>
                     </div>
-                    <button (click)="toggleFavorite(movie.id)" class="favorite-btn">
+                    <button (click)="toggleFavorite(movie.id!)" class="favorite-btn">
 
                         <i *ngIf="favoriteMap.has(movie.id)" class="pi pi-heart-fill liked"></i>
                         <i *ngIf="!favoriteMap.has(movie.id)" class="pi pi-heart"></i>
@@ -128,7 +128,7 @@
                         Not yet Released
                     </span>
                 </div>
-                <button (click)="toggleFavorite(movie.id)" class="favorite-btn">
+                <button (click)="toggleFavorite(movie.id!)" class="favorite-btn">
 
                     <i *ngIf="favoriteMap.has(movie.id)" class="pi pi-heart-fill liked"></i>
                     <i *ngIf="!favoriteMap.has(movie.id)" class="pi pi-heart"></i>

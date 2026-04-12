@@ -3,6 +3,9 @@ package theatreBooking;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @RestController
 @RequestMapping("/api/movies")
@@ -35,4 +38,12 @@ public class MovieController {
     public List<Movie> getByStatus(@RequestParam String status) {
         return movieService.getByStatus(status);
     }
+
+    //newly added post method for controller
+    @PostMapping("/post")
+    public Movie postMethodName(@RequestBody Movie newMovie) {
+        // Movie newMovie = movieService.addMovie(null)
+        return movieService.addMovie(newMovie);
+    }
+    
 }
