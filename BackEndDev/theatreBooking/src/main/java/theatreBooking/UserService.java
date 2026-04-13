@@ -349,6 +349,7 @@ public class UserService {
         }
 
         PaymentCard card = new PaymentCard();
+        card.setCardHolderName(request.cardHolderName);
         card.setCardType(request.cardType);
         card.setCardNumber(request.cardNumber);
         card.setExpirationDate(request.expirationDate);

@@ -22,7 +22,8 @@ export class LoginPage {
   password = '';
   error = '';
   successMessage = '';
-  loading = false;
+  loginLoading = false;
+  forgotPasswordLoading = false;
 
   showPassword: boolean = false;
 
@@ -39,10 +40,10 @@ export class LoginPage {
       return;
     }
 
-    this.loading = true;
+    this.forgotPasswordLoading = true;
 
     this.auth.forgotPassword(this.email.trim())
-      .pipe(finalize(() => this.loading = false))
+      .pipe(finalize(() => this.forgotPasswordLoading = false))
       .subscribe({
         next: () => {
           this.successMessage =
@@ -65,20 +66,21 @@ export class LoginPage {
 
   login() {
     this.error = '';
+    this.successMessage = '';
 
     if (!this.email || !this.password) {
       this.error = 'Please enter email and password';
       return;
     }
 
-    this.loading = true;
+    this.loginLoading = true;
 
     this.auth.login({
       email: this.email.trim(),
       password: this.password
     }).pipe(
       finalize(() => {
-        this.loading = false;
+        this.loginLoading = false;
       })
     ).subscribe({
       next: (res: LoginResponse) => {

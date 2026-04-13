@@ -23,6 +23,14 @@
     margin-top: 40px;
 }
 
+.booking-blocked {
+    margin-top: 30px;
+    padding: 18px 20px;
+    border-left: 4px solid #d97706;
+    background: #fff7ed;
+    color: #7c2d12;
+}
+
 .left-column,
 .right-column {
     display: flex;
@@ -156,5 +164,155 @@
     margin-top: 20px;
     transform: translateX(-50px);
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
     justify-content: center;
+}
+
+.checkout-error {
+    margin: 0;
+    color: #b91c1c;
+    font-weight: 600;
+}
+
+.summary-list {
+    display: grid;
+    gap: 12px;
+}
+
+.summary-list div {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 12px;
+    align-items: start;
+}
+
+.summary-list span {
+    color: #555;
+    font-weight: 600;
+}
+
+.email-confirmation {
+    display: grid;
+    gap: 8px;
+    margin-top: 24px;
+}
+
+.email-confirmation input {
+    width: 100%;
+}
+
+.email-confirmation small {
+    color: #666;
+}
+
+.dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.payment-mock {
+    display: grid;
+    gap: 12px;
+    padding-right: 4px;
+}
+
+.payment-grid,
+.field-group {
+    display: grid;
+    gap: 8px;
+}
+
+.payment-choice {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.saved-cards {
+    display: grid;
+    gap: 10px;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+}
+
+.saved-card-option {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.field-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+:host ::ng-deep .p-dialog {
+    max-width: 95vw;
+}
+
+:host ::ng-deep .p-dialog-content {
+    overflow: visible;
+}
+
+.payment-summary {
+    display: grid;
+    gap: 10px;
+    margin-top: 8px;
+    padding: 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+}
+
+.payment-summary div {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.success-state {
+    display: grid;
+    gap: 14px;
+}
+
+.qr-ticket {
+    display: grid;
+    justify-items: center;
+    gap: 8px;
+}
+
+.qr-ticket img {
+    width: 220px;
+    height: 220px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    padding: 12px;
+    background: #fff;
+}
+
+.qr-ticket small {
+    color: #666;
+    text-align: center;
+}
+
+@media (max-width: 900px) {
+    .details-container {
+        flex-direction: column;
+    }
+
+    .main-booking-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .checkout-wrapper {
+        transform: none;
+    }
+
+    .field-row {
+        grid-template-columns: 1fr;
+    }
 }

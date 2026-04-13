@@ -1,17 +1,23 @@
 package theatreBooking;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class PaymentCard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String cardHolderName;
+
+    @Convert(converter = PaymentCardEncryptionConverter.class)
     private String cardNumber;
     private String cardType;
     private String expirationDate;
     private String billingZipCode;
+
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
@@ -22,6 +28,14 @@ public class PaymentCard {
 
     public String getCardNumber() {
         return cardNumber;
+    }
+
+    public String getCardHolderName() {
+        return cardHolderName;
+    }
+
+    public void setCardHolderName(String cardholderName) {
+        this.cardHolderName = cardholderName;
     }
 
     public void setCardNumber(String cardNumber) {

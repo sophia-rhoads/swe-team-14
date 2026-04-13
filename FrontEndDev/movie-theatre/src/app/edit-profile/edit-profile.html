@@ -15,37 +15,72 @@
 
       <h2>User Profile</h2>
 
-      <div *ngIf="saveMessage" style="color:green">{{ saveMessage }}</div>
-      <div *ngIf="errorMessage" style="color:red">{{ errorMessage }}</div>
+      <div *ngIf="saveMessage" class="form-message success">{{ saveMessage }}</div>
+      <div *ngIf="errorMessage" class="form-message error">{{ errorMessage }}</div>
 
-      <div class="grid">
+      <div class="profile-form-grid">
+        <div class="field-group">
+          <label for="username">Username</label>
+          <input id="username" pInputText [(ngModel)]="userName" placeholder="Username" />
+        </div>
+        <div class="field-group">
+          <label for="firstName">First Name</label>
+          <input id="firstName" pInputText [(ngModel)]="firstName" placeholder="First Name" />
+        </div>
+        <div class="field-group">
+          <label for="lastName">Last Name</label>
+          <input id="lastName" pInputText [(ngModel)]="lastName" placeholder="Last Name" />
+        </div>
+        <div class="field-group">
+          <label for="email">Email</label>
+          <input id="email" pInputText [(ngModel)]="email" disabled placeholder="Email" />
+        </div>
+        <div class="field-group phone-field">
+          <label for="phoneNumber">Mobile Number</label>
+          <div class="phone-input-group">
+            <p-select [options]="countryCodes" [(ngModel)]="countryCode" optionLabel="label" optionValue="value">
+            </p-select>
+            <input id="phoneNumber" pInputText [(ngModel)]="phoneNumberOnly" placeholder="Phone Number" maxlength="10"
+              inputmode="numeric" />
+          </div>
+        </div>
+        <div class="field-group">
+          <label for="dateOfBirth">Date of Birth</label>
+          <p-datepicker [(ngModel)]="dateOfBirth" inputId="dateOfBirth" dateFormat="mm-dd-yy" [showIcon]="true">
+          </p-datepicker>
+        </div>
+        <div class="field-group">
+          <label for="password">New Password</label>
+          <input id="password" pInputText [(ngModel)]="password" type="password" placeholder="New Password" />
+        </div>
 
-        <input pInputText [(ngModel)]="userName" placeholder="Username" />
-        <input pInputText [(ngModel)]="firstName" placeholder="First Name" />
-        <input pInputText [(ngModel)]="lastName" placeholder="Last Name" />
+        <h3>Address</h3>
 
-        <input pInputText [(ngModel)]="email" disabled placeholder="Email" />
-        <input pInputText [(ngModel)]="phoneNum" placeholder="Phone" />
+        <div class="address-form-grid">
+          <div class="field-group">
+            <label for="street">Street</label>
+            <input id="street" pInputText [(ngModel)]="usrAddress" placeholder="Street" />
+          </div>
+          <div class="field-group">
+            <label for="city">City</label>
+            <input id="city" pInputText [(ngModel)]="usrCity" placeholder="City" />
+          </div>
+          <div class="field-group">
+            <label for="state">State</label>
+            <input id="state" pInputText [(ngModel)]="usrState" placeholder="State" />
+          </div>
+          <div class="field-group">
+            <label for="zipCode">ZIP Code</label>
+            <input id="zipCode" pInputText [(ngModel)]="usrZipCode" placeholder="ZIP Code" inputmode="numeric" />
+          </div>
+        </div>
 
-        <input pInputText [(ngModel)]="dateOfBirth" placeholder="YYYY-MM-DD" />
+        <br>
 
-        <input pInputText [(ngModel)]="password" type="password" placeholder="New Password" />
-
+        <div class="profile-actions">
+          <button pButton label="Save Profile" (click)="updateProfile()"></button>
+        </div>
       </div>
-
-      <h3>Address</h3>
-
-      <div class="grid">
-        <input pInputText [(ngModel)]="usrAddress" placeholder="Street" />
-        <input pInputText [(ngModel)]="usrCity" placeholder="City" />
-        <input pInputText [(ngModel)]="usrState" placeholder="State" />
-        <input pInputText [(ngModel)]="usrZipCode" placeholder="Zip Code" />
-      </div>
-
-      <br>
-
-      <button pButton label="Save Profile" (click)="updateProfile()"></button>
-
     </p-tabpanel>
 
     <!-- FAVORITES -->
@@ -95,15 +130,119 @@
     <!-- ORDERS -->
     <p-tabpanel value="orders">
       <h2>Booking History</h2>
-      <p>Coming soon...</p>
+      <div *ngIf="bookingHistory.length === 0" class="empty-message">
+        No bookings yet.
+      </div>
+
+      <p-table *ngIf="bookingHistory.length > 0" [value]="bookingHistory" responsiveLayout="scroll"
+        styleClass="booking-history-table">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Reference</th>
+            <th>Movie</th>
+            <th>Showtime</th>
+            <th>Seats</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>QR Ticket</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-booking>
+          <tr>
+            <td>{{ booking.bookingReference }}</td>
+            <td><button pButton type="button" class="link-button" [text]="true" (click)="openBookingDetails(booking)">{{
+                booking.movieTitle }}</button></td>
+            <td>{{ booking.showDate | date:'mediumDate' }}<br>{{ booking.showTime }}</td>
+            <td>{{ booking.seatNumbers }}</td>
+            <td>{{ booking.totalAmount | currency }}</td>
+            <td>{{ booking.paymentStatus }}</td>
+            <td>
+              <img class="history-qr" [src]="booking.qrCodeDataUrl" alt="Booking QR Code">
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
     </p-tabpanel>
 
     <!-- PAYMENTS -->
     <p-tabpanel value="payments">
       <h2>Payment Methods</h2>
-      <p>Coming soon...</p>
+      <div *ngIf="paymentMessage" class="payment-message">{{ paymentMessage }}</div>
+      <div class="card-form">
+        <div class="field-group">
+          <label for="newCardHolderName">Card Holder Name</label>
+          <input id="newCardHolderName" pInputText [(ngModel)]="newCardHolderName" placeholder="Card Holder Name" />
+        </div>
+        <div class="field-group">
+          <label for="newCardNumber">Card Number</label>
+          <input id="newCardNumber" pInputText [(ngModel)]="newCardNumber" placeholder="1234123412341234" maxlength="19"
+            inputmode="numeric" (input)="formatCardNumberInput()" />
+        </div>
+        <div class="field-group">
+          <label for="newCardType">Card Type</label>
+          <p-select inputId="newCardType" [options]="cardTypes" [(ngModel)]="newCardType" optionLabel="label"
+            optionValue="value" placeholder="Select card type"></p-select>
+        </div>
+        <div class="field-group">
+          <label for="newCardExpiry">Expiry Date</label>
+          <p-datepicker [(ngModel)]="newCardExpiry" inputId="newCardExpiry" view="month" dateFormat="mm/yy"
+            [showIcon]="true" [readonlyInput]="true"></p-datepicker>
+        </div>
+        <div class="field-group">
+          <label for="newCardZip">Billing ZIP</label>
+          <input id="newCardZip" pInputText [(ngModel)]="newCardZip" placeholder="Billing ZIP" maxlength="5"
+            inputmode="numeric" (input)="formatZipInput()" />
+        </div>
+        <div class="card-form-action">
+          <button pButton label="Save Card" (click)="addPaymentCard()" [disabled]="savedCards.length >= 3"></button>
+        </div>
+      </div>
+      <div *ngIf="savedCards.length >= 3" class="empty-message">
+        Maximum 3 saved cards reached.
+      </div>
+      <p-table *ngIf="savedCards.length > 0" [value]="savedCards" responsiveLayout="scroll">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Card Holder Name</th>
+            <th>Card Type</th>
+            <th>Card Number</th>
+            <th>Expiry</th>
+            <th>ZIP</th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-card>
+          <tr>
+            <td>{{ card.cardholderName}}</td>
+            <td>{{ card.cardType }}</td>
+            <td>{{ maskCard(card.cardNumber) }}</td>
+            <td>{{ card.expirationDate }}</td>
+            <td>{{ card.billingZipCode }}</td>
+            <td><button pButton type="button" severity="danger" label="Delete" (click)="deleteCard(card.id)"></button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
     </p-tabpanel>
 
   </p-tabpanels>
 
 </p-tabs>
+<p-dialog header="Booking Summary" [(visible)]="bookingDetailsVisible" [modal]="true" [closable]="true"
+  [style]="{ width: '520px' }" (onHide)="closeBookingDetails()">
+  <div class="summary-list" *ngIf="selectedBooking as booking">
+    <div><span>Movie</span><strong>{{ booking.movieTitle }}</strong></div>
+    <div><span>Reference</span><strong>{{ booking.bookingReference }}</strong></div>
+    <div><span>Showtime</span><strong>{{ booking.showDate | date:'mediumDate' }} at {{ booking.showTime }}</strong>
+    </div>
+    <div><span>Seats</span><strong>{{ booking.seatNumbers }}</strong></div>
+    <div><span>Total</span><strong>{{ booking.totalAmount | currency }}</strong></div>
+    <div><span>Payment</span><strong>{{ booking.paymentCardBrand }} ending in {{ booking.paymentCardLast4
+        }}</strong></div>
+    <div><span>Approval Code</span><strong>{{ booking.paymentApprovalCode }}</strong></div>
+    <div><span>Status</span><strong>{{ booking.paymentStatus }}</strong></div>
+  </div>
+  <div class="qr-ticket" *ngIf="selectedBooking as booking">
+    <img [src]="booking.qrCodeDataUrl" alt="Booking QR Code">
+  </div>
+</p-dialog>

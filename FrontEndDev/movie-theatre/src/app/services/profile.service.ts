@@ -32,6 +32,15 @@ export interface UpdateProfileRequest {
   address: Address;
 }
 
+export interface PaymentCard {
+  id: number;
+  cardholderName: String;
+  cardNumber: string;
+  cardType: string;
+  expirationDate: string;
+  billingZipCode: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
