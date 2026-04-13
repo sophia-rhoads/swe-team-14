@@ -12,11 +12,18 @@ public class Showroom {
     private Long id;
     private int capacity;
 
+ private List<Seat> seats;
+
     @OneToMany(mappedBy = "showroom", cascade = CascadeType.ALL)
     private List<Showtime> showtimes;
 
-    public int setTotalSeats() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setTotalSeats'");
-    }
+    public Long getId() { return id; }
+
+    public List<Seat> getSeats() {
+         return seats;
+         }
+    public void setSeats(List<Seat> seats) {
+         this.seats = seats; 
+        }
+ 
 }

@@ -1,6 +1,7 @@
 package theatreBooking;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import jakarta.persistence.*;
 
@@ -20,6 +21,10 @@ public class Showtime{
     @JoinColumn(name = "room_id")
     private Showroom showroom;
     private int totalSeats;
+
+    @OneToMany
+@JoinColumn(name = "showtime_id")
+private List<Seat> seats;
 
 public Long getId() {
         return id;
@@ -59,6 +64,13 @@ public int getTotalSeats() {
 public void setTotalSeats(int totalSeats) {
      this.totalSeats = totalSeats;
      }
+
+public List<Seat> getSeats() {
+         return seats;
+         }
+    public void setSeats(List<Seat> seats) {
+         this.seats = seats; 
+        }
 
 
 }
