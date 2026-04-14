@@ -97,6 +97,8 @@ export class Admin {
       (response: any) => console.log('Success!', response),
       (error: any) => console.error('Error!', error)
     );
+
+    this.visible = false;
   }
 
 }

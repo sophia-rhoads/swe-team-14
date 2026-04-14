@@ -65,7 +65,7 @@
             </div>
             <div class="book-button">
                 <button pButton label="Book Tickets" icon="pi pi-ticket" [disabled]="!showTimes || !selectedDate"
-                    (click)="goToBooking(movie.id)">
+                    (click)="goToBooking(movie.id!)">
                 </button>
             </div>
         </div>
