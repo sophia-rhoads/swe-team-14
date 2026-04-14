@@ -4,7 +4,6 @@
     </div>
 </ng-template>
 <ng-container *ngIf="movie$ | async as movie; else loading">
-    <!-- Movie Details -->
     <div class="details-container">
         <div class="details-left">
             <img [src]="movie.posterUrl" class="poster">
@@ -24,9 +23,7 @@
                 <p>This movie is coming soon. Ticket booking will open after release.</p>
             </div>
             <ng-template #bookingForm>
-                <!-- Main Booking Grid-->
                 <div class="main-booking-grid">
-                    <!-- Left Side -->
                     <div class="left-column">
                         <div>
                             <h3>Select Date</h3>
@@ -50,7 +47,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Right side-->
                     <div class="right-column">
                         <div>
                             <h3>Select Show Time</h3>
@@ -79,42 +75,32 @@
                         </div>
                         <div>
                             <h3>Select Seats</h3>
-                            <!-- Graphical layout representation -->
                             <div class="column-numbers">
                                 <span></span>
                                 <span *ngFor="let col of [1,2,3,4,5,6,7]">{{ col }}</span>
                             </div>
-                            <!-- A,B,C -->
                             <div class="seat-row" *ngFor="let row of ['A','B','C']">
                                 <span class="row-label">{{ row }}</span>
                                 <div class="seat" *ngFor="let col of [1,2,3,4,5,6,7]"
                                     [class.selected]="isSelected(row + col)" [class.disabled]="isDisabled(row + col)"
                                     (click)="selectSeat(row + col)">
-                                    <ng-container *ngIf="isSelected(row + col); else seatIcon">
-                                        {{ row + col }}
-                                    </ng-container>
-                                    <ng-template #seatIcon>
-                                        <img src="./armchair.png" class="seat-icon">
-                                    </ng-template>
+                                    <ng-container *ngIf="isSelected(row + col); else seatIcon">{{ row + col
+                                        }}</ng-container>
+                                    <ng-template #seatIcon><img src="./armchair.png" class="seat-icon"></ng-template>
                                 </div>
                             </div>
-                            <!-- D,E -->
                             <div class="seat-row" *ngFor="let row of ['D','E']">
                                 <span class="row-label">{{ row }}</span>
                                 <div class="seat placeholder"></div>
                                 <div class="seat" *ngFor="let col of [1,2,3,4,5]"
                                     [class.selected]="isSelected(row + col)" [class.disabled]="isDisabled(row + col)"
                                     (click)="selectSeat(row + col)">
-                                    <ng-container *ngIf="isSelected(row + col); else seatIcon">
-                                        {{ row + col }}
-                                    </ng-container>
-                                    <ng-template #seatIcon>
-                                        <img src="./armchair.png" class="seat-icon">
-                                    </ng-template>
+                                    <ng-container *ngIf="isSelected(row + col); else seatIcon">{{ row + col
+                                        }}</ng-container>
+                                    <ng-template #seatIcon><img src="./armchair.png" class="seat-icon"></ng-template>
                                 </div>
                                 <div class="seat placeholder"></div>
                             </div>
-                            <!-- SCREEN -->
                             <div class="screen-wrapper">
                                 <div class="screen-curve">
                                     <div class="screen-text">SCREEN</div>
@@ -133,52 +119,25 @@
         </div>
     </div>
 </ng-container>
-<!--
-<p-dialog header="Booking Confirmed" [(visible)]="displayDialog" [modal]="true" [closable]="true">
-    <p>
-        🎉 {{ totalTickets }} tickets successfully booked!
-    </p>
-</p-dialog>
 
--->
+<!-- ORDER SUMMARY DIALOG -->
 <p-dialog header="Order Summary" [(visible)]="displayDialog" [modal]="true" [closable]="true"
     [style]="{ width: '520px' }">
     <ng-container *ngIf="movie$ | async as movie">
         <div class="summary-list">
-            <div>
-                <span>Movie</span>
-                <strong>{{ movie.title }}</strong>
-            </div>
-            <div>
-                <span>Showtime</span>
-                <strong>{{ selectedDate | date:'mediumDate' }} at {{ showTimes }}</strong>
-            </div>
-            <div>
-                <span>Selected Seats</span>
-                <strong>{{ selectedSeatsLabel }}</strong>
-            </div>
-            <div>
-                <span>Tickets</span>
-                <strong>{{ ticketSummary }}</strong>
-            </div>
-            <div>
-                <span>Price per Ticket</span>
-                <strong>Adult $5.00, Child $2.50, Senior $3.50</strong>
-            </div>
-            <div>
-                <span>Total Before Tax</span>
-                <strong>{{ subtotal | currency }}</strong>
-            </div>
+            <div><span>Movie</span><strong>{{ movie.title }}</strong></div>
+            <div><span>Showtime</span><strong>{{ selectedDate | date:'mediumDate' }} at {{ showTimes }}</strong></div>
+            <div><span>Selected Seats</span><strong>{{ selectedSeatsLabel }}</strong></div>
+            <div><span>Tickets</span><strong>{{ ticketSummary }}</strong></div>
+            <div><span>Price per Ticket</span><strong>Adult $5.00, Child $2.50, Senior $3.50</strong></div>
+            <div><span>Total Before Tax</span><strong>{{ subtotal | currency }}</strong></div>
         </div>
-
         <div class="email-confirmation">
             <label for="checkoutEmail">Confirmation Email</label>
             <input id="checkoutEmail" pInputText [(ngModel)]="checkoutEmail" placeholder="email@example.com">
             <small>Use your account email or enter a different address for this order.</small>
         </div>
-
         <p class="checkout-error" *ngIf="checkoutError">{{ checkoutError }}</p>
-
         <div class="dialog-actions">
             <p-button label="Proceed to Payment" icon="pi pi-credit-card" (click)="continueToPayment()">
             </p-button>
@@ -186,18 +145,34 @@
     </ng-container>
 </p-dialog>
 
+<!-- PAYMENT DIALOG -->
 <p-dialog header="Payment Processing" [(visible)]="paymentDialog" [modal]="true" [closable]="true"
     [style]="{ width: '720px', maxWidth: '95vw' }" [contentStyle]="{ overflow: 'visible' }">
     <ng-container *ngIf="movie$ | async as movie">
         <div class="payment-mock">
             <h3>Secure payment</h3>
             <p>Your order confirmation will be sent to {{ checkoutEmail }} after successful payment.</p>
+
+            <!--
+            TEST MODE BANNER — uncomment during demo to show simulated payment test cases:
+
+            <div class="test-mode-banner">
+                <i class="pi pi-info-circle"></i>
+                <strong>Simulated Payment — Test Mode</strong>
+                <span>Use CVV <code>000</code> or <code>0000</code> to simulate a declined card.
+                      Use CVV <code>999</code> or <code>9999</code> to simulate insufficient funds.
+                      Any other valid CVV completes successfully.</span>
+            </div>
+            -->
+
             <div class="payment-choice" *ngIf="hasStoredCards">
                 <button pButton type="button" size="small" [outlined]="!useSavedCard" label="Use Saved Card"
                     (click)="switchPaymentMode(true)"></button>
                 <button pButton type="button" size="small" [outlined]="useSavedCard" label="Use Different Card"
                     (click)="switchPaymentMode(false)"></button>
             </div>
+
+            <!-- SAVED CARD SECTION -->
             <div class="saved-cards" *ngIf="hasStoredCards && useSavedCard">
                 <label class="saved-card-option" *ngFor="let card of storedCards">
                     <input type="radio" name="savedCard" [checked]="selectedCardId === card.id"
@@ -206,22 +181,24 @@
                 </label>
                 <div class="field-group">
                     <label for="savedPaymentCvv">CVV</label>
-                    <input id="savedPaymentCvv" pInputText [(ngModel)]="paymentCvv" placeholder="CVV" maxlength="4"
+                    <input id="savedPaymentCvv" pInputText [(ngModel)]="paymentCvv" placeholder="123" maxlength="4"
                         type="password" inputmode="numeric" (input)="formatPaymentCvvInput()">
                 </div>
             </div>
-            <div class="payment-grid">
-                <div class="field-group" *ngIf="!useSavedCard || !hasStoredCards">
+
+            <!-- MANUAL CARD SECTION -->
+            <div class="payment-grid" *ngIf="!useSavedCard || !hasStoredCards">
+                <div class="field-group">
                     <label for="paymentName">Cardholder Name</label>
                     <input id="paymentName" pInputText [(ngModel)]="paymentName" placeholder="Full name">
                 </div>
-                <div class="field-group" *ngIf="!useSavedCard || !hasStoredCards">
+                <div class="field-group">
                     <label for="paymentCardNumber">Card Number</label>
                     <input id="paymentCardNumber" pInputText [(ngModel)]="paymentCardNumber"
-                        placeholder="4242424242424242" maxlength="19" inputmode="numeric"
+                        placeholder="4242 4242 4242 4242" maxlength="19" inputmode="numeric"
                         (input)="formatPaymentCardNumberInput()">
                 </div>
-                <div class="field-row" *ngIf="!useSavedCard || !hasStoredCards">
+                <div class="field-row">
                     <div class="field-group">
                         <label for="paymentExpiryDate">Expiry</label>
                         <p-datepicker [(ngModel)]="paymentExpiryDate" inputId="paymentExpiryDate" view="month"
@@ -229,7 +206,7 @@
                     </div>
                     <div class="field-group">
                         <label for="manualPaymentCvv">CVV</label>
-                        <input id="manualPaymentCvv" pInputText [(ngModel)]="paymentCvv" placeholder="CVV" maxlength="4"
+                        <input id="manualPaymentCvv" pInputText [(ngModel)]="paymentCvv" placeholder="123" maxlength="4"
                             type="password" inputmode="numeric" (input)="formatPaymentCvvInput()">
                     </div>
                     <div class="field-group">
@@ -239,9 +216,10 @@
                     </div>
                 </div>
             </div>
+
             <div class="payment-summary">
                 <div><span>Subtotal</span><strong>{{ subtotal | currency }}</strong></div>
-                <div><span>Estimated Tax (5%)</span><strong>{{ estimatedTax | currency }}</strong></div>
+                <div><span>Estimated Tax (7%)</span><strong>{{ estimatedTax | currency }}</strong></div>
                 <div><span>Total</span><strong>{{ totalWithTax | currency }}</strong></div>
             </div>
             <p class="checkout-error" *ngIf="paymentError">{{ paymentError }}</p>
@@ -250,30 +228,42 @@
                     [loading]="paymentProcessing"></p-button>
             </div>
         </div>
-        <p-dialog header="Transaction Complete" [(visible)]="paymentSuccessDialog" [modal]="true" [closable]="true"
-            [style]="{ width: '520px' }" (onHide)="closeSuccessDialog()">
-            <div class="success-state" *ngIf="completedBooking as booking">
-                <h3>Payment Approved</h3>
-                <p>The order confirmation email was sent to {{ booking.confirmationEmail }}.</p>
-                <div class="payment-summary">
-                    <div><span>Booking Reference</span><strong>{{ booking.bookingReference }}</strong></div>
-                    <div><span>Approval Code</span><strong>{{ booking.paymentApprovalCode }}</strong></div>
-                    <div><span>Total Paid</span><strong>{{ booking.totalAmount | currency }}</strong></div>
-                    <div><span>Movie</span><strong>{{ booking.movieTitle }}</strong></div>
-                    <div><span>Showtime</span><strong>{{ booking.showDate | date:'mediumDate' }} at {{ booking.showTime
-                            }}</strong></div>
-                    <div><span>Seats</span><strong>{{ booking.seatNumbers }}</strong></div>
-                    <div><span>Payment Method</span><strong>{{ booking.paymentCardBrand }} ending in {{
-                            booking.paymentCardLast4 }}</strong></div>
-                </div>
-                <div class="qr-ticket">
-                    <img [src]="booking.qrCodeDataUrl" alt="Ticket QR Code">
-                    <small>Use this QR code from Booking History for theatre entry scanning.</small>
-                </div>
-                <div class="dialog-actions">
-                    <p-button label="Done" icon="pi pi-check" (click)="closeSuccessDialog()"></p-button>
-                </div>
-            </div>
-        </p-dialog>
     </ng-container>
+</p-dialog>
+
+<!--
+    TRANSACTION COMPLETE DIALOG
+    Placed as a TOP-LEVEL SIBLING — NOT nested inside the payment dialog.
+    This is the fix for the UI freeze: when paymentDialog closes, Angular destroys
+    its ng-container children. Having the success dialog nested inside meant it was
+    destroyed before it could render. As a sibling it has its own independent lifecycle.
+    Both the X button (onHide) and the Done button call closeSuccessDialog()
+    which navigates the user back to the home page.
+-->
+<p-dialog header="Transaction Complete" [(visible)]="paymentSuccessDialog" [modal]="true" [closable]="true"
+    [style]="{ width: '560px' }" (onHide)="closeSuccessDialog()">
+    <div class="success-state" *ngIf="completedBooking as booking">
+        <h3>Payment Approved ✅</h3>
+        <p>The order confirmation email was sent to <strong>{{ booking.confirmationEmail }}</strong>.</p>
+        <div class="payment-summary">
+            <div><span>Booking Reference</span><strong>{{ booking.bookingReference }}</strong></div>
+            <div><span>Approval Code</span><strong>{{ booking.paymentApprovalCode }}</strong></div>
+            <div><span>Total Paid</span><strong>{{ booking.totalAmount | currency }}</strong></div>
+            <div><span>Movie</span><strong>{{ booking.movieTitle }}</strong></div>
+            <div><span>Showtime</span>
+                <strong>{{ booking.showDate | date:'mediumDate' }} at {{ booking.showTime }}</strong>
+            </div>
+            <div><span>Seats</span><strong>{{ booking.seatNumbers }}</strong></div>
+            <div><span>Payment Method</span>
+                <strong>{{ booking.paymentCardBrand }} ending in {{ booking.paymentCardLast4 }}</strong>
+            </div>
+        </div>
+        <div class="qr-ticket">
+            <img [src]="booking.qrCodeDataUrl" alt="Ticket QR Code">
+            <small>Present this QR code at the theatre entrance for scanning.</small>
+        </div>
+        <div class="dialog-actions">
+            <p-button label="Done" icon="pi pi-check" (click)="closeSuccessDialog()"></p-button>
+        </div>
+    </div>
 </p-dialog>

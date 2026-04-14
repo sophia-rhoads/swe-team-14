@@ -1,119 +1,102 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { ActivatedRoute } from '@angular/router';
-
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
-import { ChangeDetectorRef } from '@angular/core';
 import { InputTextModule } from 'primeng/inputtext';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { HttpClientModule } from '@angular/common/http';
+import { AuthService } from '../services/auth.services';
 
 @Component({
     selector: 'app-reset-password',
     standalone: true,
-    imports: [FormsModule, CommonModule, ButtonModule, InputTextModule, ProgressSpinnerModule, HttpClientModule],
+    imports: [FormsModule, CommonModule, ButtonModule, InputTextModule, RouterLink],
     templateUrl: './reset-password.html',
     styleUrls: ['./reset-password.scss']
 })
-export class ResetPasswordPage implements OnInit {
+export class ResetPasswordPage implements OnInit, OnDestroy {
 
     token: string | null = null;
+    newPassword = '';
+    confirmPassword = '';
+    showNewPassword = false;
+    showConfirmPassword = false;
+    isLoading = false;
+    error = '';
+    success = '';
+    countdown = 5;
 
-    error: string = '';
-    success: string = '';
-
-    newPassword: string = '';
-    confirmPassword: string = '';
-
-    showNewPassword: boolean = false;
-    showConfirmPassword: boolean = false;
-
-    countdown: number = 5;
-    countdownInterval: any;
-
-    isLoading: boolean = false;
+    private countdownInterval: ReturnType<typeof setInterval> | null = null;
 
     constructor(
-        private http: HttpClient,
+        private authService: AuthService,
         private route: ActivatedRoute,
         private cdr: ChangeDetectorRef
     ) { }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.token = this.route.snapshot.queryParamMap.get('token');
     }
 
-    toggleNewPassword() {
+    ngOnDestroy(): void {
+        if (this.countdownInterval) {
+            clearInterval(this.countdownInterval);
+        }
+    }
+
+    toggleNewPassword(): void {
         this.showNewPassword = !this.showNewPassword;
     }
 
-    toggleConfirmPassword() {
+    toggleConfirmPassword(): void {
         this.showConfirmPassword = !this.showConfirmPassword;
     }
-    resetPassword() {
+
+    resetPassword(): void {
+        this.error = '';
+        this.success = '';
 
         if (!this.newPassword || !this.confirmPassword) {
-            this.error = "Please fill all fields";
+            this.error = 'Please fill all fields';
             return;
         }
 
         if (this.newPassword !== this.confirmPassword) {
-            this.error = "Passwords do not match";
+            this.error = 'Passwords do not match';
             return;
         }
 
-        const payload = {
-            token: this.token,
-            newPassword: this.newPassword,
-            confirmPassword: this.confirmPassword
-        };
-
-        console.log("Payload:", payload);
+        if (!this.token) {
+            this.error = 'Invalid or missing reset token';
+            return;
+        }
 
         this.isLoading = true;
 
-        this.http.post('http://localhost:8080/api/auth/reset-password', payload, {
-            responseType: 'text'
-        })
+        this.authService.resetPassword(this.token, this.newPassword, this.confirmPassword)
             .subscribe({
                 next: () => {
-
-                    this.success = "✅ Password reset successful!";
+                    this.success = 'Password reset successful!';
                     this.error = '';
                     this.isLoading = false;
-
                     this.cdr.detectChanges();
-                    this.countdown = 5;
 
+                    this.countdown = 5;
                     this.countdownInterval = setInterval(() => {
                         this.countdown--;
-
                         if (this.countdown === 0) {
-                            clearInterval(this.countdownInterval);
+                            clearInterval(this.countdownInterval!);
                             window.location.href = '/login';
                         }
                     }, 1000);
                 },
-                error: (err: any) => {
-
-                    this.error = err.error?.message || "Reset failed";
-                    this.success = "";
-
-                    setTimeout(() => {
-                        this.isLoading = false;
-                    }, 500);
-
+                error: (err) => {
+                    this.error = typeof err.error === 'string'
+                        ? err.error
+                        : err.error?.message || 'Reset failed. Please try again.';
+                    this.success = '';
+                    this.isLoading = false;
                     this.cdr.detectChanges();
-                    console.error(err);
                 }
             });
-    }
-
-    ngOnDestroy() {
-        if (this.countdownInterval) {
-            clearInterval(this.countdownInterval);
-        }
     }
 }

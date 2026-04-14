@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface PaymentDetailsPayload {
+    paymentCardId?: number | null;
     cardholderName: string;
     cardNumber: string;
     expiryDate: string;
@@ -47,10 +48,9 @@ export interface BookingRecord {
     bookedAt: string;
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class BookingService {
+
     private readonly baseUrl = 'http://localhost:8080/api/bookings';
 
     constructor(private http: HttpClient) { }

@@ -1,6 +1,5 @@
 <p-tabs>
 
-  <!-- TAB HEADERS -->
   <p-tablist>
     <p-tab value="profile">My Profile</p-tab>
     <p-tab value="favorites">My Favorites</p-tab>
@@ -12,9 +11,7 @@
 
     <!-- PROFILE TAB -->
     <p-tabpanel value="profile">
-
       <h2>User Profile</h2>
-
       <div *ngIf="saveMessage" class="form-message success">{{ saveMessage }}</div>
       <div *ngIf="errorMessage" class="form-message error">{{ errorMessage }}</div>
 
@@ -53,9 +50,11 @@
           <label for="password">New Password</label>
           <input id="password" pInputText [(ngModel)]="password" type="password" placeholder="New Password" />
         </div>
+      </div>
 
+      <!-- ADDRESS SECTION — full-width break outside the 2-column grid -->
+      <div class="address-section">
         <h3>Address</h3>
-
         <div class="address-form-grid">
           <div class="field-group">
             <label for="street">Street</label>
@@ -74,66 +73,45 @@
             <input id="zipCode" pInputText [(ngModel)]="usrZipCode" placeholder="ZIP Code" inputmode="numeric" />
           </div>
         </div>
+      </div>
 
-        <br>
-
-        <div class="profile-actions">
-          <button pButton label="Save Profile" (click)="updateProfile()"></button>
-        </div>
+      <br>
+      <div class="profile-actions">
+        <button pButton label="Save Profile" (click)="updateProfile()"></button>
       </div>
     </p-tabpanel>
 
-    <!-- FAVORITES -->
+    <!-- FAVORITES TAB -->
     <p-tabpanel value="favorites">
-
       <h2>❤️ My Favorites</h2>
-
-      <div *ngIf="favoriteMovies.length === 0" class="empty-message">
-        No favorite movies yet.
-      </div>
-
+      <div *ngIf="favoriteMovies.length === 0" class="empty-message">No favorite movies yet.</div>
       <div class="movie-grid" *ngIf="favoriteMovies.length > 0">
-
         <div class="movie-card" *ngFor="let movie of favoriteMovies">
-
           <img [src]="movie.posterUrl" />
-
           <h3>{{ movie.title }}</h3>
-
           <div class="rating-section">
             <ng-container *ngIf="movie.imdbRating; else notReleasedFavorite">
               <p-rating [ngModel]="movie.imdbRating / 2" [readonly]="true"></p-rating>
-              <span class="rating-number">
-                {{ movie.imdbRating }} / 10
-              </span>
+              <span class="rating-number">{{ movie.imdbRating }} / 10</span>
             </ng-container>
             <ng-template #notReleasedFavorite>
-              <span class="not-released">
-                Not yet Released
-              </span>
+              <span class="not-released">Not yet Released</span>
             </ng-template>
           </div>
-
           <div class="favorite-actions">
             <button pButton class="p-button-sm p-button-primary" label="View Details" (click)="viewDetails(movie)">
             </button>
             <button pButton class="p-button-sm p-button-danger" label="Remove" (click)="removeFavorite(movie.id)">
             </button>
           </div>
-
         </div>
-
       </div>
-
     </p-tabpanel>
 
-    <!-- ORDERS -->
+    <!-- BOOKING HISTORY TAB -->
     <p-tabpanel value="orders">
       <h2>Booking History</h2>
-      <div *ngIf="bookingHistory.length === 0" class="empty-message">
-        No bookings yet.
-      </div>
-
+      <div *ngIf="bookingHistory.length === 0" class="empty-message">No bookings yet.</div>
       <p-table *ngIf="bookingHistory.length > 0" [value]="bookingHistory" responsiveLayout="scroll"
         styleClass="booking-history-table">
         <ng-template pTemplate="header">
@@ -150,24 +128,30 @@
         <ng-template pTemplate="body" let-booking>
           <tr>
             <td>{{ booking.bookingReference }}</td>
-            <td><button pButton type="button" class="link-button" [text]="true" (click)="openBookingDetails(booking)">{{
-                booking.movieTitle }}</button></td>
+            <td>
+              <button pButton type="button" class="link-button" [text]="true" (click)="openBookingDetails(booking)">
+                {{ booking.movieTitle }}
+              </button>
+            </td>
             <td>{{ booking.showDate | date:'mediumDate' }}<br>{{ booking.showTime }}</td>
             <td>{{ booking.seatNumbers }}</td>
             <td>{{ booking.totalAmount | currency }}</td>
             <td>{{ booking.paymentStatus }}</td>
-            <td>
-              <img class="history-qr" [src]="booking.qrCodeDataUrl" alt="Booking QR Code">
-            </td>
+            <td><img class="history-qr" [src]="booking.qrCodeDataUrl" alt="Booking QR Code"></td>
           </tr>
         </ng-template>
       </p-table>
     </p-tabpanel>
 
-    <!-- PAYMENTS -->
+    <!-- PAYMENT METHODS TAB -->
     <p-tabpanel value="payments">
       <h2>Payment Methods</h2>
-      <div *ngIf="paymentMessage" class="payment-message">{{ paymentMessage }}</div>
+
+      <div *ngIf="paymentMessage"
+        [ngClass]="paymentMessageType === 'success' ? 'form-message success' : 'form-message error'">
+        {{ paymentMessage }}
+      </div>
+
       <div class="card-form">
         <div class="field-group">
           <label for="newCardHolderName">Card Holder Name</label>
@@ -175,8 +159,8 @@
         </div>
         <div class="field-group">
           <label for="newCardNumber">Card Number</label>
-          <input id="newCardNumber" pInputText [(ngModel)]="newCardNumber" placeholder="1234123412341234" maxlength="19"
-            inputmode="numeric" (input)="formatCardNumberInput()" />
+          <input id="newCardNumber" pInputText [(ngModel)]="newCardNumber" placeholder="1234 1234 1234 1234"
+            maxlength="19" inputmode="numeric" (input)="formatCardNumberInput()" />
         </div>
         <div class="field-group">
           <label for="newCardType">Card Type</label>
@@ -190,16 +174,30 @@
         </div>
         <div class="field-group">
           <label for="newCardZip">Billing ZIP</label>
-          <input id="newCardZip" pInputText [(ngModel)]="newCardZip" placeholder="Billing ZIP" maxlength="5"
+          <input id="newCardZip" pInputText [(ngModel)]="newCardZip" placeholder="12345" maxlength="5"
             inputmode="numeric" (input)="formatZipInput()" />
+        </div>
+        <div class="field-group">
+          <label for="newCardCvv">CVV</label>
+          <input id="newCardCvv" pInputText [(ngModel)]="newCardCvv" placeholder="123" maxlength="4" type="password"
+            inputmode="numeric" (input)="formatCvvInput()" />
         </div>
         <div class="card-form-action">
           <button pButton label="Save Card" (click)="addPaymentCard()" [disabled]="savedCards.length >= 3"></button>
         </div>
       </div>
+
+      <!-- CVV security note -->
+      <p class="cvv-note">
+        <i class="pi pi-info-circle"></i>
+        For security, CVV is never stored. You will be asked to enter your CVV each time you pay at checkout to verify
+        the transaction.
+      </p>
+
       <div *ngIf="savedCards.length >= 3" class="empty-message">
         Maximum 3 saved cards reached.
       </div>
+
       <p-table *ngIf="savedCards.length > 0" [value]="savedCards" responsiveLayout="scroll">
         <ng-template pTemplate="header">
           <tr>
@@ -213,12 +211,14 @@
         </ng-template>
         <ng-template pTemplate="body" let-card>
           <tr>
-            <td>{{ card.cardholderName}}</td>
+            <td>{{ card.cardHolderName }}</td>
             <td>{{ card.cardType }}</td>
             <td>{{ maskCard(card.cardNumber) }}</td>
             <td>{{ card.expirationDate }}</td>
             <td>{{ card.billingZipCode }}</td>
-            <td><button pButton type="button" severity="danger" label="Delete" (click)="deleteCard(card.id)"></button>
+            <td>
+              <button pButton type="button" severity="danger" label="Delete" (click)="deleteCard(card.id)">
+              </button>
             </td>
           </tr>
         </ng-template>
@@ -228,6 +228,8 @@
   </p-tabpanels>
 
 </p-tabs>
+
+<!-- BOOKING DETAILS DIALOG -->
 <p-dialog header="Booking Summary" [(visible)]="bookingDetailsVisible" [modal]="true" [closable]="true"
   [style]="{ width: '520px' }" (onHide)="closeBookingDetails()">
   <div class="summary-list" *ngIf="selectedBooking as booking">
@@ -237,8 +239,8 @@
     </div>
     <div><span>Seats</span><strong>{{ booking.seatNumbers }}</strong></div>
     <div><span>Total</span><strong>{{ booking.totalAmount | currency }}</strong></div>
-    <div><span>Payment</span><strong>{{ booking.paymentCardBrand }} ending in {{ booking.paymentCardLast4
-        }}</strong></div>
+    <div><span>Payment</span><strong>{{ booking.paymentCardBrand }} ending in {{ booking.paymentCardLast4 }}</strong>
+    </div>
     <div><span>Approval Code</span><strong>{{ booking.paymentApprovalCode }}</strong></div>
     <div><span>Status</span><strong>{{ booking.paymentStatus }}</strong></div>
   </div>
