@@ -1,23 +1,36 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 
-interface Orders {
-  id: number;
-  movie: String;
-  numTickets: number;
-  cost: String;
-}
+import { AuthService } from '../services/auth.services';
+import { BookingRecord, BookingService } from '../services/booking.services';
 
 @Component({
   selector: 'app-order-history',
-  imports: [TableModule],
+  standalone: true,
+  imports: [TableModule, CommonModule],
   templateUrl: './order-history.html',
-  styleUrl: './order-history.scss',
+  styleUrl: './order-history.scss'
 })
+export class OrderHistory implements OnInit {
 
-export class OrderHistory {
-  orders: Orders[] = [
-    { id: 1, movie: 'The Matrix', numTickets: 3, cost: '$34' },
-    { id: 2, movie: 'Avatar', numTickets: 1, cost: '$12' },
-  ]
+  orders: BookingRecord[] = [];
+
+  constructor(
+    private authService: AuthService,
+    private bookingService: BookingService
+  ) { }
+
+  ngOnInit(): void {
+    const userId = this.authService.getUserId();
+    if (!userId) {
+      this.orders = [];
+      return;
+    }
+
+    this.bookingService.getBookingHistory(userId).subscribe({
+      next: orders => { this.orders = orders; },
+      error: () => { this.orders = []; }
+    });
+  }
 }

@@ -1,15 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { Table, TableModule } from 'primeng/table';
+import { Component } from '@angular/core';
+import { TableModule } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
 import { SelectModule } from 'primeng/select';
 import { ButtonModule } from 'primeng/button';
-import { CommonModule, NgIf } from '@angular/common';
-interface MenuTables {
-  name: String;
-}
-interface Data {
-  id: String;
-}
+
+interface MenuTable { name: string; }
+interface Data { id: string; }
+
 @Component({
   selector: 'app-admin',
   imports: [TableModule, FormsModule, SelectModule, ButtonModule],
@@ -17,9 +14,10 @@ interface Data {
   styleUrl: './admin.scss',
 })
 export class Admin {
-  tables?: MenuTables[];
-  viewTable?: MenuTables | undefined;
-  dataArr!: Data[];
+  tables: MenuTable[] = [];
+  viewTable: MenuTable | undefined;
+  dataArr: Data[] = [];
+
   ngOnInit() {
     this.tables = [
       { name: 'Movies' },
@@ -27,9 +25,6 @@ export class Admin {
       { name: 'Promotions' },
       { name: 'Showtimes' }
     ];
-    this.dataArr = [
-      { id: '' }
-    ]
-    console.log(this.viewTable?.name);
+    this.dataArr = [{ id: '' }];
   }
 }

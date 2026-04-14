@@ -23,11 +23,11 @@
         Forgot Password?
       </p>
 
-      <p *ngIf="loading" style="color:gray;">
+      <p *ngIf="forgotPasswordLoading" style="color:gray;">
         Sending reset link...
       </p>
 
-      <button pButton label="Login" [loading]="loading" (click)="login()">
+      <button pButton label="Login" [loading]="loginLoading" (click)="login()">
       </button>
 
       <p *ngIf="successMessage" class="success-text">
