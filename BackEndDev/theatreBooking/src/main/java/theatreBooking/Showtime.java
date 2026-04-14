@@ -26,8 +26,7 @@ public class Showtime{
 // @OneToMany(mappedBy = "showtime", cascade = CascadeType.ALL)
 // private List<Seat> seats;
 
-@OneToMany(cascade = CascadeType.ALL)
-@JoinColumn(name = "showtime_id")
+@OneToMany(mappedBy = "showtime", cascade = CascadeType.ALL)
 private List<Seat> seats;
 
 public Long getId() {
