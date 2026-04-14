@@ -1,6 +1,8 @@
 
     package theatreBooking;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -10,14 +12,17 @@ public class Seat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String seatNumber; // e.g. A1, B2
-
+    private String seatNumber;
     private boolean isBooked = false;
 
     @ManyToOne
     @JoinColumn(name = "showroom_id")
     private Showroom showroom;
 
+    @ManyToOne
+    @JoinColumn(name = "showtime_id")
+    private Showtime showtime;
+    
     public Long getId() {
          return id; 
     }

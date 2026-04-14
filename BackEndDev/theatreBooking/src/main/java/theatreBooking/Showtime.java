@@ -21,8 +21,12 @@ public class Showtime{
     @JoinColumn(name = "room_id")
     private Showroom showroom;
     private int totalSeats;
+    
 
-    @OneToMany
+// @OneToMany(mappedBy = "showtime", cascade = CascadeType.ALL)
+// private List<Seat> seats;
+
+@OneToMany(cascade = CascadeType.ALL)
 @JoinColumn(name = "showtime_id")
 private List<Seat> seats;
 

@@ -12,7 +12,8 @@ public class Showroom {
     private Long id;
     private int capacity;
 
- private List<Seat> seats;
+@OneToMany(mappedBy = "showtime", cascade = CascadeType.ALL)
+private List<Seat> seats;
 
     @OneToMany(mappedBy = "showroom", cascade = CascadeType.ALL)
     private List<Showtime> showtimes;
