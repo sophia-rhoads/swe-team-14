@@ -1,0 +1,109 @@
+<p-tabs>
+
+  <!-- TAB HEADERS -->
+  <p-tablist>
+    <p-tab value="profile">My Profile</p-tab>
+    <p-tab value="favorites">My Favorites</p-tab>
+    <p-tab value="orders">Booking History</p-tab>
+    <p-tab value="payments">Payment Methods</p-tab>
+  </p-tablist>
+
+  <p-tabpanels>
+
+    <!-- PROFILE TAB -->
+    <p-tabpanel value="profile">
+
+      <h2>User Profile</h2>
+
+      <div *ngIf="saveMessage" style="color:green">{{ saveMessage }}</div>
+      <div *ngIf="errorMessage" style="color:red">{{ errorMessage }}</div>
+
+      <div class="grid">
+
+        <input pInputText [(ngModel)]="userName" placeholder="Username" />
+        <input pInputText [(ngModel)]="firstName" placeholder="First Name" />
+        <input pInputText [(ngModel)]="lastName" placeholder="Last Name" />
+
+        <input pInputText [(ngModel)]="email" disabled placeholder="Email" />
+        <input pInputText [(ngModel)]="phoneNum" placeholder="Phone" />
+
+        <input pInputText [(ngModel)]="dateOfBirth" placeholder="YYYY-MM-DD" />
+
+        <input pInputText [(ngModel)]="password" type="password" placeholder="New Password" />
+
+      </div>
+
+      <h3>Address</h3>
+
+      <div class="grid">
+        <input pInputText [(ngModel)]="usrAddress" placeholder="Street" />
+        <input pInputText [(ngModel)]="usrCity" placeholder="City" />
+        <input pInputText [(ngModel)]="usrState" placeholder="State" />
+        <input pInputText [(ngModel)]="usrZipCode" placeholder="Zip Code" />
+      </div>
+
+      <br>
+
+      <button pButton label="Save Profile" (click)="updateProfile()"></button>
+
+    </p-tabpanel>
+
+    <!-- FAVORITES -->
+    <p-tabpanel value="favorites">
+
+      <h2>❤️ My Favorites</h2>
+
+      <div *ngIf="favoriteMovies.length === 0" class="empty-message">
+        No favorite movies yet.
+      </div>
+
+      <div class="movie-grid" *ngIf="favoriteMovies.length > 0">
+
+        <div class="movie-card" *ngFor="let movie of favoriteMovies">
+
+          <img [src]="movie.posterUrl" />
+
+          <h3>{{ movie.title }}</h3>
+
+          <div class="rating-section">
+            <ng-container *ngIf="movie.imdbRating; else notReleasedFavorite">
+              <p-rating [ngModel]="movie.imdbRating / 2" [readonly]="true"></p-rating>
+              <span class="rating-number">
+                {{ movie.imdbRating }} / 10
+              </span>
+            </ng-container>
+            <ng-template #notReleasedFavorite>
+              <span class="not-released">
+                Not yet Released
+              </span>
+            </ng-template>
+          </div>
+
+          <div class="favorite-actions">
+            <button pButton class="p-button-sm p-button-primary" label="View Details" (click)="viewDetails(movie)">
+            </button>
+            <button pButton class="p-button-sm p-button-danger" label="Remove" (click)="removeFavorite(movie.id)">
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </p-tabpanel>
+
+    <!-- ORDERS -->
+    <p-tabpanel value="orders">
+      <h2>Booking History</h2>
+      <p>Coming soon...</p>
+    </p-tabpanel>
+
+    <!-- PAYMENTS -->
+    <p-tabpanel value="payments">
+      <h2>Payment Methods</h2>
+      <p>Coming soon...</p>
+    </p-tabpanel>
+
+  </p-tabpanels>
+
+</p-tabs>

@@ -1,0 +1,29 @@
+<div class="favorites-page">
+
+    <h2>❤️ My Favorites</h2>
+
+    <div *ngIf="loading">Loading...</div>
+
+    <div *ngIf="favorites.length === 0">
+        No favorite movies yet.
+    </div>
+
+    <div class="movie-grid">
+
+        <div class="movie-card" *ngFor="let movie of favorites">
+
+            <img [src]="movie.posterUrl" />
+
+            <h3>{{ movie.title }}</h3>
+
+            <button pButton label="View Details" (click)="viewDetails(movie)">
+            </button>
+
+            <button pButton class="p-button-danger" label="Remove" (click)="removeFavorite(movie.id)">
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
