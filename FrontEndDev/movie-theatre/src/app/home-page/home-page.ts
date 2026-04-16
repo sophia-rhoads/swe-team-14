@@ -38,7 +38,8 @@ export class HomePage implements OnInit {
   showAllRunning = false;
   showAllComing = false;
 
-  favoriteMap: Set<number> = new Set();
+  //changed to undefined here
+  favoriteMap: Set<number | undefined> = new Set();
   private favoriteLoadVersion = 0;
   private pendingFavoriteToggles = new Set<number>();
 
@@ -94,7 +95,7 @@ export class HomePage implements OnInit {
         if (requestVersion !== this.favoriteLoadVersion) {
           return;
         }
-
+        //had to make a change here: movie.id -> movie.id!
         this.favoriteMap = new Set(res.map(movie => movie.id));
       });
   }

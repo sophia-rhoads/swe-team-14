@@ -5,7 +5,7 @@ import java.util.List;
 
 @Service
 public class MovieService {
-    private final MovieRepo movieRepo;
+    final MovieRepo movieRepo;
 
     public MovieService(MovieRepo movieRepo) {
         this.movieRepo = movieRepo;
@@ -31,5 +31,10 @@ public class MovieService {
     public List<Movie> getByStatus(String status) {
         return movieRepo.findByStatus(
                 MovieStatus.valueOf(status.toUpperCase()));
+    }
+
+    //newly added service
+    public Movie addMovie(Movie newMovie) {
+        return movieRepo.save(newMovie);
     }
 }
