@@ -1,27 +1,35 @@
 package theatreBooking;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import jakarta.persistence.*;
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Entity
-public class Showtime {
+public class Showtime{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long id;
+    LocalDateTime time;
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     @JoinColumn(name = "movie_id")
     private Movie movie;
 
-    private LocalDate showDate;
+    @ManyToOne
+    @JoinColumn(name = "room_id")
+    private Showroom showroom;
+    private int totalSeats;
+    
 
-    private LocalTime showTime;
+// @OneToMany(mappedBy = "showtime", cascade = CascadeType.ALL)
+// private List<Seat> seats;
 
-    private String showroom;
+@OneToMany(mappedBy = "showtime", cascade = CascadeType.ALL)
+private List<Seat> seats;
 
-    public Long getId() {
+public Long getId() {
         return id;
     }
 
@@ -29,35 +37,43 @@ public class Showtime {
         this.id = id;
     }
 
-    public Movie getMovie() {
-        return movie;
+
+public LocalDateTime getTime() {
+        return time;
     }
 
-    public void setMovie(Movie movie) {
-        this.movie = movie;
+    public void setTime(LocalDateTime time) {
+        this.time = time;
     }
 
-    public LocalDate getShowDate() {
-        return showDate;
-    }
+ public Movie getMovie() { 
+    return movie;
 
-    public void setShowDate(LocalDate showDate) {
-        this.showDate = showDate;
-    }
+  }
+public void setMovie(Movie movie) { 
+    this.movie = movie; 
+}
 
-    public LocalTime getShowTime() {
-        return showTime;
-    }
+public Showroom getShowRoom() { 
+    return showroom;
 
-    public void setShowTime(LocalTime showTime) {
-        this.showTime = showTime;
-    }
+ }
+public void setShowRoom(Showroom room) {
+     this.showroom = room; }
 
-    public String getShowroom() {
-        return showroom;
-    }
+public int getTotalSeats() {
+     return totalSeats;
+     }
+public void setTotalSeats(int totalSeats) {
+     this.totalSeats = totalSeats;
+     }
 
-    public void setShowroom(String showroom) {
-        this.showroom = showroom;
-    }
+public List<Seat> getSeats() {
+         return seats;
+         }
+    public void setSeats(List<Seat> seats) {
+         this.seats = seats; 
+        }
+
+
 }
