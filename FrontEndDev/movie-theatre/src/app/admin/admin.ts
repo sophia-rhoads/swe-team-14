@@ -1,35 +1,31 @@
-import { Component, OnInit } from '@angular/core';
-import { Table, TableModule } from 'primeng/table';
-import { FormsModule } from '@angular/forms';
-import { SelectModule } from 'primeng/select';
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
-import { CommonModule, NgIf } from '@angular/common';
-interface MenuTables {
-  name: String;
-}
-interface Data {
-  id: String;
-}
+import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-admin',
-  imports: [TableModule, FormsModule, SelectModule, ButtonModule],
+  standalone: true,
+  imports: [CommonModule, ButtonModule],
   templateUrl: './admin.html',
   styleUrl: './admin.scss',
 })
 export class Admin {
-  tables?: MenuTables[];
-  viewTable?: MenuTables | undefined;
-  dataArr!: Data[];
-  ngOnInit() {
-    this.tables = [
-      { name: 'Movies' },
-      { name: 'Users' },
-      { name: 'Promotions' },
-      { name: 'Showtimes' }
-    ];
-    this.dataArr = [
-      { id: '' }
-    ]
-    console.log(this.viewTable?.name);
+  constructor(private router: Router) {}
+
+  goToMovies(): void {
+    // keep for later
+  }
+
+  goToPromotions(): void {
+    // keep for later
+  }
+
+  goToUsers(): void {
+    // keep for later
+  }
+
+  goToShowtimes(): void {
+    this.router.navigate(['/admin-page/showtimes']);
   }
 }

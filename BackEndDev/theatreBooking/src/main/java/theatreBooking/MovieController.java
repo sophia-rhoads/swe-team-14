@@ -16,6 +16,11 @@ public class MovieController {
         return movieService.getAllMovies();
     }
 
+    @PostMapping
+    public Movie addMovie(@RequestBody Movie movie) {
+        return movieService.addMovie(movie);
+    }
+
     @GetMapping("/{id}")
     public Movie getMovieById(@PathVariable Long id) {
         return movieService.getMovieById(id);

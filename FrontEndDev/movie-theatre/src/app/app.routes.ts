@@ -11,6 +11,7 @@ import { OrderHistory } from './order-history/order-history';
 import { Admin } from './admin/admin';
 import { ResetPasswordPage } from './reset-password/reset-password';
 import { adminGuard } from './admin/admin.guard';
+import { ManageShowtimesComponent } from './manage-showtime/manage-showtimes';
 
 export const routes: Routes = [
     { path: '', component: HomePage },
@@ -22,7 +23,10 @@ export const routes: Routes = [
     { path: 'logout-page', component: LogoutPage },
     { path: 'favorites-page', component: FavoritesPage },
     { path: 'order-history', component: OrderHistory },
+
     { path: 'admin-page', component: Admin, canActivate: [adminGuard] },
+    { path: 'admin-page/showtimes', component: ManageShowtimesComponent, canActivate: [adminGuard] },
+
     { path: 'reset-password', component: ResetPasswordPage },
-    { path: '**', redirectTo: '' } // VERY IMPORTANT
+    { path: '**', redirectTo: '' }
 ];
