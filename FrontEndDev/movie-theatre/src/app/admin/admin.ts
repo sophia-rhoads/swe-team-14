@@ -14,7 +14,7 @@ export class Admin {
   constructor(private router: Router) { }
 
   goToMovies(): void {
-    this.router.navigate(['/admin-page/'])
+    this.router.navigate(['/admin-page/movies'])
   }
 
   goToPromotions(): void {

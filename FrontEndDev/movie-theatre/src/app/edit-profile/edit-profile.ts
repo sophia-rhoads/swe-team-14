@@ -139,7 +139,7 @@ export class EditProfile implements OnInit, OnDestroy {
   loadFavorites(): void {
     this.profileService.getFavorites(this.userId).subscribe(res => {
       const uniqueMap = new Map<number, Movie>();
-      res.forEach(movie => uniqueMap.set(movie.id, movie));
+      res.forEach(movie => uniqueMap.set(movie.id!, movie));
       this.favoriteMovies = Array.from(uniqueMap.values());
     });
   }

@@ -95,7 +95,7 @@ export class HomePage implements OnInit {
           return;
         }
 
-        this.favoriteMap = new Set(res.map(movie => movie.id));
+        this.favoriteMap = new Set(res.map(movie => movie.id!));
       });
   }
 

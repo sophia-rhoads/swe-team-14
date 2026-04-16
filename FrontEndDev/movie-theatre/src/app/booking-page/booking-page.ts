@@ -173,7 +173,7 @@ export class BookingPage implements OnInit {
     }
 
     if (!this.authService.isLoggedIn()) {
-      this.persistBookingDraft(movie.id);
+      this.persistBookingDraft(movie.id!);
       this.router.navigate(['/login'], {
         queryParams: {
           returnUrl: `/booking/${movie.id}/${this.showTimes}`,

@@ -12,6 +12,7 @@ import { Admin } from './admin/admin';
 import { ResetPasswordPage } from './reset-password/reset-password';
 import { adminGuard } from './admin/admin.guard';
 import { ManageShowtimesComponent } from './manage-showtime/manage-showtimes';
+import { ManageMovies } from './manage-movies/manage-movies';
 
 export const routes: Routes = [
     { path: '', component: HomePage },
@@ -26,6 +27,7 @@ export const routes: Routes = [
 
     { path: 'admin-page', component: Admin, canActivate: [adminGuard] },
     { path: 'admin-page/showtimes', component: ManageShowtimesComponent, canActivate: [adminGuard] },
+    { path: 'admin-page/movies', component: ManageMovies, canActivate: [adminGuard]},
 
     { path: 'reset-password', component: ResetPasswordPage },
     { path: '**', redirectTo: '' }
