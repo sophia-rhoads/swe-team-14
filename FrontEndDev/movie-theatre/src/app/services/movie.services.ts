@@ -24,4 +24,11 @@ export class MovieService {
     getByStatus(status: string): Observable<Movie[]> {
         return this.http.get<Movie[]>(`${this.baseUrl}/status?status=${status}`);
     }
+    postMovie(movieInfo: Movie): Observable<Movie> {
+        console.log("something happening!");
+        console.log(movieInfo);
+        //not set up properly yet
+        return this.http.post<Movie>(`${this.baseUrl}/post`, movieInfo);
+    }
+
 }

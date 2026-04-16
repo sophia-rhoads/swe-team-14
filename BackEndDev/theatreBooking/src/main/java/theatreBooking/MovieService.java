@@ -32,4 +32,9 @@ public class MovieService {
         return movieRepo.findByStatus(
                 MovieStatus.valueOf(status.toUpperCase()));
     }
+
+    //newly added service
+    public Movie addMovie(Movie newMovie) {
+        return movieRepo.save(newMovie);
+    }
 }

@@ -234,7 +234,7 @@ export class BookingPage implements OnInit {
 
     const payload = {
       userId,
-      movieId: movie.id,
+      movieId: movie.id!,
       showDate: this.toLocalDateString(this.selectedDate),
       showTime: this.showTimes,
       adultTickets: this.adult || 0,

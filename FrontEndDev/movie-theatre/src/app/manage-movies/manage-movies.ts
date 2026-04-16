@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { Table, TableModule } from 'primeng/table';
 import { FormControl, FormGroup, FormsModule } from '@angular/forms';
 import { SelectModule } from 'primeng/select';
@@ -20,20 +20,10 @@ import { ReactiveFormsModule } from '@angular/forms';
   styleUrl: './manage-movies.scss',
 })
 
-// interface MenuTables {
-//   name: String;
-// }
-// interface Data {
-//   id: String;
-// }
-
-export class ManageMovies {
-  // movies$!: Observable<Movie[]>;
-  // titles?: string[];
+export class ManageMovies implements OnInit {
+  private movieService = inject(MovieService);
+  private cd = inject(ChangeDetectorRef);
   movies!: Movie[];
-  // tables?: MenuTables[];
-  // // viewTable?: MenuTables | undefined;
-  // dataArr!: Data[];
   visible: boolean = false;
 
   addMovieForm = new FormGroup({ 
@@ -49,25 +39,25 @@ export class ManageMovies {
     status: new FormControl("", Validators.required),
   })
 
-  constructor(private movieService: MovieService) {
+  // constructor(private movieService: MovieService) {
+  //   // this.movieService.getAllMovies().subscribe(data => {
+  //   //   this.movies = data;
+  //   // })
     
-  }
+  // }
 
   ngOnInit() {
 
     this.movieService.getAllMovies().subscribe(data => {
       this.movies = data;
+      this.cd.detectChanges();
     })
     
-    // this.tables = [
-    //   { name: 'Movies' },
-    //   { name: 'Users' },
-    //   { name: 'Promotions' },
-    //   { name: 'Showtimes' }
-    // ];
-    // this.dataArr = [
-    //   { id: '' }
-    // ]
+
+  }
+
+  idk() {
+    console.log('la la la');
   }
 
   showDialog() {

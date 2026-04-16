@@ -38,4 +38,10 @@ public class MovieController {
     public List<Movie> getByStatus(@RequestParam String status) {
         return movieService.getByStatus(status);
     }
+
+    @PostMapping("/post")
+    public Movie postMethodName(@RequestBody Movie newMovie) {
+        // Movie newMovie = movieService.addMovie(null)
+        return movieService.addMovie(newMovie);
+    }
 }

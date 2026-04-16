@@ -1,1 +1,72 @@
-<p>manage-movies works!</p>
+<br>
+<br>
+<!-- <p-button label="random!" (click)="idk()"/> -->
+<p-button label="Add Movie" (click)="showDialog()"/>
+<p-dialog header="Add Movie" [modal]="true" [(visible)]="visible" [style]="{width: '25rem'}">
+   <form [formGroup]="addMovieForm" (ngSubmit)="submitMovie()">
+    <div class="flex items-center gap-4 mb-4">
+        <label for="title">Title</label>
+        <input id="title" type="text" pInputText formControlName="title"/>
+    </div>
+    <div class="flex items-center gap-4 mb-4">
+        <label for="genre">Genre</label>
+        <input id="genre" type="text" pInputText formControlName="genre"/>
+    </div>
+    <div class="flex items-center gap-4 mb-4">
+        <label for="mpaa">MPAA Rating</label>
+        <input id="mpaa" type="text" pInputText formControlName="mpaaRating"/>
+    </div> <div class="flex items-center gap-4 mb-4">
+        <label for="imbd">IMDB Rating</label>
+        <input id="imbd" type="number" pInputText formControlName="imdbRating"/>
+    </div>
+    <div class="flex items-center gap-4 mb-4">
+        <label for="director">Director</label>
+        <input id="director" type="text" pInputText formControlName="director"/>
+    </div>
+    <div class="flex items-center gap-4 mb-4">
+        <label for="producer">Producer</label>
+        <input id="producer" type="text" pInputText formControlName="producer"/>
+    </div>
+    <div class="flex items-center gap-4 mb-4">
+        <label for="description">Description</label>
+        <input id="description" type="text" pInputText formControlName="description"/>
+    </div>
+    <div class="flex items-center gap-4 mb-4">
+        <label for="trailer">Trailer URL</label>
+        <input id="trailer" type="text" pInputText formControlName="trailerUrl"/>
+    </div>
+    <div class="flex items-center gap-4 mb-4">
+        <label for="poster">Poster URL</label>
+        <input id="poster" type="text" pInputText formControlName="posterUrl"/>
+    </div>
+    <div class="flex items-center gap-4 mb-4">
+        <label for="status">Status</label>
+        <input id="status" type="text" pInputText formControlName="status"/>
+    </div>
+    <p-button type="submit" label="Submit"/>
+</form>
+</p-dialog>
+
+
+<br>
+<br>
+<p-table [value]="movies" [tableStyle]="{'min-width': '50rem'}">
+<ng-template #header>
+    <tr>
+        <th>Movie</th>
+        <th></th>
+        <th></th>
+    </tr>
+</ng-template>
+<ng-template #body let-movie>
+    <tr>
+ 
+        <td>{{movie.title}}</td>
+        <td>&nbsp;</td>
+        <td><p-button label="Edit Movie Details"/></td>
+        <td><p-button label="Remove Movie" /></td>
+    </tr>
+</ng-template>
+</p-table>
+<br>
+<br>
