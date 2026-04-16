@@ -42,6 +42,7 @@ export class App {
   // Authentication State
   isLoggedIn: boolean = false;
   isAuthPage: boolean = false;
+  isAdmin: boolean = false;
 
   // Genre Options
   genres = [
@@ -190,6 +191,35 @@ export class App {
     }
 
     const username = this.getUsername();
+
+    //menu options for logging in as an admin
+    if (this.authService.isAdmin()) {
+      return [
+        {
+          label: username,
+          icon: 'pi pi-user',
+          disabled: true
+        },
+        {
+          separator: true
+        },
+        {
+          label: 'My Profile',
+          icon: 'pi pi-user-edit',
+          command: () => this.router.navigate(['/edit-profile'])
+        },
+        {
+          label: 'Admin Menu',
+          icon: 'pi pi-credit-card',
+          command: () => this.router.navigate(['/admin-page'])
+        },
+        {
+          label: 'Logout',
+          icon: 'pi pi-sign-out',
+          command: () => this.logout()
+        }
+      ];
+    }
 
     return [
       {
