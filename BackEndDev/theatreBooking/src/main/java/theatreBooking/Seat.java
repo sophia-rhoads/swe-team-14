@@ -47,5 +47,11 @@ public class Seat {
     public void setShowroom(Showroom showroom) {
          this.showroom = showroom;
          }
+  public Showtime getShowtime() { 
+        return showtime; 
+    }
+public void setShowtime(Showtime showtime) {
+    this.showtime = showtime;
+}
 }
 

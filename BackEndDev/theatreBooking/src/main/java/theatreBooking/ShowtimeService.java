@@ -33,14 +33,17 @@ public class ShowtimeService {
     showtime.setMovie(movie);
     showtime.setShowRoom(room);
     showtime.setTime(time);
+    //showtime.setTotalSeats(room.());
 
-    
     List<Seat> showtimeSeats = new ArrayList<>();
 
     for (Seat seat : room.getSeats()) {
         Seat newSeat = new Seat();
         newSeat.setSeatNumber(seat.getSeatNumber());
         newSeat.setBooked(false);
+
+        newSeat.setShowtime(showtime); 
+        newSeat.setShowroom(room);
 
         showtimeSeats.add(newSeat);
     }

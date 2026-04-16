@@ -3,8 +3,10 @@ package theatreBooking;
 import java.time.LocalDateTime;
 
 import org.springframework.web.bind.annotation.*;
+
 @RestController
 @RequestMapping("/api/showtimes")
+@CrossOrigin(origins = "http://localhost:4200") // optional (for Angular)
 public class ShowtimeController {
 
     private final ShowtimeService showtimeService;
@@ -14,20 +16,16 @@ public class ShowtimeController {
     }
 
     @PostMapping
-    public String createShowtime(
-        @RequestParam Long movieId,
-        @RequestParam Long roomId,
-        @RequestParam String time
-    ) {
+    public String createShowtime(@RequestBody ShowtimeRequest request) {
+
+       // System.out.println("***********createShowtime CALLED");
+
         showtimeService.createShowtime(
-            movieId,
-            roomId,
-            LocalDateTime.parse(time)
+            request.getMovieId(),
+            request.getRoomId(),
+            LocalDateTime.parse(request.getTime())
         );
 
         return "Showtime created";
     }
-
-
-
 }
