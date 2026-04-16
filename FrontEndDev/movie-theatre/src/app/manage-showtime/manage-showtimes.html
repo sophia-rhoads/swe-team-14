@@ -1,0 +1,66 @@
+<div class="showtimes-page">
+    <h1 class="page-title">Manage Showtimes</h1>
+    <p class="page-subtitle">Schedule movies by date, time, and showroom</p>
+
+    <p-button label="Back to Admin Menu" icon="pi pi-arrow-left" (onClick)="goBack()">
+    </p-button>
+
+    <div class="section-card">
+        <h2>Schedule a Movie</h2>
+
+        <div class="showtime-form">
+            <select [(ngModel)]="showtimeForm.movie.id">
+                <option [ngValue]="null">Select Movie</option>
+                @for (movie of movies; track movie.id) {
+                <option [ngValue]="movie.id">{{ movie.title }}</option>
+                }
+            </select>
+
+            <input type="date" [(ngModel)]="showtimeForm.showDate" />
+            <input type="time" [(ngModel)]="showtimeForm.showTime" />
+
+            <select [(ngModel)]="showtimeForm.showroom">
+                <option value="">Select Showroom</option>
+                @for (room of showrooms; track room) {
+                <option [value]="room">{{ room }}</option>
+                }
+            </select>
+
+            <div class="form-actions">
+                <p-button label="Add Showtime" (onClick)="addShowtime()"></p-button>
+                <p-button label="Clear" severity="secondary" (onClick)="resetShowtimeForm()"></p-button>
+            </div>
+
+            @if (showtimeError) {
+            <p class="error-text">{{ showtimeError }}</p>
+            }
+
+            @if (showtimeSuccess) {
+            <p class="success-text">{{ showtimeSuccess }}</p>
+            }
+        </div>
+
+        <h3>Showtimes List</h3>
+
+        <table class="showtime-table">
+            <thead>
+                <tr>
+                    <th>Movie</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Showroom</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (showtime of showtimes; track showtime.id) {
+                <tr>
+                    <td>{{ showtime.movie.title }}</td>
+                    <td>{{ showtime.showDate }}</td>
+                    <td>{{ showtime.showTime }}</td>
+                    <td>{{ showtime.showroom }}</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
