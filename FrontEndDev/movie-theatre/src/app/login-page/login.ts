@@ -22,10 +22,16 @@ export class LoginPage {
   password = '';
   error = '';
   successMessage = '';
-  loading = false;
-  reseting = false;
+  loginLoading = false;
+  forgotPasswordLoading = false;
+  showPassword = false;
 
-  showPassword: boolean = false;
+  constructor(
+    private auth: AuthService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
+  ) { }
 
   togglePassword(): void {
     this.showPassword = !this.showPassword;
@@ -40,10 +46,10 @@ export class LoginPage {
       return;
     }
 
-    this.reseting = true;
+    this.forgotPasswordLoading = true;
 
     this.auth.forgotPassword(this.email.trim())
-      .pipe(finalize(() => this.reseting = false))
+      .pipe(finalize(() => this.forgotPasswordLoading = false))
       .subscribe({
         next: () => {
           this.successMessage = 'If an account with that email exists, a reset link has been sent';
