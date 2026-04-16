@@ -1,147 +1,30 @@
-<h1>Admin Menu</h1>
-<p-select [options]="tables" [(ngModel)]="viewTable" optionLabel="name" placeholder="Select a Table" />
-@if (viewTable?.name === 'Movies') {
-<br>
-<br>
-<div class="card flex justify-center">
-    <p-button label="Add Movie" (click)="showDialog()"/>
-    <p-dialog header="Add Movie" [modal]="true" [(visible)]="visible" [style]="{width: '25rem'}">
-       <form [formGroup]="addMovieForm" (ngSubmit)="submitMovie()">
-        <div class="flex items-center gap-4 mb-4">
-            <label for="title">Title</label>
-            <input id="title" type="text" pInputText formControlName="title"/>
-        </div>
-        <div class="flex items-center gap-4 mb-4">
-            <label for="genre">Genre</label>
-            <input id="genre" type="text" pInputText formControlName="genre"/>
-        </div>
-        <div class="flex items-center gap-4 mb-4">
-            <label for="mpaa">MPAA Rating</label>
-            <input id="mpaa" type="text" pInputText formControlName="mpaaRating"/>
-        </div> <div class="flex items-center gap-4 mb-4">
-            <label for="imbd">IMDB Rating</label>
-            <input id="imbd" type="number" pInputText formControlName="imdbRating"/>
-        </div>
-        <div class="flex items-center gap-4 mb-4">
-            <label for="director">Director</label>
-            <input id="director" type="text" pInputText formControlName="director"/>
-        </div>
-        <div class="flex items-center gap-4 mb-4">
-            <label for="producer">Producer</label>
-            <input id="producer" type="text" pInputText formControlName="producer"/>
-        </div>
-        <div class="flex items-center gap-4 mb-4">
-            <label for="description">Description</label>
-            <input id="description" type="text" pInputText formControlName="description"/>
-        </div>
-        <div class="flex items-center gap-4 mb-4">
-            <label for="trailer">Trailer URL</label>
-            <input id="trailer" type="text" pInputText formControlName="trailerUrl"/>
-        </div>
-        <div class="flex items-center gap-4 mb-4">
-            <label for="poster">Poster URL</label>
-            <input id="poster" type="text" pInputText formControlName="posterUrl"/>
-        </div>
-        <div class="flex items-center gap-4 mb-4">
-            <label for="status">Status</label>
-            <input id="status" type="text" pInputText formControlName="status"/>
-        </div>
-        <p-button type="submit" label="Submit"/>
-    </form>
-    </p-dialog>
+<div class="admin-page">
+    <h1 class="page-title">Admin Home Page</h1>
+    <p class="page-subtitle">Choose a section to manage</p>
 
+    <div class="dashboard-grid">
+        <div class="dashboard-card" (click)="goToMovies()">
+            <div class="card-icon">🎬</div>
+            <h2>Manage Movies</h2>
+            <p>View and add movies.</p>
+        </div>
+
+        <div class="dashboard-card" (click)="goToPromotions()">
+            <div class="card-icon">🏷️</div>
+            <h2>Manage Promotions</h2>
+            <p>Create and manage promotional offers.</p>
+        </div>
+
+        <div class="dashboard-card" (click)="goToUsers()">
+            <div class="card-icon">👤</div>
+            <h2>Manage Users</h2>
+            <p>View and manage registered users.</p>
+        </div>
+
+        <div class="dashboard-card" (click)="goToShowtimes()">
+            <div class="card-icon">🕒</div>
+            <h2>Manage Showtimes</h2>
+            <p>Schedule and update movie showtimes.</p>
+        </div>
+    </div>
 </div>
-<br>
-<br>
-<p-table [value]="movies">
-    <ng-template #header>
-        <tr>
-            <th>Movie</th>
-            <th></th>
-            <th></th>
-        </tr>
-    </ng-template>
-    <ng-template #body let-movie>
-        <tr>
-            <td>{{movie.title}}</td>
-            <td>&nbsp;</td>
-            <td><p-button label="Edit Movie Details"/></td>
-            <td><p-button label="Remove Movie" /></td>
-        </tr>
-    </ng-template>
-</p-table>
-<br>
-<br>
-}
-@if (viewTable?.name === 'Users') {
-<br>
-<br>
-<p-table [value]="dataArr">
-    <ng-template #header>
-        <tr>
-            <th>Username</th>
-            <th></th>
-            <th></th>
-            <th></th>
-        </tr>
-    </ng-template>
-    <ng-template #body let-movie>
-        <tr>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td><p-button label="Edit User Details" /></td>
-            <td><p-button label="Suspend User" /></td>
-            <td><p-button label="Remove User" /></td>
-        </tr>
-    </ng-template>
-</p-table>
-}
-@if (viewTable?.name === 'Showtimes') {
-<br>
-<br>
-<p-table [value]="dataArr">
-    <ng-template #header>
-        <tr>
-            <th>Show Time</th>
-            <th>Theatre Room #</th>
-            <th></th>
-            <th></th>
-            <th></th>
-        </tr>
-    </ng-template>
-    <ng-template #body let-favorite>
-        <tr>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td><p-button label="Edit Show Time" /></td>
-            <td><p-button label="Remove Show Time" /></td>
-        </tr>
-    </ng-template>
-</p-table>
-<p-button label="Add Show Time"/>
-}
-@if (viewTable?.name === 'Promotions') {
-<br>
-<br>
-<p-table [value]="dataArr">
-    <ng-template #header>
-        <tr>
-            <th>Promotion Type</th>
-            <th>Discount</th>
-            <th>Duration</th>
-            <th></th>
-            <th></th>
-        </tr>
-    </ng-template>
-    <ng-template #body let-favorite>
-        <tr>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td><p-button label="Edit Promotion Details" /></td>
-            <td><p-button label="Remove Promotion" /></td>
-        </tr>
-    </ng-template>
-</p-table>
-}
-

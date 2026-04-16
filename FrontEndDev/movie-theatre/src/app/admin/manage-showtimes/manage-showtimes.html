@@ -1,0 +1,86 @@
+<div class="showtimes-page">
+    <div class="page-header">
+        <p-button label="Back to Admin Menu" icon="pi pi-arrow-left" (click)="goBack()"></p-button>
+        <h1 class="page-title">Manage Showtimes</h1>
+    </div>
+    <p class="page-subtitle">Schedule movies by date, time, and showroom</p>
+
+    <div class="section-card">
+        <h2>Schedule a Movie</h2>
+
+        <div class="showtime-form">
+
+            <!-- Movie dropdown (loaded from DB) -->
+            <div class="field-group">
+                <label>Movie <span class="required">*</span></label>
+                <select [(ngModel)]="selectedMovieId">
+                    <option [ngValue]="null">— Select Movie —</option>
+                    <option *ngFor="let movie of movies" [ngValue]="movie.id">
+                        {{ movie.title }}
+                    </option>
+                </select>
+            </div>
+
+            <!-- Date -->
+            <div class="field-group">
+                <label>Show Date <span class="required">*</span></label>
+                <input type="date" [(ngModel)]="showDate" />
+            </div>
+
+            <!-- Time -->
+            <div class="field-group">
+                <label>Show Time <span class="required">*</span></label>
+                <input type="time" [(ngModel)]="showTime" />
+            </div>
+
+            <!-- Showroom dropdown (3 seeded rooms loaded from DB) -->
+            <div class="field-group">
+                <label>Showroom <span class="required">*</span></label>
+                <select [(ngModel)]="selectedRoomId">
+                    <option [ngValue]="null">— Select Showroom —</option>
+                    <option *ngFor="let room of showrooms" [ngValue]="room.id">
+                        {{ room.name }}
+                    </option>
+                </select>
+            </div>
+
+            <div class="form-actions">
+                <p-button label="Add Showtime" icon="pi pi-plus" (click)="addShowtime()"></p-button>
+                <p-button label="Clear" severity="secondary" (click)="resetForm()"></p-button>
+            </div>
+
+            <p *ngIf="showtimeError" class="error-text">{{ showtimeError }}</p>
+            <p *ngIf="showtimeSuccess" class="success-text">{{ showtimeSuccess }}</p>
+        </div>
+
+        <!-- SHOWTIMES TABLE -->
+        <h3>Scheduled Showtimes</h3>
+
+        <p *ngIf="showtimes.length === 0" class="empty-message">
+            No showtimes scheduled yet.
+        </p>
+
+        <table *ngIf="showtimes.length > 0" class="showtime-table">
+            <thead>
+                <tr>
+                    <th>Movie</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Showroom</th>
+                    <th>Available / Total Seats</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let st of showtimes">
+                    <td>{{ st.movieTitle }}</td>
+                    <td>{{ st.showDate | date:'mediumDate' }}</td>
+                    <td>{{ formatTime(st.showTime) }}</td>
+                    <td>{{ st.roomName }}</td>
+                    <td>
+                        {{ countAvailable(st) }} / {{ st.seats.length }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

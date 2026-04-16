@@ -8,16 +8,17 @@ import { switchMap } from 'rxjs/operators';
 import { ButtonModule } from 'primeng/button';
 import { RatingModule } from 'primeng/rating';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { RadioButtonModule } from 'primeng/radiobutton';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DatePickerModule } from 'primeng/datepicker';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
+import { CheckboxModule } from 'primeng/checkbox';
 
 import { MovieService } from '../services/movie.services';
+import { ShowtimeService, ShowtimeResponse, SeatInfo } from '../services/showtime.services';
 import { AuthService } from '../services/auth.services';
 import { BookingRecord, BookingService } from '../services/booking.services';
-import { ProfileService, PaymentCard } from '../services/profile.service';
+import { ProfileService, PaymentCard, AddCardRequest } from '../services/profile.service';
 import { Movie } from '../models/movie';
 
 @Component({
@@ -25,8 +26,8 @@ import { Movie } from '../models/movie';
   standalone: true,
   imports: [
     CommonModule, FormsModule, ButtonModule, RatingModule,
-    ProgressSpinnerModule, RadioButtonModule, InputNumberModule,
-    DatePickerModule, DialogModule, InputTextModule
+    ProgressSpinnerModule, InputNumberModule,
+    DatePickerModule, DialogModule, InputTextModule, CheckboxModule
   ],
   templateUrl: './booking-page.html',
   styleUrls: ['./booking-page.scss']
@@ -36,8 +37,13 @@ export class BookingPage implements OnInit {
   private readonly draftStorageKey = 'bookingDraft';
 
   movie$!: Observable<Movie>;
-  showTimes!: string;
-  selectedDate!: Date;
+
+  // Showtime & seat map (loaded from DB)
+  showtimeId!: number;
+  showtime: ShowtimeResponse | null = null;
+  seatMapLoading = false;
+  seatMapError = '';
+
   adult = 0;
   child = 0;
   senior = 0;
@@ -53,14 +59,13 @@ export class BookingPage implements OnInit {
   paymentProcessing = false;
   completedBooking: BookingRecord | null = null;
 
-  minDate = new Date();
-  maxDate = new Date(new Date().setMonth(new Date().getMonth() + 1));
-
+  // Manual card fields
   paymentName = '';
   paymentCardNumber = '';
   paymentExpiryDate: Date | null = null;
   paymentCvv = '';
   paymentZip = '';
+  saveCardForFuture = false;
 
   storedCards: PaymentCard[] = [];
   selectedCardId: number | null = null;
@@ -74,7 +79,8 @@ export class BookingPage implements OnInit {
     private authService: AuthService,
     private bookingService: BookingService,
     private profileService: ProfileService,
-    private movieService: MovieService
+    private movieService: MovieService,
+    private showtimeService: ShowtimeService
   ) {
     this.movie$ = this.route.paramMap.pipe(
       switchMap(params => this.movieService.getMovieById(Number(params.get('id'))))
@@ -83,26 +89,32 @@ export class BookingPage implements OnInit {
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
-      const passedShowtime = params.get('showtime');
-      if (passedShowtime) this.showTimes = passedShowtime;
-    });
-
-    this.route.queryParams.subscribe(params => {
-      if (params['date']) {
-        this.selectedDate = new Date(params['date']);
-        this.selectedDate.setHours(0, 0, 0, 0);
+      const showtimeIdParam = params.get('showtime');
+      if (showtimeIdParam) {
+        this.showtimeId = Number(showtimeIdParam);
+        this.loadSeatMap();
       }
     });
-
-    const stateDate = history.state?.date;
-    if (!this.selectedDate && stateDate) {
-      this.selectedDate = new Date(stateDate);
-      this.selectedDate.setHours(0, 0, 0, 0);
-    }
 
     this.restoreBookingDraft();
     this.checkoutEmail = this.authService.getCurrentUser()?.email || '';
     this.loadStoredCards();
+  }
+
+  // Load seat map from the backend for this specific showtime
+  loadSeatMap(): void {
+    this.seatMapLoading = true;
+    this.seatMapError = '';
+    this.showtimeService.getShowtimeById(this.showtimeId).subscribe({
+      next: st => {
+        this.showtime = st;
+        this.seatMapLoading = false;
+      },
+      error: () => {
+        this.seatMapError = 'Unable to load seat map. Please go back and try again.';
+        this.seatMapLoading = false;
+      }
+    });
   }
 
   get totalTickets(): number {
@@ -125,6 +137,10 @@ export class BookingPage implements OnInit {
     return this.storedCards.length > 0;
   }
 
+  get canSaveCard(): boolean {
+    return this.storedCards.length < 3;
+  }
+
   get ticketSummary(): string {
     return [
       { label: 'Adult', count: this.adult || 0, price: 5 },
@@ -140,28 +156,48 @@ export class BookingPage implements OnInit {
     return this.selectedSeats.length ? this.selectedSeats.join(', ') : 'None';
   }
 
+  // Returns rows A-C (7 seats) and D-E (5 seats) from the loaded seat map
+  get rowsABC(): SeatInfo[][] {
+    if (!this.showtime) return [];
+    return ['A', 'B', 'C'].map(row =>
+      (this.showtime!.seats || []).filter(s => s.seatNumber.startsWith(row))
+        .sort((a, b) => a.seatNumber.localeCompare(b.seatNumber))
+    );
+  }
+
+  get rowsDE(): SeatInfo[][] {
+    if (!this.showtime) return [];
+    return ['D', 'E'].map(row =>
+      (this.showtime!.seats || []).filter(s => s.seatNumber.startsWith(row))
+        .sort((a, b) => a.seatNumber.localeCompare(b.seatNumber))
+    );
+  }
+
+  selectSeat(seat: SeatInfo): void {
+    if (seat.booked) return; // already booked — blocked
+    if (this.selectedSeats.includes(seat.seatNumber)) {
+      this.selectedSeats = this.selectedSeats.filter(s => s !== seat.seatNumber);
+    } else if (this.selectedSeats.length < this.totalTickets) {
+      this.selectedSeats.push(seat.seatNumber);
+    }
+  }
+
+  isSelected(seatNumber: string): boolean {
+    return this.selectedSeats.includes(seatNumber);
+  }
+
+  isDisabled(seat: SeatInfo): boolean {
+    if (seat.booked) return true;
+    return !this.selectedSeats.includes(seat.seatNumber) &&
+      this.selectedSeats.length >= this.totalTickets;
+  }
+
   private resolveCardholderName(): string {
     if (this.useSavedCard && this.storedCards.length > 0 && this.selectedCardId) {
       const card = this.storedCards.find(c => c.id === this.selectedCardId);
       return card?.cardHolderName || '';
     }
     return this.paymentName.trim();
-  }
-
-  selectSeat(seat: string): void {
-    if (this.selectedSeats.includes(seat)) {
-      this.selectedSeats = this.selectedSeats.filter(s => s !== seat);
-    } else if (this.selectedSeats.length < this.totalTickets) {
-      this.selectedSeats.push(seat);
-    }
-  }
-
-  isSelected(seat: string): boolean {
-    return this.selectedSeats.includes(seat);
-  }
-
-  isDisabled(seat: string): boolean {
-    return !this.selectedSeats.includes(seat) && this.selectedSeats.length >= this.totalTickets;
   }
 
   proceedToCheckout(movie: Movie): void {
@@ -173,19 +209,15 @@ export class BookingPage implements OnInit {
     }
 
     if (!this.authService.isLoggedIn()) {
-      this.persistBookingDraft(movie.id!);
+      this.persistBookingDraft(movie.id);
       this.router.navigate(['/login'], {
-        queryParams: {
-          returnUrl: `/booking/${movie.id}/${this.showTimes}`,
-          date: this.selectedDate?.toISOString()
-        }
+        queryParams: { returnUrl: `/booking/${movie.id}/${this.showtimeId}` }
       });
       return;
     }
 
-    if (!this.selectedDate || !this.showTimes || this.totalTickets === 0 ||
-      this.selectedSeats.length !== this.totalTickets) {
-      this.checkoutError = 'Select a date, showtime, ticket quantity, and matching number of seats.';
+    if (this.totalTickets === 0 || this.selectedSeats.length !== this.totalTickets) {
+      this.checkoutError = 'Select ticket quantities and matching seats before proceeding.';
       return;
     }
 
@@ -210,13 +242,11 @@ export class BookingPage implements OnInit {
 
     const userId = this.authService.getUserId();
     if (!userId) { this.paymentError = 'Please log in again before completing payment.'; return; }
-    if (!this.selectedDate) { this.paymentError = 'Please select a show date.'; return; }
     if (!/^\d{3,4}$/.test(this.onlyDigits(this.paymentCvv))) {
       this.paymentError = 'Enter a valid CVV (3 or 4 digits).'; return;
     }
 
     const usingStoredCard = this.useSavedCard && this.storedCards.length > 0;
-
     if (usingStoredCard && !this.selectedCardId) {
       this.paymentError = 'Choose one of your saved cards.'; return;
     }
@@ -232,11 +262,19 @@ export class BookingPage implements OnInit {
       if (!/^\d{5}$/.test(sanitizedZip)) { this.paymentError = 'Enter a valid 5-digit billing ZIP code.'; return; }
     }
 
+    const showDate = this.showtime
+      ? this.showtime.showDate
+      : '';
+    const showTime = this.showtime
+      ? this.showtime.showTime.substring(0, 5)  // HH:mm from HH:mm:ss
+      : '';
+
     const payload = {
       userId,
-      movieId: movie.id!,
-      showDate: this.toLocalDateString(this.selectedDate),
-      showTime: this.showTimes,
+      movieId: movie.id,
+      showtimeId: this.showtimeId,
+      showDate,
+      showTime,
       adultTickets: this.adult || 0,
       childTickets: this.child || 0,
       seniorTickets: this.senior || 0,
@@ -257,20 +295,23 @@ export class BookingPage implements OnInit {
       next: booking => {
         this.paymentProcessing = false;
         this.completedBooking = booking;
-        // Close payment dialog first, then open success dialog as an independent sibling
+
+        if (!usingStoredCard && this.saveCardForFuture && userId) {
+          this.saveManualCardToAccount(userId, this.paymentName.trim(),
+            sanitizedCardNumber, formattedExpiry, sanitizedZip);
+        }
+
         this.paymentDialog = false;
-        setTimeout(() => {
-          this.paymentSuccessDialog = true;
-        });
+        setTimeout(() => { this.paymentSuccessDialog = true; });
         sessionStorage.removeItem(this.draftStorageKey);
         this.resetBookingForm();
         this.loadStoredCards();
+        // Refresh seat map to reflect newly booked seats
+        this.loadSeatMap();
       },
       error: err => {
         this.paymentProcessing = false;
-        const raw: string = typeof err?.error === 'string'
-          ? err.error
-          : err?.error?.message || '';
+        const raw: string = typeof err?.error === 'string' ? err.error : err?.error?.message || '';
         this.paymentError = raw.startsWith('PAYMENT_DECLINED:')
           ? raw.replace('PAYMENT_DECLINED:', '').trim()
           : (raw || 'Payment could not be completed. Please try again.');
@@ -278,7 +319,21 @@ export class BookingPage implements OnInit {
     });
   }
 
-  // Called by both the Done button and the X icon on the success dialog
+  private saveManualCardToAccount(userId: number, cardHolderName: string,
+    cardNumber: string, expirationDate: string, billingZipCode: string): void {
+    const req: AddCardRequest = {
+      cardHolderName,
+      cardType: this.detectCardBrand(cardNumber),
+      cardNumber,
+      expirationDate,
+      billingZipCode
+    };
+    this.profileService.addCard(userId, req).subscribe({
+      next: () => this.loadStoredCards(),
+      error: () => { /* silent — payment already succeeded */ }
+    });
+  }
+
   closeSuccessDialog(): void {
     this.paymentSuccessDialog = false;
     this.completedBooking = null;
@@ -294,29 +349,27 @@ export class BookingPage implements OnInit {
   switchPaymentMode(useSavedCard: boolean): void {
     this.useSavedCard = useSavedCard;
     this.paymentError = '';
+    if (useSavedCard) this.saveCardForFuture = false;
   }
 
   maskCard(cardNumber: string): string {
-    const digits = cardNumber.replace(/\s+/g, '');
-    return `**** **** **** ${digits.slice(-4)}`;
+    return `**** **** **** ${cardNumber.replace(/\s+/g, '').slice(-4)}`;
   }
 
-  formatPaymentCardNumberInput(): void {
-    this.paymentCardNumber = this.groupCardNumber(this.paymentCardNumber);
-  }
+  formatPaymentCardNumberInput(): void { this.paymentCardNumber = this.groupCardNumber(this.paymentCardNumber); }
+  formatPaymentZipInput(): void { this.paymentZip = this.onlyDigits(this.paymentZip).slice(0, 5); }
+  formatPaymentCvvInput(): void { this.paymentCvv = this.onlyDigits(this.paymentCvv).slice(0, 4); }
 
-  formatPaymentZipInput(): void {
-    this.paymentZip = this.onlyDigits(this.paymentZip).slice(0, 5);
-  }
-
-  formatPaymentCvvInput(): void {
-    this.paymentCvv = this.onlyDigits(this.paymentCvv).slice(0, 4);
+  private detectCardBrand(n: string): string {
+    if (n.startsWith('4')) return 'Visa';
+    if (/^5[1-5]/.test(n)) return 'Mastercard';
+    if (/^3[47]/.test(n)) return 'American Express';
+    return 'Card';
   }
 
   private loadStoredCards(): void {
     const userId = this.authService.getUserId();
     if (!userId) { this.storedCards = []; return; }
-
     this.profileService.getCards(userId).subscribe({
       next: cards => {
         this.storedCards = cards;
@@ -329,59 +382,42 @@ export class BookingPage implements OnInit {
           this.useSavedCard = false;
         }
       },
-      error: () => {
-        this.storedCards = [];
-        this.selectedCardId = null;
-        this.useSavedCard = false;
-      }
+      error: () => { this.storedCards = []; this.selectedCardId = null; this.useSavedCard = false; }
     });
   }
 
   private persistBookingDraft(movieId: number): void {
-    const draft = {
-      movieId,
-      showTimes: this.showTimes,
-      selectedDate: this.selectedDate ? this.toLocalDateString(this.selectedDate) : '',
+    sessionStorage.setItem(this.draftStorageKey, JSON.stringify({
+      movieId, showtimeId: this.showtimeId,
       adult: this.adult, child: this.child, senior: this.senior,
-      selectedSeats: this.selectedSeats,
-      checkoutEmail: this.checkoutEmail
-    };
-    sessionStorage.setItem(this.draftStorageKey, JSON.stringify(draft));
+      selectedSeats: this.selectedSeats, checkoutEmail: this.checkoutEmail
+    }));
   }
 
   private restoreBookingDraft(): void {
     const raw = sessionStorage.getItem(this.draftStorageKey);
     if (!raw) return;
     try {
-      const draft = JSON.parse(raw);
+      const d = JSON.parse(raw);
       const routeMovieId = Number(this.route.snapshot.paramMap.get('id'));
-      if (draft.movieId !== routeMovieId) return;
-      this.showTimes = draft.showTimes || this.showTimes;
-      this.selectedDate = draft.selectedDate ? new Date(`${draft.selectedDate}T00:00:00`) : this.selectedDate;
-      this.adult = draft.adult ?? this.adult;
-      this.child = draft.child ?? this.child;
-      this.senior = draft.senior ?? this.senior;
-      this.selectedSeats = Array.isArray(draft.selectedSeats) ? draft.selectedSeats : this.selectedSeats;
-      this.checkoutEmail = draft.checkoutEmail || this.checkoutEmail;
-    } catch {
-      sessionStorage.removeItem(this.draftStorageKey);
-    }
+      if (d.movieId !== routeMovieId) return;
+      this.adult = d.adult ?? 0;
+      this.child = d.child ?? 0;
+      this.senior = d.senior ?? 0;
+      this.selectedSeats = Array.isArray(d.selectedSeats) ? d.selectedSeats : [];
+      this.checkoutEmail = d.checkoutEmail || '';
+    } catch { sessionStorage.removeItem(this.draftStorageKey); }
   }
 
   private resetBookingForm(): void {
     this.adult = 0; this.child = 0; this.senior = 0;
     this.selectedSeats = [];
     this.paymentCvv = '';
+    this.saveCardForFuture = false;
     if (!this.useSavedCard) {
-      this.paymentName = '';
-      this.paymentCardNumber = '';
-      this.paymentExpiryDate = null;
-      this.paymentZip = '';
+      this.paymentName = ''; this.paymentCardNumber = '';
+      this.paymentExpiryDate = null; this.paymentZip = '';
     }
-  }
-
-  private toLocalDateString(date: Date): string {
-    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
   }
 
   private formatExpiryMonth(date: Date | null): string {
@@ -389,11 +425,9 @@ export class BookingPage implements OnInit {
     return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
   }
 
-  private onlyDigits(value: string): string {
-    return String(value || '').replace(/\D/g, '');
-  }
+  private onlyDigits(v: string): string { return String(v || '').replace(/\D/g, ''); }
 
-  private groupCardNumber(value: string): string {
-    return this.onlyDigits(value).slice(0, 16).replace(/(\d{4})(?=\d)/g, '$1 ').trim();
+  private groupCardNumber(v: string): string {
+    return this.onlyDigits(v).slice(0, 16).replace(/(\d{4})(?=\d)/g, '$1 ').trim();
   }
 }

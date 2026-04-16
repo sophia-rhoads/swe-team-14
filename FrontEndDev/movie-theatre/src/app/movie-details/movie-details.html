@@ -3,14 +3,15 @@
         <p-progressSpinner></p-progressSpinner>
     </div>
 </ng-template>
+
 <ng-container *ngIf="movie$ | async as movie; else loading">
     <div class="trailer-section">
         <h2>Watch Trailer</h2>
         <div class="trailer-wrapper">
-            <iframe [src]="trailerUrl$ | async" frameborder="0" allowfullscreen>
-            </iframe>
+            <iframe [src]="trailerUrl$ | async" frameborder="0" allowfullscreen></iframe>
         </div>
     </div>
+
     <div class="details-container">
         <div class="details-left">
             <img [src]="movie.posterUrl" class="poster">
@@ -21,58 +22,50 @@
                 <span class="mpaa-badge">{{ movie.mpaaRating }}</span>
                 <span class="genre">{{ movie.genre }}</span>
             </div>
+
             <div *ngIf="movie.imdbRating; else notReleased">
-                <p-rating [ngModel]="movie.imdbRating / 2" [readonly]="true">
-                </p-rating>
+                <p-rating [ngModel]="movie.imdbRating / 2" [readonly]="true"></p-rating>
                 <span>{{ movie.imdbRating }} / 10</span>
             </div>
             <ng-template #notReleased>
                 <p>Not yet Released</p>
             </ng-template>
+
             <p class="description">{{ movie.description }}</p>
             <p><strong>Director:</strong> {{ movie.director }}</p>
             <p><strong>Producer:</strong> {{ movie.producer }}</p>
-            <p *ngIf="movie.status === 'COMING_SOON'" class="release-note">
-                This movie is coming soon. Ticket booking will open after release.
-            </p>
-            <br>
-            <br>
-            <div class="booking-options">
-                <div class="date-section">
-                    <h3>Select Date</h3>
-                    <p-datePicker [(ngModel)]="selectedDate" [minDate]="minDate" [maxDate]="maxDate"
-                        dateFormat="mm/dd/yy" [showIcon]="true" [disabled]="movie.status === 'COMMING SOON'">
-                    </p-datePicker>
+
+            <div *ngIf="movie.status === 'COMING_SOON'" class="release-note">
+                <p>This movie is coming soon. Ticket booking will open after release.</p>
+            </div>
+
+            <!-- SHOWTIMES SECTION -->
+            <div *ngIf="movie.status !== 'COMING_SOON'" class="booking-options">
+                <h3>Available Showtimes</h3>
+
+                <div *ngIf="showtimesLoading" class="spinner-container">
+                    <p-progressSpinner></p-progressSpinner>
                 </div>
-                <div class="showtime-section">
-                    <h3>Select Show Time</h3>
-                    <div class="showtime-options">
-                        <label class="radio-option">
-                            <p-radiobutton name="showTimes" [(ngModel)]="showTimes" value="10:00 am"
-                                [disabled]="movie.status === 'COMMING SOON'"></p-radiobutton>
-                            <span>10:00 am</span>
-                        </label>
-                        <label class="radio-option">
-                            <p-radiobutton name="showTimes" [(ngModel)]="showTimes" value="1:45 pm"
-                                [disabled]="movie.status === 'COMMING SOON'"></p-radiobutton>
-                            <span>1:45 pm</span>
-                        </label>
-                        <label class="radio-option">
-                            <p-radiobutton name="showTimes" [(ngModel)]="showTimes" value="2:30 pm"
-                                [disabled]="movie.status === 'COMMING SOON'"></p-radiobutton>
-                            <span>2:30 pm</span>
-                        </label>
-                        <label class="radio-option">
-                            <p-radiobutton name="showTimes" [(ngModel)]="showTimes" value="8:00 pm"
-                                [disabled]="movie.status === 'COMMING SOON'"></p-radiobutton>
-                            <span>8:00 pm</span>
-                        </label>
-                    </div>
+
+                <p *ngIf="showtimesError" class="error-text">{{ showtimesError }}</p>
+
+                <p *ngIf="!showtimesLoading && !showtimesError && showtimes.length === 0" class="empty-message">
+                    No showtimes scheduled yet. Check back soon.
+                </p>
+
+                <div *ngIf="showtimes.length > 0" class="showtime-options">
+                    <label class="radio-option" *ngFor="let st of showtimes">
+                        <p-radiobutton name="selectedShowtime" [value]="st" [(ngModel)]="selectedShowtime">
+                        </p-radiobutton>
+                        <span>{{ formatShowtime(st) }}</span>
+                    </label>
                 </div>
             </div>
+
+            <br>
             <div class="book-button">
-                <button pButton label="Book Tickets" icon="pi pi-ticket" [disabled]="!showTimes || !selectedDate"
-                    (click)="goToBooking(movie)">
+                <button pButton label="Book Tickets" icon="pi pi-ticket"
+                    [disabled]="movie.status === 'COMING_SOON' || !selectedShowtime" (click)="goToBooking(movie)">
                 </button>
             </div>
         </div>

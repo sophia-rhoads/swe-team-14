@@ -3,6 +3,7 @@
         <p-progressSpinner></p-progressSpinner>
     </div>
 </ng-template>
+
 <ng-container *ngIf="movie$ | async as movie; else loading">
     <div class="details-container">
         <div class="details-left">
@@ -18,104 +19,128 @@
                 <p-rating [ngModel]="movie.imdbRating / 2" [readonly]="true"></p-rating>
                 <span>{{ movie.imdbRating }} / 10</span>
             </div>
-            <div *ngIf="movie.status === 'COMING_SOON'; else bookingForm" class="booking-blocked">
+
+            <div *ngIf="movie.status === 'COMING_SOON'" class="booking-blocked">
                 <h3>Booking unavailable</h3>
                 <p>This movie is coming soon. Ticket booking will open after release.</p>
             </div>
-            <ng-template #bookingForm>
-                <div class="main-booking-grid">
-                    <div class="left-column">
-                        <div>
-                            <h3>Select Date</h3>
-                            <p-datePicker [(ngModel)]="selectedDate" [minDate]="minDate" [maxDate]="maxDate"
-                                dateFormat="mm/dd/yy" [showIcon]="true">
-                            </p-datePicker>
+
+            <ng-container *ngIf="movie.status !== 'COMING_SOON'">
+
+                <!-- SHOWTIME INFO BANNER -->
+                <div *ngIf="showtime" class="showtime-info-banner">
+                    <i class="pi pi-clock"></i>
+                    <span>
+                        <strong>{{ showtime.showDate | date:'mediumDate' }}</strong>
+                        at <strong>{{ showtime.showTime | slice:0:5 }}</strong>
+                        — {{ showtime.roomName }}
+                    </span>
+                </div>
+
+                <p *ngIf="seatMapError" class="checkout-error">{{ seatMapError }}</p>
+
+                <div *ngIf="seatMapLoading" class="spinner-container">
+                    <p-progressSpinner></p-progressSpinner>
+                </div>
+
+                <ng-container *ngIf="!seatMapLoading && showtime">
+                    <div class="main-booking-grid">
+
+                        <!-- TICKET TYPES -->
+                        <div class="left-column">
+                            <div>
+                                <h3>Ticket Types</h3>
+                                <div class="ticket-row">
+                                    <span class="ticket-label">Adult — $5.00</span>
+                                    <p-inputnumber [(ngModel)]="adult" [showButtons]="true" [min]="0"></p-inputnumber>
+                                </div>
+                                <div class="ticket-row">
+                                    <span class="ticket-label">Child — $2.50</span>
+                                    <p-inputnumber [(ngModel)]="child" [showButtons]="true" [min]="0"></p-inputnumber>
+                                </div>
+                                <div class="ticket-row">
+                                    <span class="ticket-label">Senior — $3.50</span>
+                                    <p-inputnumber [(ngModel)]="senior" [showButtons]="true" [min]="0"></p-inputnumber>
+                                </div>
+                            </div>
+
+                            <!-- SEAT LEGEND -->
+                            <div class="seat-legend">
+                                <div class="legend-item">
+                                    <div class="legend-swatch available"></div><span>Available</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-swatch selected"></div><span>Your selection</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-swatch booked"></div><span>Booked</span>
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <h3>Ticket Types</h3>
-                            <div class="ticket-row">
-                                <span class="ticket-label">Adult - $5.00</span>
-                                <p-inputnumber [(ngModel)]="adult" [showButtons]="true" [min]="0"></p-inputnumber>
-                            </div>
-                            <div class="ticket-row">
-                                <span class="ticket-label">Child - $2.50</span>
-                                <p-inputnumber [(ngModel)]="child" [showButtons]="true" [min]="0"></p-inputnumber>
-                            </div>
-                            <div class="ticket-row">
-                                <span class="ticket-label">Senior - $3.50</span>
-                                <p-inputnumber [(ngModel)]="senior" [showButtons]="true" [min]="0"></p-inputnumber>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="right-column">
-                        <div>
-                            <h3>Select Show Time</h3>
-                            <div class="showtime-options">
-                                <label class="radio-option">
-                                    <p-radiobutton name="showTimes" [(ngModel)]="showTimes"
-                                        value="10:00 am"></p-radiobutton>
-                                    <span>10:00 am</span>
-                                </label>
-                                <label class="radio-option">
-                                    <p-radiobutton name="showTimes" [(ngModel)]="showTimes"
-                                        value="1:45 pm"></p-radiobutton>
-                                    <span>1:45 pm</span>
-                                </label>
-                                <label class="radio-option">
-                                    <p-radiobutton name="showTimes" [(ngModel)]="showTimes"
-                                        value="2:30 pm"></p-radiobutton>
-                                    <span>2:30 pm</span>
-                                </label>
-                                <label class="radio-option">
-                                    <p-radiobutton name="showTimes" [(ngModel)]="showTimes"
-                                        value="8:00 pm"></p-radiobutton>
-                                    <span>8:00 pm</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div>
+
+                        <!-- SEAT MAP -->
+                        <div class="right-column">
                             <h3>Select Seats</h3>
+
                             <div class="column-numbers">
                                 <span></span>
                                 <span *ngFor="let col of [1,2,3,4,5,6,7]">{{ col }}</span>
                             </div>
-                            <div class="seat-row" *ngFor="let row of ['A','B','C']">
-                                <span class="row-label">{{ row }}</span>
-                                <div class="seat" *ngFor="let col of [1,2,3,4,5,6,7]"
-                                    [class.selected]="isSelected(row + col)" [class.disabled]="isDisabled(row + col)"
-                                    (click)="selectSeat(row + col)">
-                                    <ng-container *ngIf="isSelected(row + col); else seatIcon">{{ row + col
-                                        }}</ng-container>
-                                    <ng-template #seatIcon><img src="./armchair.png" class="seat-icon"></ng-template>
+
+                            <!-- Rows A, B, C — 7 seats each -->
+                            <div class="seat-row" *ngFor="let row of rowsABC; let i = index">
+                                <span class="row-label">{{ ['A','B','C'][i] }}</span>
+                                <div class="seat" *ngFor="let seat of row"
+                                    [class.selected]="isSelected(seat.seatNumber)" [class.booked]="seat.booked"
+                                    [class.disabled]="isDisabled(seat)" (click)="selectSeat(seat)">
+                                    <ng-container *ngIf="seat.booked">
+                                        <i class="pi pi-times"></i>
+                                    </ng-container>
+                                    <ng-container *ngIf="!seat.booked && isSelected(seat.seatNumber)">
+                                        {{ seat.seatNumber }}
+                                    </ng-container>
+                                    <ng-container *ngIf="!seat.booked && !isSelected(seat.seatNumber)">
+                                        <img src="./armchair.png" class="seat-icon">
+                                    </ng-container>
                                 </div>
                             </div>
-                            <div class="seat-row" *ngFor="let row of ['D','E']">
-                                <span class="row-label">{{ row }}</span>
+
+                            <!-- Rows D, E — 5 seats each (centred with placeholders) -->
+                            <div class="seat-row" *ngFor="let row of rowsDE; let i = index">
+                                <span class="row-label">{{ ['D','E'][i] }}</span>
                                 <div class="seat placeholder"></div>
-                                <div class="seat" *ngFor="let col of [1,2,3,4,5]"
-                                    [class.selected]="isSelected(row + col)" [class.disabled]="isDisabled(row + col)"
-                                    (click)="selectSeat(row + col)">
-                                    <ng-container *ngIf="isSelected(row + col); else seatIcon">{{ row + col
-                                        }}</ng-container>
-                                    <ng-template #seatIcon><img src="./armchair.png" class="seat-icon"></ng-template>
+                                <div class="seat" *ngFor="let seat of row"
+                                    [class.selected]="isSelected(seat.seatNumber)" [class.booked]="seat.booked"
+                                    [class.disabled]="isDisabled(seat)" (click)="selectSeat(seat)">
+                                    <ng-container *ngIf="seat.booked">
+                                        <i class="pi pi-times"></i>
+                                    </ng-container>
+                                    <ng-container *ngIf="!seat.booked && isSelected(seat.seatNumber)">
+                                        {{ seat.seatNumber }}
+                                    </ng-container>
+                                    <ng-container *ngIf="!seat.booked && !isSelected(seat.seatNumber)">
+                                        <img src="./armchair.png" class="seat-icon">
+                                    </ng-container>
                                 </div>
                                 <div class="seat placeholder"></div>
                             </div>
+
                             <div class="screen-wrapper">
                                 <div class="screen-curve">
                                     <div class="screen-text">SCREEN</div>
                                 </div>
                             </div>
                         </div>
+
+                        <div class="checkout-wrapper">
+                            <p class="checkout-error" *ngIf="checkoutError">{{ checkoutError }}</p>
+                            <p-button label="Proceed to Checkout" icon="pi pi-ticket" (click)="proceedToCheckout(movie)"
+                                [disabled]="totalTickets === 0 || selectedSeats.length !== totalTickets">
+                            </p-button>
+                        </div>
                     </div>
-                    <div class="checkout-wrapper">
-                        <p class="checkout-error" *ngIf="checkoutError">{{ checkoutError }}</p>
-                        <p-button label="Proceed to Checkout" icon="pi pi-ticket" (click)="proceedToCheckout(movie)"
-                            [disabled]="!selectedDate || !showTimes || totalTickets === 0 || selectedSeats.length !== totalTickets">
-                        </p-button>
-                    </div>
-                </div>
-            </ng-template>
+                </ng-container>
+            </ng-container>
         </div>
     </div>
 </ng-container>
@@ -126,7 +151,11 @@
     <ng-container *ngIf="movie$ | async as movie">
         <div class="summary-list">
             <div><span>Movie</span><strong>{{ movie.title }}</strong></div>
-            <div><span>Showtime</span><strong>{{ selectedDate | date:'mediumDate' }} at {{ showTimes }}</strong></div>
+            <div *ngIf="showtime">
+                <span>Showtime</span>
+                <strong>{{ showtime.showDate | date:'mediumDate' }} at {{ showtime.showTime | slice:0:5 }}
+                    — {{ showtime.roomName }}</strong>
+            </div>
             <div><span>Selected Seats</span><strong>{{ selectedSeatsLabel }}</strong></div>
             <div><span>Tickets</span><strong>{{ ticketSummary }}</strong></div>
             <div><span>Price per Ticket</span><strong>Adult $5.00, Child $2.50, Senior $3.50</strong></div>
@@ -154,14 +183,14 @@
             <p>Your order confirmation will be sent to {{ checkoutEmail }} after successful payment.</p>
 
             <!--
-            TEST MODE BANNER — uncomment during demo to show simulated payment test cases:
+            TEST MODE BANNER — uncomment during demo:
 
             <div class="test-mode-banner">
                 <i class="pi pi-info-circle"></i>
                 <strong>Simulated Payment — Test Mode</strong>
-                <span>Use CVV <code>000</code> or <code>0000</code> to simulate a declined card.
-                      Use CVV <code>999</code> or <code>9999</code> to simulate insufficient funds.
-                      Any other valid CVV completes successfully.</span>
+                <span>CVV <code>000</code> / <code>0000</code> → card declined.
+                      CVV <code>999</code> / <code>9999</code> → insufficient funds.
+                      Any other valid CVV succeeds.</span>
             </div>
             -->
 
@@ -202,7 +231,8 @@
                     <div class="field-group">
                         <label for="paymentExpiryDate">Expiry</label>
                         <p-datepicker [(ngModel)]="paymentExpiryDate" inputId="paymentExpiryDate" view="month"
-                            dateFormat="mm/yy" [showIcon]="true" [readonlyInput]="true"></p-datepicker>
+                            dateFormat="mm/yy" [showIcon]="true" [readonlyInput]="true">
+                        </p-datepicker>
                     </div>
                     <div class="field-group">
                         <label for="manualPaymentCvv">CVV</label>
@@ -214,6 +244,11 @@
                         <input id="paymentZip" pInputText [(ngModel)]="paymentZip" placeholder="30602" maxlength="5"
                             inputmode="numeric" (input)="formatPaymentZipInput()">
                     </div>
+                </div>
+                <div class="save-card-option" *ngIf="canSaveCard">
+                    <p-checkbox [(ngModel)]="saveCardForFuture" [binary]="true" inputId="saveCardCheckbox">
+                    </p-checkbox>
+                    <label for="saveCardCheckbox">Save this card to my account for future payments</label>
                 </div>
             </div>
 
@@ -231,15 +266,7 @@
     </ng-container>
 </p-dialog>
 
-<!--
-    TRANSACTION COMPLETE DIALOG
-    Placed as a TOP-LEVEL SIBLING — NOT nested inside the payment dialog.
-    This is the fix for the UI freeze: when paymentDialog closes, Angular destroys
-    its ng-container children. Having the success dialog nested inside meant it was
-    destroyed before it could render. As a sibling it has its own independent lifecycle.
-    Both the X button (onHide) and the Done button call closeSuccessDialog()
-    which navigates the user back to the home page.
--->
+<!-- TRANSACTION COMPLETE DIALOG — top-level sibling -->
 <p-dialog header="Transaction Complete" [(visible)]="paymentSuccessDialog" [modal]="true" [closable]="true"
     [style]="{ width: '560px' }" (onHide)="closeSuccessDialog()">
     <div class="success-state" *ngIf="completedBooking as booking">
