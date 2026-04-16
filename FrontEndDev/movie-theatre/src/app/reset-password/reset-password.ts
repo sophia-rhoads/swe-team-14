@@ -74,7 +74,7 @@ export class ResetPasswordPage implements OnInit {
 
         this.isLoading = true;
 
-        this.http.post('http://localhost:8080/api/auth/reset-password', payload, {
+        this.http.post('http://localhost:8081/api/auth/reset-password', payload, {
             responseType: 'text'
         })
             .subscribe({

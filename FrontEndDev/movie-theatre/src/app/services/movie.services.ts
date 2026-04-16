@@ -7,7 +7,7 @@ import { Movie } from '../models/movie';
     providedIn: 'root'
 })
 export class MovieService {
-    private baseUrl = 'http://localhost:8080/api/movies';
+    private baseUrl = 'http://localhost:8081/api/movies';
     constructor(private http: HttpClient) { }
     getAllMovies(): Observable<Movie[]> {
         return this.http.get<Movie[]>(this.baseUrl);

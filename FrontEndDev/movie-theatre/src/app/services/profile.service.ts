@@ -37,8 +37,8 @@ export interface UpdateProfileRequest {
 })
 export class ProfileService {
 
-  private baseUrl = 'http://localhost:8080/api/profile';
-  private favUrl = 'http://localhost:8080/api/favorites';
+  private baseUrl = 'http://localhost:8081/api/profile';
+  private favUrl = 'http://localhost:8081/api/favorites';
   private favoritesChangedSubject = new Subject<void>();
   favoritesChanged$ = this.favoritesChangedSubject.asObservable();
 

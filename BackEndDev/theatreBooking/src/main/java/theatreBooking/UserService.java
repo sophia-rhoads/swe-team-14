@@ -113,7 +113,7 @@ public class UserService {
         tokenRepo.save(activationToken);
 
         // Simulated Email using EmailService MailTrap
-        String activationLink = "http://localhost:8080/api/auth/activate?token=" + token;
+        String activationLink = "http://localhost:8081/api/auth/activate?token=" + token;
 
         String subject = "Activate Your Cinema Booking Account";
 
