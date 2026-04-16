@@ -25,6 +25,7 @@ export class ManageMovies implements OnInit {
   private cd = inject(ChangeDetectorRef);
   movies!: Movie[];
   visible: boolean = false;
+  disable: boolean = true;
 
   addMovieForm = new FormGroup({ 
     title: new FormControl("", Validators.required),

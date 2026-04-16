@@ -43,7 +43,12 @@
         <label for="status">Status</label>
         <input id="status" type="text" pInputText formControlName="status"/>
     </div>
-    <p-button type="submit" label="Submit"/>
+    @if (!addMovieForm.valid) {
+        <p-button type="submit" label="Submit" [disabled]="true"/>
+    } @else {
+        <p-button type="submit" label="Submit" [disabled]="false"/>
+    }
+    
 </form>
 </p-dialog>
 
