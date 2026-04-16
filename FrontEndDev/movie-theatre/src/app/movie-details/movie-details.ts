@@ -55,28 +55,18 @@ export class MovieDetails {
       )
     );
   }
-  goToBooking(id: number) {
-    const isLoggedIn = !!localStorage.getItem('user');
-    // not logged-in flow
-    if (!isLoggedIn) {
-      const date = this.selectedDate?.toISOString();
-      this.router.navigate(['/login'], {
-        queryParams: {
-          returnUrl: `/booking/${id}/${this.showTimes}`,
-          date: date
-        }
-      });
+  goToBooking(movie: Movie) {
+    if (movie.status === 'COMING_SOON') {
       return;
     }
-    // logged-in flow
-    this.movie$.subscribe(movie => {
-      this.router.navigate(
-        ['/booking', id, this.showTimes],
-        {
-          queryParams: { date: this.selectedDate?.toISOString() },
-          state: { movieTitle: movie.title }
-        }
-      );
-    });
+
+    const id = movie.id;
+    this.router.navigate(
+      ['/booking', id, this.showTimes],
+      {
+        queryParams: { date: this.selectedDate?.toISOString() },
+        state: { movieTitle: movie.title }
+      }
+    );
   }
 }

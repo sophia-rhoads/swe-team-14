@@ -1,6 +1,5 @@
 package theatreBooking;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,8 +10,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/api/movies")
 @CrossOrigin(origins = "http://localhost:4200")
 public class MovieController {
-    @Autowired
-    private MovieService movieService;
+
+    private final MovieService movieService;
+
+    public MovieController(MovieService movieService) {
+        this.movieService = movieService;
+    }
 
     @GetMapping
     public List<Movie> getAllMovies() {

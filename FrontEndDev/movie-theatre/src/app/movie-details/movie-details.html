@@ -32,32 +32,39 @@
             <p class="description">{{ movie.description }}</p>
             <p><strong>Director:</strong> {{ movie.director }}</p>
             <p><strong>Producer:</strong> {{ movie.producer }}</p>
+            <p *ngIf="movie.status === 'COMING_SOON'" class="release-note">
+                This movie is coming soon. Ticket booking will open after release.
+            </p>
             <br>
             <br>
             <div class="booking-options">
                 <div class="date-section">
                     <h3>Select Date</h3>
                     <p-datePicker [(ngModel)]="selectedDate" [minDate]="minDate" [maxDate]="maxDate"
-                        dateFormat="mm/dd/yy" [showIcon]="true">
+                        dateFormat="mm/dd/yy" [showIcon]="true" [disabled]="movie.status === 'COMMING SOON'">
                     </p-datePicker>
                 </div>
                 <div class="showtime-section">
                     <h3>Select Show Time</h3>
                     <div class="showtime-options">
                         <label class="radio-option">
-                            <p-radiobutton name="showTimes" [(ngModel)]="showTimes" value="10:00 am"></p-radiobutton>
+                            <p-radiobutton name="showTimes" [(ngModel)]="showTimes" value="10:00 am"
+                                [disabled]="movie.status === 'COMMING SOON'"></p-radiobutton>
                             <span>10:00 am</span>
                         </label>
                         <label class="radio-option">
-                            <p-radiobutton name="showTimes" [(ngModel)]="showTimes" value="1:45 pm"></p-radiobutton>
+                            <p-radiobutton name="showTimes" [(ngModel)]="showTimes" value="1:45 pm"
+                                [disabled]="movie.status === 'COMMING SOON'"></p-radiobutton>
                             <span>1:45 pm</span>
                         </label>
                         <label class="radio-option">
-                            <p-radiobutton name="showTimes" [(ngModel)]="showTimes" value="2:30 pm"></p-radiobutton>
+                            <p-radiobutton name="showTimes" [(ngModel)]="showTimes" value="2:30 pm"
+                                [disabled]="movie.status === 'COMMING SOON'"></p-radiobutton>
                             <span>2:30 pm</span>
                         </label>
                         <label class="radio-option">
-                            <p-radiobutton name="showTimes" [(ngModel)]="showTimes" value="8:00 pm"></p-radiobutton>
+                            <p-radiobutton name="showTimes" [(ngModel)]="showTimes" value="8:00 pm"
+                                [disabled]="movie.status === 'COMMING SOON'"></p-radiobutton>
                             <span>8:00 pm</span>
                         </label>
                     </div>

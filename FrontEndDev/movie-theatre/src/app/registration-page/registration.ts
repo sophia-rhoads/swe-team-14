@@ -1,6 +1,5 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { AuthService } from '../services/auth.services';
-import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -14,27 +13,18 @@ import { CheckboxModule } from 'primeng/checkbox';
     selector: 'app-register',
     standalone: true,
     imports: [
-        FormsModule,
-        CommonModule,
-        InputTextModule,
-        ButtonModule,
-        DatePickerModule,
-        SelectModule,
-        CheckboxModule,
-        RouterLink
+        FormsModule, CommonModule, InputTextModule, ButtonModule,
+        DatePickerModule, SelectModule, CheckboxModule, RouterLink
     ],
     templateUrl: './registration.html',
     styleUrls: ['./registration.scss']
 })
 export class RegisterPage {
 
-    loading: boolean = false;
-
-    // password toggle
+    loading = false;
     showPassword = false;
     showConfirmPassword = false;
 
-    // Country codes
     countryCodes = [
         { label: '+1 (USA)', value: '+1' },
         { label: '+91 (India)', value: '+91' },
@@ -57,42 +47,31 @@ export class RegisterPage {
     error = '';
     success = '';
 
-    constructor(
-        private auth: AuthService,
-        private router: Router,
-        private cdr: ChangeDetectorRef
-    ) { }
+    constructor(private auth: AuthService, private cdr: ChangeDetectorRef) { }
 
     register() {
-
         this.error = '';
         this.success = '';
         this.loading = true;
 
-        // Email validation
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(this.user.email)) {
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.user.email)) {
             this.error = 'Please enter a valid email address';
             this.loading = false;
             return;
         }
 
-        // Password match
         if (this.user.password.trim() !== this.user.confirmPassword.trim()) {
             this.error = 'Passwords do not match';
             this.loading = false;
             return;
         }
 
-        // Phone validation (digits only, max 10)
-        const phoneRegex = /^[0-9]{10}$/;
-        if (!phoneRegex.test(this.user.phoneNumber)) {
+        if (!/^[0-9]{10}$/.test(this.user.phoneNumber)) {
             this.error = 'Phone number must be exactly 10 digits';
             this.loading = false;
             return;
         }
 
-        // Build payload
         const payload = {
             username: this.user.username,
             firstName: this.user.firstName,
@@ -107,29 +86,17 @@ export class RegisterPage {
             promotions: this.user.promotions
         };
 
-        // Debug log to check the ActivationToken payload before sending
-        console.log("REGISTER PAYLOAD:", payload);
-
         this.auth.register(payload).subscribe({
             next: (res) => {
                 this.success = res;
                 this.loading = false;
                 this.cdr.detectChanges();
-
-                // Optional redirect later
-                // this.router.navigate(['/login']);
             },
             error: (err) => {
                 this.loading = false;
-
-                if (typeof err.error === 'string') {
-                    this.error = err.error;
-                } else if (err.error?.message) {
-                    this.error = err.error.message;
-                } else {
-                    this.error = 'Registration failed';
-                }
-
+                this.error = typeof err.error === 'string'
+                    ? err.error
+                    : err.error?.message || 'Registration failed';
                 this.cdr.detectChanges();
             }
         });

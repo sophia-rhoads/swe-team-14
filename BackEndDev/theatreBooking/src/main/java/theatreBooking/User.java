@@ -5,7 +5,6 @@ import java.time.LocalDate;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-
 public abstract class User {
 
     @Id
@@ -26,10 +25,6 @@ public abstract class User {
     @Enumerated(EnumType.STRING)
     private UserState userState;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id")
-    private MailingAddr address;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
@@ -39,23 +34,6 @@ public abstract class User {
         ADMIN
     }
 
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public UserState getUserState() {
-        return userState;
-    }
-
-    public void setUserState(UserState userState) {
-        this.userState = userState;
-    }
-
-    // GETTERS & SETTERS
     public Long getId() {
         return id;
     }
@@ -118,5 +96,21 @@ public abstract class User {
 
     public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
+    }
+
+    public UserState getUserState() {
+        return userState;
+    }
+
+    public void setUserState(UserState userState) {
+        this.userState = userState;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

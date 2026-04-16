@@ -1,8 +1,8 @@
 package theatreBooking;
 
 import jakarta.persistence.*;
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.List;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -18,7 +18,6 @@ public class Customer extends User {
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Favorites> favorites = new ArrayList<>();
 
-    // Getters & Setters
     public List<PaymentCard> getPaymentCards() {
         return paymentCards;
     }
@@ -36,26 +35,5 @@ public class Customer extends User {
 
     public List<Favorites> getFavorites() {
         return favorites;
-    }
-
-    // Business Logic
-    public void addPaymentCard(PaymentCard card) {
-        if (paymentCards.size() >= 3) {
-            throw new RuntimeException("Max 3 cards allowed");
-        }
-        card.setCustomer(this);
-        paymentCards.add(card);
-    }
-
-    public void addFavorites(Movie movie) {
-        boolean exists = favorites.stream()
-                .anyMatch(f -> f.getMovie().getId().equals(movie.getId()));
-
-        if (!exists) {
-            Favorites fav = new Favorites();
-            fav.setMovie(movie);
-            fav.setCustomer(this);
-            favorites.add(fav);
-        }
     }
 }
