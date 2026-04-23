@@ -14,8 +14,8 @@ export interface ShowtimeResponse {
     movieTitle: string;
     roomId: number;
     roomName: string;
-    showDate: string;   // YYYY-MM-DD
-    showTime: string;   // HH:mm:ss
+    showDate: string;   // "YYYY-MM-DD"
+    showTime: string;   // "HH:mm:ss"
     seats: SeatInfo[];
 }
 
@@ -28,8 +28,24 @@ export interface ShowroomInfo {
 export interface ShowtimeRequest {
     movieId: number;
     roomId: number;
-    showDate: string;   // YYYY-MM-DD
-    showTime: string;   // HH:mm
+    showDate: string;
+    showTime: string;
+}
+
+// Seat lock interfaces
+export interface SeatLockRequest {
+    showtimeId: number;
+    seatNumbers: string[];
+    userId: number;
+}
+
+export interface SeatLockResponse {
+    sessionToken: string;
+    expiresAt: string;   // ISO datetime string "yyyy-MM-dd'T'HH:mm:ss"
+}
+
+export interface LockedSeatsResponse {
+    lockedSeats: string[];
 }
 
 @Injectable({ providedIn: 'root' })
@@ -37,31 +53,53 @@ export class ShowtimeService {
 
     private readonly showtimesUrl = 'http://localhost:8080/api/showtimes';
     private readonly showroomsUrl = 'http://localhost:8080/api/showrooms';
+    private readonly seatsUrl = 'http://localhost:8080/api/seats';
 
     constructor(private http: HttpClient) { }
 
-    // User portal: showtimes for a specific movie
     getShowtimesByMovie(movieId: number): Observable<ShowtimeResponse[]> {
         return this.http.get<ShowtimeResponse[]>(`${this.showtimesUrl}/movie/${movieId}`);
     }
 
-    // Booking page: single showtime with full seat map
     getShowtimeById(showtimeId: number): Observable<ShowtimeResponse> {
         return this.http.get<ShowtimeResponse>(`${this.showtimesUrl}/${showtimeId}`);
     }
 
-    // Admin: all showtimes
     getAllShowtimes(): Observable<ShowtimeResponse[]> {
         return this.http.get<ShowtimeResponse[]>(this.showtimesUrl);
     }
 
-    // Admin: create a showtime
     createShowtime(request: ShowtimeRequest): Observable<ShowtimeResponse> {
         return this.http.post<ShowtimeResponse>(this.showtimesUrl, request);
     }
 
-    // Admin: all showrooms for dropdown — separate URL avoids Spring path variable conflict
+    deleteShowtime(showtimeId: number): Observable<string> {
+        return this.http.delete(`${this.showtimesUrl}/${showtimeId}`, { responseType: 'text' });
+    }
+
     getShowrooms(): Observable<ShowroomInfo[]> {
         return this.http.get<ShowroomInfo[]>(this.showroomsUrl);
+    }
+
+    // Seat lock API
+    // Lock selected seats for 5 minutes. Returns sessionToken + expiresAt.
+    lockSeats(req: SeatLockRequest): Observable<SeatLockResponse> {
+        return this.http.post<SeatLockResponse>(`${this.seatsUrl}/lock`, req);
+    }
+
+    // Release all locks held by this session token.
+    releaseLocks(sessionToken: string): Observable<string> {
+        return this.http.delete(`${this.seatsUrl}/lock/${sessionToken}`,
+            { responseType: 'text' });
+    }
+
+    // Get all seat numbers currently locked (by anyone) for a showtime.
+    getLockedSeats(showtimeId: number): Observable<LockedSeatsResponse> {
+        return this.http.get<LockedSeatsResponse>(`${this.seatsUrl}/locked/${showtimeId}`);
+    }
+
+    // Verify the lock for a session token is still active and get its expiry.
+    getLockStatus(sessionToken: string): Observable<SeatLockResponse> {
+        return this.http.get<SeatLockResponse>(`${this.seatsUrl}/lock/status/${sessionToken}`);
     }
 }

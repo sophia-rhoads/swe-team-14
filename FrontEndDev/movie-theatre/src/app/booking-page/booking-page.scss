@@ -132,6 +132,18 @@
     cursor: not-allowed;
 }
 
+// Seat locked by another customer during checkout
+.seat.locked {
+    background: #fef3c7;
+    border-color: #f59e0b;
+    color: #92400e;
+    cursor: not-allowed;
+
+    i {
+        font-size: 0.85rem;
+    }
+}
+
 .placeholder {
     visibility: hidden;
 }
@@ -314,5 +326,138 @@
 
     .field-row {
         grid-template-columns: 1fr;
+    }
+}
+
+
+// Seat Reservation Timer Banner
+// Active timer — green baseline, switches to urgent red when under 60 s
+.reservation-timer-banner {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 20px;
+    margin: 16px 0;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #e6f9f0 0%, #d0f2e4 100%);
+    border: 2px solid #2ecc71;
+    box-shadow: 0 3px 12px rgba(46, 204, 113, 0.2);
+    transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+
+    // Icon column — large, vertically centred
+    .timer-icon-col {
+        flex-shrink: 0;
+
+        i {
+            font-size: 2rem;
+            color: #27ae60;
+            transition: color 0.4s ease;
+        }
+    }
+
+    // Text block
+    .timer-body {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        min-width: 0;
+    }
+
+    // "SEATS RESERVED" caption
+    .timer-label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #27ae60;
+        transition: color 0.4s ease;
+    }
+
+    // The MM:SS countdown — the focal point
+    .timer-countdown {
+        font-size: 2.4rem;
+        font-weight: 800;
+        line-height: 1;
+        font-variant-numeric: tabular-nums; // prevents layout shift as digits change
+        letter-spacing: 0.04em;
+        color: #1a7a46;
+        transition: color 0.4s ease;
+    }
+
+    // Instructional sub-text
+    .timer-sub {
+        font-size: 0.8rem;
+        color: #2d8653;
+        margin-top: 2px;
+        transition: color 0.4s ease;
+    }
+
+    // Urgent state (< 60 seconds)
+    &.timer-urgent {
+        background: linear-gradient(135deg, #fff0f0 0%, #ffe0e0 100%);
+        border-color: #e74c3c;
+        box-shadow: 0 3px 16px rgba(231, 76, 60, 0.3);
+        animation: timerPulse 1s ease-in-out infinite;
+
+        .timer-icon-col i {
+            color: #c0392b;
+        }
+
+        .timer-label {
+            color: #c0392b;
+        }
+
+        .timer-countdown {
+            color: #922b21;
+        }
+
+        .timer-sub {
+            color: #c0392b;
+        }
+    }
+
+    // Compact version inside dialogs (Order Summary + Payment)
+    &.dialog-timer {
+        margin: 0 0 16px 0;
+        padding: 10px 16px;
+
+        .timer-countdown {
+            font-size: 1.8rem;
+        }
+    }
+}
+
+// Pulse keyframe for the urgent countdown glow
+@keyframes timerPulse {
+
+    0%,
+    100% {
+        box-shadow: 0 3px 16px rgba(231, 76, 60, 0.3);
+    }
+
+    50% {
+        box-shadow: 0 3px 24px rgba(231, 76, 60, 0.6);
+    }
+}
+
+
+// Lock Expired Banner
+.reservation-expired-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 18px;
+    margin: 16px 0;
+    border-radius: 10px;
+    background: #fff0f0;
+    border: 2px solid #e74c3c;
+    color: #922b21;
+    font-size: 0.92rem;
+    font-weight: 600;
+
+    i {
+        font-size: 1.4rem;
+        flex-shrink: 0;
+        color: #e74c3c;
     }
 }

@@ -1,7 +1,7 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -30,7 +30,7 @@ import { Movie } from '../models/movie';
   templateUrl: './edit-profile.html',
   styleUrls: ['./edit-profile.scss']
 })
-export class EditProfile implements OnInit, OnDestroy {
+export class EditProfile implements OnInit, AfterViewInit, OnDestroy {
 
   userId!: number;
 
@@ -55,6 +55,8 @@ export class EditProfile implements OnInit, OnDestroy {
   saveMessage = '';
   errorMessage = '';
 
+  activeTab: string = '';
+
   // Data
   favoriteMovies: Movie[] = [];
   bookingHistory: BookingRecord[] = [];
@@ -68,7 +70,6 @@ export class EditProfile implements OnInit, OnDestroy {
   newCardType = '';
   newCardExpiry: Date | null = null;
   newCardZip = '';
-  // CVV is validated locally for realism but never sent to or stored in the backend
   newCardCvv = '';
   paymentMessage = '';
   paymentMessageType: 'success' | 'error' = 'success';
@@ -92,12 +93,22 @@ export class EditProfile implements OnInit, OnDestroy {
     private profileService: ProfileService,
     private authService: AuthService,
     private router: Router,
+    private route: ActivatedRoute,
     private bookingService: BookingService,
     private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
     this.userId = this.authService.getUserId()!;
+
+    this.route.queryParams
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(params => {
+        const valid = ['profile', 'favorites', 'orders', 'payments'];
+        this.activeTab = valid.includes(params['tab']) ? params['tab'] : 'profile';
+        this.cdr.detectChanges();
+      });
+
     this.loadProfile();
     this.loadFavorites();
     this.loadCards();
@@ -106,6 +117,15 @@ export class EditProfile implements OnInit, OnDestroy {
     this.profileService.favoritesChanged$
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => this.loadFavorites());
+  }
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      const snap = this.route.snapshot.queryParams['tab'];
+      const valid = ['profile', 'favorites', 'orders', 'payments'];
+      this.activeTab = valid.includes(snap) ? snap : 'profile';
+      this.cdr.detectChanges();
+    }, 0);
   }
 
   ngOnDestroy(): void {
@@ -209,25 +229,12 @@ export class EditProfile implements OnInit, OnDestroy {
     const sanitizedCvv = this.onlyDigits(this.newCardCvv);
     const formattedExpiry = this.formatExpiryMonth(this.newCardExpiry);
 
-    if (!this.newCardHolderName.trim()) {
-      this.setPaymentMessage('Enter the card holder name.', 'error'); return;
-    }
-    if (!/^\d{16}$/.test(sanitizedCardNumber)) {
-      this.setPaymentMessage('Enter a valid 16-digit card number.', 'error'); return;
-    }
-    if (!this.newCardType) {
-      this.setPaymentMessage('Select a card type.', 'error'); return;
-    }
-    if (!formattedExpiry) {
-      this.setPaymentMessage('Choose a valid expiry month.', 'error'); return;
-    }
-    if (!/^\d{5}$/.test(sanitizedZip)) {
-      this.setPaymentMessage('Enter a valid 5-digit ZIP code.', 'error'); return;
-    }
-    // CVV validated locally — not sent to or stored in backend
-    if (!/^\d{3,4}$/.test(sanitizedCvv)) {
-      this.setPaymentMessage('Enter a valid CVV (3 or 4 digits).', 'error'); return;
-    }
+    if (!this.newCardHolderName.trim()) { this.setPaymentMessage('Enter the card holder name.', 'error'); return; }
+    if (!/^\d{16}$/.test(sanitizedCardNumber)) { this.setPaymentMessage('Enter a valid 16-digit card number.', 'error'); return; }
+    if (!this.newCardType) { this.setPaymentMessage('Select a card type.', 'error'); return; }
+    if (!formattedExpiry) { this.setPaymentMessage('Choose a valid expiry month.', 'error'); return; }
+    if (!/^\d{5}$/.test(sanitizedZip)) { this.setPaymentMessage('Enter a valid 5-digit ZIP code.', 'error'); return; }
+    if (!/^\d{3,4}$/.test(sanitizedCvv)) { this.setPaymentMessage('Enter a valid CVV (3 or 4 digits).', 'error'); return; }
 
     const payload: AddCardRequest = {
       cardHolderName: this.newCardHolderName.trim(),
@@ -235,31 +242,18 @@ export class EditProfile implements OnInit, OnDestroy {
       cardNumber: sanitizedCardNumber,
       expirationDate: formattedExpiry,
       billingZipCode: sanitizedZip
-      // CVV intentionally excluded — never stored
     };
 
     this.profileService.addCard(this.userId, payload).subscribe({
       next: () => {
-        this.newCardHolderName = '';
-        this.newCardNumber = '';
-        this.newCardExpiry = null;
-        this.newCardZip = '';
-        this.newCardType = '';
-        this.newCardCvv = '';
+        this.newCardHolderName = ''; this.newCardNumber = ''; this.newCardExpiry = null;
+        this.newCardZip = ''; this.newCardType = ''; this.newCardCvv = '';
         this.loadCards();
-        setTimeout(() => {
-          this.setPaymentMessage('Card saved successfully.', 'success');
-          this.cdr.detectChanges();
-        });
+        setTimeout(() => { this.setPaymentMessage('Card saved successfully.', 'success'); this.cdr.detectChanges(); });
       },
       error: err => {
-        const msg = typeof err?.error === 'string'
-          ? err.error
-          : err?.error?.message || 'Unable to save card.';
-        setTimeout(() => {
-          this.setPaymentMessage(msg, 'error');
-          this.cdr.detectChanges();
-        });
+        const msg = typeof err?.error === 'string' ? err.error : err?.error?.message || 'Unable to save card.';
+        setTimeout(() => { this.setPaymentMessage(msg, 'error'); this.cdr.detectChanges(); });
       }
     });
   }
@@ -268,40 +262,24 @@ export class EditProfile implements OnInit, OnDestroy {
     this.profileService.deleteCard(cardId).subscribe({
       next: () => {
         this.loadCards();
-        setTimeout(() => {
-          this.setPaymentMessage('Card removed successfully.', 'success');
-          this.cdr.detectChanges();
-        });
+        setTimeout(() => { this.setPaymentMessage('Card removed successfully.', 'success'); this.cdr.detectChanges(); });
       },
       error: () => {
-        setTimeout(() => {
-          this.setPaymentMessage('Unable to remove card.', 'error');
-          this.cdr.detectChanges();
-        });
+        setTimeout(() => { this.setPaymentMessage('Unable to remove card.', 'error'); this.cdr.detectChanges(); });
       }
     });
   }
 
   maskCard(cardNumber: string): string {
-    const digits = this.onlyDigits(cardNumber);
-    return `**** **** **** ${digits.slice(-4)}`;
+    return `**** **** **** ${this.onlyDigits(cardNumber).slice(-4)}`;
   }
 
-  formatCardNumberInput(): void {
-    this.newCardNumber = this.groupCardNumber(this.newCardNumber);
-  }
-
-  formatZipInput(): void {
-    this.newCardZip = this.onlyDigits(this.newCardZip).slice(0, 5);
-  }
-
-  formatCvvInput(): void {
-    this.newCardCvv = this.onlyDigits(this.newCardCvv).slice(0, 4);
-  }
+  formatCardNumberInput(): void { this.newCardNumber = this.groupCardNumber(this.newCardNumber); }
+  formatZipInput(): void { this.newCardZip = this.onlyDigits(this.newCardZip).slice(0, 5); }
+  formatCvvInput(): void { this.newCardCvv = this.onlyDigits(this.newCardCvv).slice(0, 4); }
 
   private setPaymentMessage(msg: string, type: 'success' | 'error'): void {
-    this.paymentMessage = msg;
-    this.paymentMessageType = type;
+    this.paymentMessage = msg; this.paymentMessageType = type;
   }
 
   private hydratePhoneFields(phone: string): void {
@@ -319,9 +297,7 @@ export class EditProfile implements OnInit, OnDestroy {
     return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
   }
 
-  private onlyDigits(value: string): string {
-    return String(value || '').replace(/\D/g, '');
-  }
+  private onlyDigits(value: string): string { return String(value || '').replace(/\D/g, ''); }
 
   private groupCardNumber(value: string): string {
     return this.onlyDigits(value).slice(0, 16).replace(/(\d{4})(?=\d)/g, '$1 ').trim();

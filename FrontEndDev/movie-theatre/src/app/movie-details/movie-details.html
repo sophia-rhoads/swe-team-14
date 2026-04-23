@@ -39,9 +39,8 @@
                 <p>This movie is coming soon. Ticket booking will open after release.</p>
             </div>
 
-            <!-- SHOWTIMES SECTION -->
+            <!-- SHOWTIME PICKER -->
             <div *ngIf="movie.status !== 'COMING_SOON'" class="booking-options">
-                <h3>Available Showtimes</h3>
 
                 <div *ngIf="showtimesLoading" class="spinner-container">
                     <p-progressSpinner></p-progressSpinner>
@@ -49,17 +48,60 @@
 
                 <p *ngIf="showtimesError" class="error-text">{{ showtimesError }}</p>
 
-                <p *ngIf="!showtimesLoading && !showtimesError && showtimes.length === 0" class="empty-message">
-                    No showtimes scheduled yet. Check back soon.
-                </p>
+                <ng-container *ngIf="!showtimesLoading && !showtimesError">
 
-                <div *ngIf="showtimes.length > 0" class="showtime-options">
-                    <label class="radio-option" *ngFor="let st of showtimes">
-                        <p-radiobutton name="selectedShowtime" [value]="st" [(ngModel)]="selectedShowtime">
-                        </p-radiobutton>
-                        <span>{{ formatShowtime(st) }}</span>
-                    </label>
-                </div>
+                    <p *ngIf="allShowtimes.length === 0" class="empty-message">
+                        No showtimes scheduled yet. Check back soon.
+                    </p>
+
+                    <ng-container *ngIf="allShowtimes.length > 0">
+
+                        <!-- Two-column layout: calendar left, time chips right -->
+                        <div class="showtime-picker-grid">
+
+                            <!-- LEFT: Inline calendar -->
+                            <div class="showtime-calendar-col">
+                                <h3>Select a Date</h3>
+                                <p class="showtime-hint">
+                                    <i class="pi pi-info-circle"></i>
+                                    Greyed-out dates have no scheduled showtimes.
+                                </p>
+                                <p-datePicker [(ngModel)]="selectedDate" [inline]="true" [minDate]="minDate"
+                                    [maxDate]="maxDate" [disabledDates]="disabledDates" (onSelect)="onDateSelected()">
+                                </p-datePicker>
+                            </div>
+
+                            <!-- RIGHT: Time slot chips for selected date -->
+                            <div class="showtime-slots-col">
+                                <ng-container *ngIf="!selectedDate">
+                                    <p class="showtime-hint">
+                                        <i class="pi pi-arrow-left"></i>
+                                        Pick a date to see available times.
+                                    </p>
+                                </ng-container>
+
+                                <ng-container *ngIf="selectedDate">
+                                    <h3>{{ selectedDate | date:'EEE, MMM d' }}</h3>
+
+                                    <p *ngIf="timeSlotsForDate.length === 0" class="empty-message">
+                                        No showtimes on this date.
+                                    </p>
+
+                                    <div *ngIf="timeSlotsForDate.length > 0" class="timeslot-grid">
+                                        <button *ngFor="let st of timeSlotsForDate" class="timeslot-chip"
+                                            [class.selected]="selectedShowtime?.id === st.id"
+                                            (click)="selectTimeSlot(st)">
+                                            <span class="timeslot-time">{{ formatTime(st) }}</span>
+                                            <span class="timeslot-venue">{{ formatVenue(st) }}</span>
+                                            <span class="timeslot-seats">{{ availableSeats(st) }} seats left</span>
+                                        </button>
+                                    </div>
+                                </ng-container>
+                            </div>
+
+                        </div>
+                    </ng-container>
+                </ng-container>
             </div>
 
             <br>
@@ -70,4 +112,3 @@
             </div>
         </div>
     </div>
-</ng-container>

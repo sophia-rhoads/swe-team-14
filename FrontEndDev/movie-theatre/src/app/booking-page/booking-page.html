@@ -37,6 +37,28 @@
                     </span>
                 </div>
 
+                <!-- SEAT RESERVATION TIMER BANNER
+                     Appears as soon as seats are locked.
+                     Turns urgent red styling when under 60 seconds remain. -->
+                <div *ngIf="timerActive && !lockExpired" class="reservation-timer-banner"
+                    [class.timer-urgent]="timerUrgent">
+                    <div class="timer-icon-col">
+                        <i class="pi" [ngClass]="timerUrgent ? 'pi-exclamation-circle' : 'pi-hourglass'"></i>
+                    </div>
+                    <div class="timer-body">
+                        <span class="timer-label">Seats Reserved</span>
+                        <span class="timer-countdown">{{ timerDisplay }}</span>
+                        <span class="timer-sub">{{ timerUrgent ? 'Hurry! Complete payment now.' : 'Complete your booking
+                            before time runs out.' }}</span>
+                    </div>
+                </div>
+
+                <!-- LOCK EXPIRED NOTICE -->
+                <div *ngIf="lockExpired" class="reservation-expired-banner">
+                    <i class="pi pi-times-circle"></i>
+                    <span>Seat reservation expired — please reselect your seats to continue.</span>
+                </div>
+
                 <p *ngIf="seatMapError" class="checkout-error">{{ seatMapError }}</p>
 
                 <div *ngIf="seatMapLoading" class="spinner-container">
@@ -46,7 +68,7 @@
                 <ng-container *ngIf="!seatMapLoading && showtime">
                     <div class="main-booking-grid">
 
-                        <!-- TICKET TYPES -->
+                        <!-- LEFT: Ticket types + legend -->
                         <div class="left-column">
                             <div>
                                 <h3>Ticket Types</h3>
@@ -67,18 +89,31 @@
                             <!-- SEAT LEGEND -->
                             <div class="seat-legend">
                                 <div class="legend-item">
-                                    <div class="legend-swatch available"></div><span>Available</span>
+                                    <div class="legend-seat available">
+                                        <img src="./armchair.png" class="seat-icon">
+                                    </div>
+                                    <span>Available</span>
                                 </div>
                                 <div class="legend-item">
-                                    <div class="legend-swatch selected"></div><span>Your selection</span>
+                                    <div class="legend-seat selected">A1</div>
+                                    <span>Your selection</span>
                                 </div>
                                 <div class="legend-item">
-                                    <div class="legend-swatch booked"></div><span>Booked</span>
+                                    <div class="legend-seat locked">
+                                        <i class="pi pi-lock"></i>
+                                    </div>
+                                    <span>Reserved by someone</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-seat booked">
+                                        <i class="pi pi-times"></i>
+                                    </div>
+                                    <span>Already booked</span>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- SEAT MAP -->
+                        <!-- RIGHT: Seat map -->
                         <div class="right-column">
                             <h3>Select Seats</h3>
 
@@ -92,33 +127,45 @@
                                 <span class="row-label">{{ ['A','B','C'][i] }}</span>
                                 <div class="seat" *ngFor="let seat of row"
                                     [class.selected]="isSelected(seat.seatNumber)" [class.booked]="seat.booked"
+                                    [class.locked]="isLockedByOther(seat.seatNumber)"
                                     [class.disabled]="isDisabled(seat)" (click)="selectSeat(seat)">
                                     <ng-container *ngIf="seat.booked">
                                         <i class="pi pi-times"></i>
                                     </ng-container>
-                                    <ng-container *ngIf="!seat.booked && isSelected(seat.seatNumber)">
+                                    <ng-container *ngIf="!seat.booked && isLockedByOther(seat.seatNumber)">
+                                        <i class="pi pi-lock"></i>
+                                    </ng-container>
+                                    <ng-container
+                                        *ngIf="!seat.booked && !isLockedByOther(seat.seatNumber) && isSelected(seat.seatNumber)">
                                         {{ seat.seatNumber }}
                                     </ng-container>
-                                    <ng-container *ngIf="!seat.booked && !isSelected(seat.seatNumber)">
+                                    <ng-container
+                                        *ngIf="!seat.booked && !isLockedByOther(seat.seatNumber) && !isSelected(seat.seatNumber)">
                                         <img src="./armchair.png" class="seat-icon">
                                     </ng-container>
                                 </div>
                             </div>
 
-                            <!-- Rows D, E — 5 seats each (centred with placeholders) -->
+                            <!-- Rows D, E — 5 seats centred with placeholders -->
                             <div class="seat-row" *ngFor="let row of rowsDE; let i = index">
                                 <span class="row-label">{{ ['D','E'][i] }}</span>
                                 <div class="seat placeholder"></div>
                                 <div class="seat" *ngFor="let seat of row"
                                     [class.selected]="isSelected(seat.seatNumber)" [class.booked]="seat.booked"
+                                    [class.locked]="isLockedByOther(seat.seatNumber)"
                                     [class.disabled]="isDisabled(seat)" (click)="selectSeat(seat)">
                                     <ng-container *ngIf="seat.booked">
                                         <i class="pi pi-times"></i>
                                     </ng-container>
-                                    <ng-container *ngIf="!seat.booked && isSelected(seat.seatNumber)">
+                                    <ng-container *ngIf="!seat.booked && isLockedByOther(seat.seatNumber)">
+                                        <i class="pi pi-lock"></i>
+                                    </ng-container>
+                                    <ng-container
+                                        *ngIf="!seat.booked && !isLockedByOther(seat.seatNumber) && isSelected(seat.seatNumber)">
                                         {{ seat.seatNumber }}
                                     </ng-container>
-                                    <ng-container *ngIf="!seat.booked && !isSelected(seat.seatNumber)">
+                                    <ng-container
+                                        *ngIf="!seat.booked && !isLockedByOther(seat.seatNumber) && !isSelected(seat.seatNumber)">
                                         <img src="./armchair.png" class="seat-icon">
                                     </ng-container>
                                 </div>
@@ -135,7 +182,7 @@
                         <div class="checkout-wrapper">
                             <p class="checkout-error" *ngIf="checkoutError">{{ checkoutError }}</p>
                             <p-button label="Proceed to Checkout" icon="pi pi-ticket" (click)="proceedToCheckout(movie)"
-                                [disabled]="totalTickets === 0 || selectedSeats.length !== totalTickets">
+                                [disabled]="totalTickets === 0 || selectedSeats.length !== totalTickets || lockExpired">
                             </p-button>
                         </div>
                     </div>
@@ -149,6 +196,20 @@
 <p-dialog header="Order Summary" [(visible)]="displayDialog" [modal]="true" [closable]="true"
     [style]="{ width: '520px' }">
     <ng-container *ngIf="movie$ | async as movie">
+        <!-- Timer shown inside Order Summary dialog -->
+        <div *ngIf="timerActive && !lockExpired" class="reservation-timer-banner dialog-timer"
+            [class.timer-urgent]="timerUrgent">
+            <div class="timer-icon-col">
+                <i class="pi" [ngClass]="timerUrgent ? 'pi-exclamation-circle' : 'pi-hourglass'"></i>
+            </div>
+            <div class="timer-body">
+                <span class="timer-label">Seats Reserved</span>
+                <span class="timer-countdown">{{ timerDisplay }}</span>
+                <span class="timer-sub">{{ timerUrgent ? 'Hurry! Complete payment now.' : 'Complete booking before time
+                    runs out.' }}</span>
+            </div>
+        </div>
+
         <div class="summary-list">
             <div><span>Movie</span><strong>{{ movie.title }}</strong></div>
             <div *ngIf="showtime">
@@ -179,20 +240,27 @@
     [style]="{ width: '720px', maxWidth: '95vw' }" [contentStyle]="{ overflow: 'visible' }">
     <ng-container *ngIf="movie$ | async as movie">
         <div class="payment-mock">
+
+            <!-- Timer shown in payment dialog -->
+            <div *ngIf="timerActive && !lockExpired" class="reservation-timer-banner dialog-timer"
+                [class.timer-urgent]="timerUrgent">
+                <div class="timer-icon-col">
+                    <i class="pi" [ngClass]="timerUrgent ? 'pi-exclamation-circle' : 'pi-hourglass'"></i>
+                </div>
+                <div class="timer-body">
+                    <span class="timer-label">Seats Reserved</span>
+                    <span class="timer-countdown">{{ timerDisplay }}</span>
+                    <span class="timer-sub">{{ timerUrgent ? 'Hurry! Complete payment now.' : 'Time remaining to
+                        complete payment.' }}</span>
+                </div>
+            </div>
+            <div *ngIf="lockExpired" class="reservation-expired-banner">
+                <i class="pi pi-exclamation-triangle"></i>
+                <span>Seat reservation expired. Close this dialog and reselect your seats.</span>
+            </div>
+
             <h3>Secure payment</h3>
             <p>Your order confirmation will be sent to {{ checkoutEmail }} after successful payment.</p>
-
-            <!--
-            TEST MODE BANNER — uncomment during demo:
-
-            <div class="test-mode-banner">
-                <i class="pi pi-info-circle"></i>
-                <strong>Simulated Payment — Test Mode</strong>
-                <span>CVV <code>000</code> / <code>0000</code> → card declined.
-                      CVV <code>999</code> / <code>9999</code> → insufficient funds.
-                      Any other valid CVV succeeds.</span>
-            </div>
-            -->
 
             <div class="payment-choice" *ngIf="hasStoredCards">
                 <button pButton type="button" size="small" [outlined]="!useSavedCard" label="Use Saved Card"
@@ -201,7 +269,6 @@
                     (click)="switchPaymentMode(false)"></button>
             </div>
 
-            <!-- SAVED CARD SECTION -->
             <div class="saved-cards" *ngIf="hasStoredCards && useSavedCard">
                 <label class="saved-card-option" *ngFor="let card of storedCards">
                     <input type="radio" name="savedCard" [checked]="selectedCardId === card.id"
@@ -215,7 +282,6 @@
                 </div>
             </div>
 
-            <!-- MANUAL CARD SECTION -->
             <div class="payment-grid" *ngIf="!useSavedCard || !hasStoredCards">
                 <div class="field-group">
                     <label for="paymentName">Cardholder Name</label>
@@ -259,14 +325,14 @@
             </div>
             <p class="checkout-error" *ngIf="paymentError">{{ paymentError }}</p>
             <div class="dialog-actions">
-                <p-button label="Pay Now" icon="pi pi-lock" (click)="submitPayment(movie)"
-                    [loading]="paymentProcessing"></p-button>
+                <p-button label="Pay Now" icon="pi pi-lock" (click)="submitPayment(movie)" [loading]="paymentProcessing"
+                    [disabled]="lockExpired"></p-button>
             </div>
         </div>
     </ng-container>
 </p-dialog>
 
-<!-- TRANSACTION COMPLETE DIALOG — top-level sibling -->
+<!-- TRANSACTION COMPLETE DIALOG -->
 <p-dialog header="Transaction Complete" [(visible)]="paymentSuccessDialog" [modal]="true" [closable]="true"
     [style]="{ width: '560px' }" (onHide)="closeSuccessDialog()">
     <div class="success-state" *ngIf="completedBooking as booking">
