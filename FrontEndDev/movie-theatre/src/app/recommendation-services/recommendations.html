@@ -1,0 +1,23 @@
+<div class="recommendations-section">
+  <h2>Recommended for You</h2>
+
+  @if (loading) {
+    <p>Loading recommendations...</p>
+  }
+
+  @if (error) {
+    <p class="error-text">{{ error }}</p>
+  }
+
+  <div class="recommendation-grid">
+    @for (movie of recommendations; track movie.movieId) {
+      <div class="recommendation-card">
+        <img [src]="movie.posterUrl" [alt]="movie.title" />
+        <h3>{{ movie.title }}</h3>
+        <p><strong>Genre:</strong> {{ movie.genre }}</p>
+        <p><strong>IMDb:</strong> {{ movie.imdbRating }}</p>
+        <p class="reason">{{ movie.reason }}</p>
+      </div>
+    }
+  </div>
+</div>

@@ -11,6 +11,8 @@ import { ManageMovies } from './admin/manage-movies/manage-movies';
 import { ManageShowtimesComponent } from './admin/manage-showtimes/manage-showtimes';
 import { ResetPasswordPage } from './reset-password/reset-password';
 import { adminGuard } from './admin/admin.guard';
+import { RecommendationsComponent } from './recommendation-services/recommendations';
+
 
 export const routes: Routes = [
     { path: '', component: HomePage },
@@ -24,6 +26,7 @@ export const routes: Routes = [
     { path: 'edit-profile', component: EditProfile },
     { path: 'logout-page', component: LogoutPage },
     { path: 'reset-password', component: ResetPasswordPage },
+    { path: 'recommendations', component: RecommendationsComponent },
 
     // Admin section — guarded, with child routes per sub-page
     {

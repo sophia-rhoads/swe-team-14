@@ -13,12 +13,14 @@ import { Observable } from 'rxjs';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { AuthService } from '../services/auth.services';
 import { ProfileService } from '../services/profile.service';
+import { RecommendationsComponent } from '../recommendation-services/recommendations';
 
 @Component({
   selector: 'app-home-page',
   standalone: true,
   imports: [
     CommonModule,
+    RecommendationsComponent,
     ProgressSpinnerModule,
     ButtonModule,
     RatingModule,
@@ -29,6 +31,8 @@ import { ProfileService } from '../services/profile.service';
   templateUrl: './home-page.html',
   styleUrls: ['./home-page.scss']
 })
+
+
 
 export class HomePage implements OnInit {
   movies$!: Observable<Movie[]>;

@@ -1,0 +1,38 @@
+.recommendations-section {
+  padding: 24px;
+}
+
+.recommendation-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-top: 16px;
+}
+
+.recommendation-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.recommendation-card img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.recommendation-card h3 {
+  margin: 12px 0 8px;
+}
+
+.reason {
+  color: #555;
+  font-size: 14px;
+}
+
+.error-text {
+  color: red;
+}
