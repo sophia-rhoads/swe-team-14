@@ -1,0 +1,63 @@
+<p-toolbar>
+
+  <!-- LEFT -->
+  <ng-template #start>
+    <div class="nav-left">
+
+      <button pButton icon="pi pi-home" (click)="goHome()"></button>
+
+      @if (showBackButton && !isAdminPage) {
+      <p-button icon="pi pi-arrow-left" class="p-button-secondary" (click)="goBack()">
+      </p-button>
+      }
+
+    </div>
+  </ng-template>
+
+  <!-- CENTER -->
+  <ng-template #center>
+    <div class="nav-title">
+      {{ navTitle }}
+    </div>
+  </ng-template>
+
+  <!-- RIGHT -->
+  <ng-template #end>
+
+    <!-- Hide the entire right section on login/register pages -->
+    @if (!isAuthPage) {
+
+    <div class="toolbar-controls">
+
+      <!-- Search and genre filter -->
+      @if (!isAdminPage && !showBackButton) {
+
+      <div class="search-group">
+        <input type="text" pInputText [(ngModel)]="searchTerm" (keyup.enter)="onSearch()"
+          placeholder="Search by title" />
+        <button pButton icon="pi pi-search" (click)="onSearch()"></button>
+      </div>
+
+      <p-select [options]="genres" [(ngModel)]="selectedGenre" optionLabel="label" optionValue="value"
+        placeholder="All Genres" (onChange)="onFilter()">
+      </p-select>
+
+      <input type="date" pInputText [(ngModel)]="selectedShowDate" (change)="onFilter()" />
+
+      <button pButton icon="pi pi-times" class="p-button-secondary" (click)="clearFilters()"></button>
+
+      }
+
+      <!-- Profile / admin menu — always visible when logged in -->
+      <p-menu #menu [popup]="true" [model]="profileMenuItems"></p-menu>
+      <button pButton icon="pi pi-user" type="button" (click)="menu.toggle($event)"></button>
+
+    </div>
+
+    }
+
+  </ng-template>
+
+</p-toolbar>
+
+<router-outlet></router-outlet>

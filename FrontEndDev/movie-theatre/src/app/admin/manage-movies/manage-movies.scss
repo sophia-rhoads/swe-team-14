@@ -1,0 +1,41 @@
+.movie-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 20px;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    label {
+        font-weight: 500;
+        font-size: 13px;
+    }
+
+    input,
+    textarea,
+    p-select {
+        width: 100%;
+    }
+
+    .required {
+        color: #ef4444;
+    }
+
+    .error-text {
+        color: #ef4444;
+        font-size: 11px;
+    }
+}
+
+.form-field.full-width {
+    grid-column: 1 / -1;
+}
+
+.dialog-actions {
+    margin-top: 16px;
+    display: flex;
+    justify-content: flex-end;
+}

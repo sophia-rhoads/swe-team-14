@@ -1,0 +1,114 @@
+<ng-template #loading>
+    <div class="spinner-container">
+        <p-progressSpinner></p-progressSpinner>
+    </div>
+</ng-template>
+
+<ng-container *ngIf="movie$ | async as movie; else loading">
+    <div class="trailer-section">
+        <h2>Watch Trailer</h2>
+        <div class="trailer-wrapper">
+            <iframe [src]="trailerUrl$ | async" frameborder="0" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <div class="details-container">
+        <div class="details-left">
+            <img [src]="movie.posterUrl" class="poster">
+        </div>
+        <div class="details-right">
+            <h1>{{ movie.title }}</h1>
+            <div class="meta-info">
+                <span class="mpaa-badge">{{ movie.mpaaRating }}</span>
+                <span class="genre">{{ movie.genre }}</span>
+            </div>
+
+            <div *ngIf="movie.imdbRating; else notReleased">
+                <p-rating [ngModel]="movie.imdbRating / 2" [readonly]="true"></p-rating>
+                <span>{{ movie.imdbRating }} / 10</span>
+            </div>
+            <ng-template #notReleased>
+                <p>Not yet Released</p>
+            </ng-template>
+
+            <p class="description">{{ movie.description }}</p>
+            <p><strong>Director:</strong> {{ movie.director }}</p>
+            <p><strong>Producer:</strong> {{ movie.producer }}</p>
+
+            <div *ngIf="movie.status === 'COMING_SOON'" class="release-note">
+                <p>This movie is coming soon. Ticket booking will open after release.</p>
+            </div>
+
+            <!-- SHOWTIME PICKER -->
+            <div *ngIf="movie.status !== 'COMING_SOON'" class="booking-options">
+
+                <div *ngIf="showtimesLoading" class="spinner-container">
+                    <p-progressSpinner></p-progressSpinner>
+                </div>
+
+                <p *ngIf="showtimesError" class="error-text">{{ showtimesError }}</p>
+
+                <ng-container *ngIf="!showtimesLoading && !showtimesError">
+
+                    <p *ngIf="allShowtimes.length === 0" class="empty-message">
+                        No showtimes scheduled yet. Check back soon.
+                    </p>
+
+                    <ng-container *ngIf="allShowtimes.length > 0">
+
+                        <!-- Two-column layout: calendar left, time chips right -->
+                        <div class="showtime-picker-grid">
+
+                            <!-- LEFT: Inline calendar -->
+                            <div class="showtime-calendar-col">
+                                <h3>Select a Date</h3>
+                                <p class="showtime-hint">
+                                    <i class="pi pi-info-circle"></i>
+                                    Greyed-out dates have no scheduled showtimes.
+                                </p>
+                                <p-datePicker [(ngModel)]="selectedDate" [inline]="true" [minDate]="minDate"
+                                    [maxDate]="maxDate" [disabledDates]="disabledDates" (onSelect)="onDateSelected()">
+                                </p-datePicker>
+                            </div>
+
+                            <!-- RIGHT: Time slot chips for selected date -->
+                            <div class="showtime-slots-col">
+                                <ng-container *ngIf="!selectedDate">
+                                    <p class="showtime-hint">
+                                        <i class="pi pi-arrow-left"></i>
+                                        Pick a date to see available times.
+                                    </p>
+                                </ng-container>
+
+                                <ng-container *ngIf="selectedDate">
+                                    <h3>{{ selectedDate | date:'EEE, MMM d' }}</h3>
+
+                                    <p *ngIf="timeSlotsForDate.length === 0" class="empty-message">
+                                        No showtimes on this date.
+                                    </p>
+
+                                    <div *ngIf="timeSlotsForDate.length > 0" class="timeslot-grid">
+                                        <button *ngFor="let st of timeSlotsForDate" class="timeslot-chip"
+                                            [class.selected]="selectedShowtime?.id === st.id"
+                                            (click)="selectTimeSlot(st)">
+                                            <span class="timeslot-time">{{ formatTime(st) }}</span>
+                                            <span class="timeslot-venue">{{ formatVenue(st) }}</span>
+                                            <span class="timeslot-seats">{{ availableSeats(st) }} seats left</span>
+                                        </button>
+                                    </div>
+                                </ng-container>
+                            </div>
+
+                        </div>
+                    </ng-container>
+                </ng-container>
+            </div>
+
+            <br>
+            <div class="book-button">
+                <button pButton label="Book Tickets" icon="pi pi-ticket"
+                    [disabled]="movie.status === 'COMING_SOON' || !selectedShowtime" (click)="goToBooking(movie)">
+                </button>
+            </div>
+        </div>
+    </div>

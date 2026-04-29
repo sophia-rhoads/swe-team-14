@@ -1,0 +1,48 @@
+<div class="auth-page">
+
+  <div class="auth-card">
+
+    <h2>Welcome Back</h2>
+    <p class="subtitle">Login to continue booking your movies</p>
+
+    <div class="p-fluid">
+
+      <div class="field">
+        <input pInputText [(ngModel)]="email" placeholder="Email" />
+      </div>
+
+      <div class="field">
+        <input pInputText [type]="showPassword ? 'text' : 'password'" [(ngModel)]="password" placeholder="Password" />
+
+        <i class="pi" [ngClass]="showPassword ? 'pi-eye-slash' : 'pi-eye'" (click)="togglePassword()">
+        </i>
+      </div>
+
+      <p *ngIf="email && email.includes('@')" (click)="forgotPassword()"
+        style="cursor:pointer; color:#007bff; margin-top:8px;">
+        Forgot Password?
+      </p>
+
+      <p *ngIf="forgotPasswordLoading" style="color:gray;">
+        Sending reset link...
+      </p>
+
+      <button pButton label="Login" [loading]="loginLoading" (click)="login()">
+      </button>
+
+      <p *ngIf="successMessage" class="success-text">
+        {{ successMessage }}
+      </p>
+
+      <p *ngIf="error" class="error-text">{{ error }}</p>
+
+      <div class="auth-switch">
+        <p class="subtitle">Don't have an account?</p>
+        <a routerLink="/register">Create Account</a>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

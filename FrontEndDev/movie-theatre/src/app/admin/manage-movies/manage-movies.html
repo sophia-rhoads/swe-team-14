@@ -1,0 +1,129 @@
+<div class="manage-movies-page">
+    <div class="page-header">
+        <p-button label="Back to Admin Menu" icon="pi pi-arrow-left" (click)="goBack()"></p-button>
+        <h1 class="page-title">Manage Movies</h1>
+    </div>
+
+    <div *ngIf="submitSuccess" class="form-message success">{{ submitSuccess }}</div>
+    <div *ngIf="submitError" class="form-message error">{{ submitError }}</div>
+
+    <p-button label="Add Movie" icon="pi pi-plus" (click)="showDialog()"></p-button>
+
+    <br><br>
+
+    <!-- ADD / EDIT MOVIE DIALOG -->
+    <p-dialog [header]="editingMovieId ? 'Update Movie' : 'Add Movie'" [modal]="true" [(visible)]="dialogVisible"
+        [style]="{ width: '44rem' }">
+        <form [formGroup]="addMovieForm" (ngSubmit)="submitMovie()">
+
+            <div class="movie-form-grid">
+
+                <!-- Row 1: Title (full width) -->
+                <div class="form-field full-width">
+                    <label for="title">Title <span class="required">*</span></label>
+                    <input id="title" pInputText formControlName="title" placeholder="Movie title" />
+                    <small class="error-text"
+                        *ngIf="addMovieForm.get('title')?.invalid && addMovieForm.get('title')?.touched">
+                        Title is required.
+                    </small>
+                </div>
+
+                <!-- Row 2: Genre | MPAA Rating -->
+                <div class="form-field">
+                    <label for="genre">Genre <span class="required">*</span></label>
+                    <input id="genre" pInputText formControlName="genre" placeholder="e.g. Action" />
+                </div>
+                <div class="form-field">
+                    <label for="mpaa">MPAA Rating <span class="required">*</span></label>
+                    <input id="mpaa" pInputText formControlName="mpaaRating" placeholder="e.g. PG-13" />
+                </div>
+
+                <!-- Row 3: Director | Producer -->
+                <div class="form-field">
+                    <label for="director">Director <span class="required">*</span></label>
+                    <input id="director" pInputText formControlName="director" placeholder="Director name" />
+                </div>
+                <div class="form-field">
+                    <label for="producer">Producer <span class="required">*</span></label>
+                    <input id="producer" pInputText formControlName="producer" placeholder="Producer name" />
+                </div>
+
+                <!-- Row 4: IMDB Rating | Status -->
+                <div class="form-field">
+                    <label for="imdb">IMDB Rating</label>
+                    <input id="imdb" type="number" pInputText formControlName="imdbRating" placeholder="0.0 – 10.0"
+                        min="0" max="10" step="0.1" />
+                </div>
+                <div class="form-field">
+                    <label for="status">Status <span class="required">*</span></label>
+                    <p-select inputId="status" [options]="statusOptions" formControlName="status" optionLabel="label"
+                        optionValue="value" placeholder="Select status">
+                    </p-select>
+                    <small class="error-text"
+                        *ngIf="addMovieForm.get('status')?.invalid && addMovieForm.get('status')?.touched">
+                        Status is required.
+                    </small>
+                </div>
+
+                <!-- Row 5: Description (full width) -->
+                <div class="form-field full-width">
+                    <label for="description">Description <span class="required">*</span></label>
+                    <textarea id="description" pInputText formControlName="description"
+                        placeholder="Brief synopsis of the movie" rows="3"></textarea>
+                </div>
+
+                <!-- Row 6: Trailer URL (full width) -->
+                <div class="form-field full-width">
+                    <label for="trailer">Trailer URL <span class="required">*</span></label>
+                    <input id="trailer" pInputText formControlName="trailerUrl"
+                        placeholder="https://www.youtube.com/embed/..." />
+                </div>
+
+                <!-- Row 7: Poster URL (full width) -->
+                <div class="form-field full-width">
+                    <label for="poster">Poster URL <span class="required">*</span></label>
+                    <input id="poster" pInputText formControlName="posterUrl" placeholder="https://..." />
+                </div>
+
+            </div>
+
+            <div *ngIf="submitError" class="form-message error">{{ submitError }}</div>
+
+            <div class="dialog-actions">
+                <p-button type="submit" [label]="editingMovieId ? 'Update Movie' : 'Submit'"
+                    [disabled]="addMovieForm.invalid"></p-button>
+            </div>
+
+        </form>
+    </p-dialog>
+
+    <!-- MOVIES TABLE -->
+    <p-table [value]="movies" [tableStyle]="{ 'min-width': '50rem' }" responsiveLayout="scroll">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Title</th>
+                <th>Genre</th>
+                <th>MPAA</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-movie>
+            <tr>
+                <td>{{ movie.title }}</td>
+                <td>{{ movie.genre }}</td>
+                <td>{{ movie.mpaaRating }}</td>
+                <td>{{ movie.status }}</td>
+                <td>
+                    <p-button label="Edit" severity="secondary" size="small" (click)="editMovie(movie)"></p-button>
+                    <p-button label="Remove" severity="danger" size="small" (click)="deleteMovie(movie)"></p-button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="5">No movies in the catalogue yet.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

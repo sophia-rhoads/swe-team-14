@@ -1,0 +1,30 @@
+<div class="admin-page">
+    <h1 class="page-title">Admin Home Page</h1>
+    <p class="page-subtitle">Choose a section to manage</p>
+
+    <div class="dashboard-grid">
+        <div class="dashboard-card" (click)="goToMovies()">
+            <div class="card-icon">🎬</div>
+            <h2>Manage Movies</h2>
+            <p>View and add movies.</p>
+        </div>
+
+        <div class="dashboard-card" (click)="goToPromotions()">
+            <div class="card-icon">🏷️</div>
+            <h2>Manage Promotions</h2>
+            <p>Create and manage promotional offers.</p>
+        </div>
+
+        <div class="dashboard-card" (click)="goToUsers()">
+            <div class="card-icon">👤</div>
+            <h2>Manage Users</h2>
+            <p>View and manage registered users.</p>
+        </div>
+
+        <div class="dashboard-card" (click)="goToShowtimes()">
+            <div class="card-icon">🕒</div>
+            <h2>Manage Showtimes</h2>
+            <p>Schedule and update movie showtimes.</p>
+        </div>
+    </div>
+</div>

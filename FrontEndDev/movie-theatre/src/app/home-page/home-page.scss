@@ -1,0 +1,189 @@
+.movie-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); // smaller cards
+    gap: 16px; // slightly reduced spacing
+    margin-bottom: 30px;
+}
+
+.movie-card {
+    background: var(--surface-card);
+    padding: 14px; // smaller padding
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    transition: transform 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.movie-card:hover {
+    transform: translateY(-4px);
+}
+
+.movie-card img {
+    width: 100%;
+    height: 240px; // reduced from 300px
+    object-fit: contain; // changed to contain for better aspect ratio handling
+    border-radius: 10px;
+}
+
+.movie-card h3 {
+    margin-top: 10px 6px 0;
+    font-size: 16px; // slightly smaller title
+    font-weight: 600;
+    min-height: 40px;
+}
+
+.not-released {
+    font-size: 14px;
+    font-style: italic;
+    color: #999;
+}
+
+.filter-bar {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.spinner-container {
+    display: flex;
+    justify-content: center;
+    margin: 40px 0;
+}
+
+.section-title {
+    margin-top: 30px;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.empty-message {
+    margin: 20px 0;
+    padding: 20px 0;
+    text-align: center;
+    font-size: 15px;
+    font-style: italic;
+    color: var(--text-color-secondary);
+}
+
+.rating-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 10px;
+}
+
+.rating-number {
+    font-size: 13px;
+    font-weight: 500;
+    color: #444;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+    margin-bottom: 10px;
+}
+
+.carousel-card {
+    text-align: center;
+    padding: 10px;
+}
+
+.carousel-card img {
+    width: 100%;
+    height: 220px;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+.favorite-btn {
+    font-size: 20px;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.liked {
+    color: red;
+}
+
+// Recommended For You section
+
+// Section header row: title + AI badge on the left, View All on the right
+.recs-section-header {
+    border-bottom: 2px solid #f0fdf4;
+    padding-bottom: 6px;
+    margin-bottom: 4px;
+}
+
+.recs-title-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    h2 {
+        margin: 0;
+    }
+}
+
+// "AI Picks" pill badge next to the heading
+.recs-badge {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 20px;
+    box-shadow: 0 2px 6px rgba(34, 197, 94, 0.35);
+    white-space: nowrap;
+}
+
+.recs-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+// Inline loading row (spinner + text side by side)
+.recs-home-loading {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 0 12px;
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+// Rank badge overlaid on carousel/grid cards
+.rec-carousel-card,
+.rec-grid-card {
+    position: relative;
+}
+
+.rec-home-rank {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 2;
+    background: #22c55e;
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 20px;
+    box-shadow: 0 2px 5px rgba(34, 197, 94, 0.4);
+    pointer-events: none;
+}

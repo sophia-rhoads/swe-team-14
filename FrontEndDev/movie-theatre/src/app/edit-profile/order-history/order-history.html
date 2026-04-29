@@ -1,0 +1,25 @@
+<br>
+<br>
+<div class="orderHistory">
+    <div *ngIf="orders.length === 0">No bookings yet.</div>
+    <p-table *ngIf="orders.length > 0" [value]="orders">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Reference</th>
+                <th>Movie</th>
+                <th>Showtime</th>
+                <th>Seats</th>
+                <th>Total Cost</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-order>
+            <tr>
+                <td>{{ order.bookingReference }}</td>
+                <td>{{ order.movieTitle }}</td>
+                <td>{{ order.showDate | date:'mediumDate' }} at {{ order.showTime }}</td>
+                <td>{{ order.seatNumbers }}</td>
+                <td>{{ order.totalAmount | currency }}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
