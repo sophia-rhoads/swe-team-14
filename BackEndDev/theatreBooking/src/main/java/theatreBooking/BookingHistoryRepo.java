@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface BookingHistoryRepo extends JpaRepository<BookingHistory, Long> {
     List<BookingHistory> findByCustomerIdOrderByBookedAtDesc(Long customerId);
+
+    boolean existsByMovie_Id(Long movieId);
 }

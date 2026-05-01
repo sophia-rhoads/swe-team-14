@@ -22,6 +22,9 @@ public class Movie {
     private String trailerUrl;
     private String posterUrl;
 
+    @Column(columnDefinition = "BOOLEAN DEFAULT TRUE")
+    private boolean active = true;
+
     // @OneToMany(mappedBy = "movie")
 
     // private List<Favorites> favorites;
@@ -112,6 +115,14 @@ public class Movie {
 
     public void setPosterUrl(String posterUrl) {
         this.posterUrl = posterUrl;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     /*

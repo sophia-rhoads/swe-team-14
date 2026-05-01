@@ -12,5 +12,7 @@ public interface FavoritesRepo extends JpaRepository<Favorites, Long> {
 
     void deleteByCustomer_IdAndMovie_Id(Long customerId, Long movieId);
 
+    void deleteByMovie_Id(Long movieId);
+
     boolean existsByCustomer_IdAndMovie_Id(Long customerId, Long movieId);
 }

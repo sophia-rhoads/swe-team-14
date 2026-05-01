@@ -43,6 +43,9 @@ public class ShowtimeService {
 
         Movie movie = movieRepo.findById(request.getMovieId())
                 .orElseThrow(() -> new RuntimeException("Movie not found"));
+        if (!movie.isActive()) {
+            throw new RuntimeException("Cannot schedule a removed movie");
+        }
 
         Showroom room = showroomRepo.findById(request.getRoomId())
                 .orElseThrow(() -> new RuntimeException("Showroom not found"));
@@ -115,6 +118,7 @@ public class ShowtimeService {
     public List<ShowtimeResponse> getAllShowtimes() {
         return showtimeRepo.findAllWithSeats()
                 .stream()
+                .filter(showtime -> showtime.getMovie().isActive())
                 .map(ShowtimeResponse::new)
                 .toList();
     }
@@ -123,6 +127,7 @@ public class ShowtimeService {
     public List<ShowtimeResponse> getShowtimesByMovie(Long movieId) {
         return showtimeRepo.findByMovieIdWithSeats(movieId)
                 .stream()
+                .filter(showtime -> showtime.getMovie().isActive())
                 .map(ShowtimeResponse::new)
                 .toList();
     }
@@ -131,6 +136,9 @@ public class ShowtimeService {
     public ShowtimeResponse getShowtimeById(Long showtimeId) {
         Showtime showtime = showtimeRepo.findByIdWithAll(showtimeId)
                 .orElseThrow(() -> new RuntimeException("Showtime not found"));
+        if (!showtime.getMovie().isActive()) {
+            throw new RuntimeException("Showtime not found");
+        }
         return new ShowtimeResponse(showtime);
     }
 

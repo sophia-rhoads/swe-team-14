@@ -134,9 +134,19 @@ export class ManageMovies implements OnInit {
 
     deleteMovie(movie: Movie): void {
         if (!confirm(`Remove "${movie.title}" from the catalogue?`)) return;
+        this.submitError = '';
+        this.submitSuccess = '';
+
         this.movieService.deleteMovie(movie.id!).subscribe({
-            next: () => this.loadMovies(),
-            error: () => { this.submitError = 'Failed to remove movie.'; }
+            next: message => {
+                this.submitSuccess = message || `"${movie.title}" removed successfully.`;
+                this.loadMovies();
+            },
+            error: err => {
+                this.submitError = typeof err?.error === 'string'
+                    ? err.error
+                    : `Failed to remove "${movie.title}".`;
+            }
         });
     }
 

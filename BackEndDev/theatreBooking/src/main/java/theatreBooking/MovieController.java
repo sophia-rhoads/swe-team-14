@@ -71,7 +71,7 @@ public class MovieController {
     public ResponseEntity<?> deleteMovie(@PathVariable Long id) {
         try {
             movieService.deleteMovie(id);
-            return ResponseEntity.ok("Movie deleted successfully");
+            return ResponseEntity.ok("Movie removed from catalogue successfully");
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }

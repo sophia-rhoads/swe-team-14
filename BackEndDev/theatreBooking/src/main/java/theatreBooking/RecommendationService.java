@@ -71,6 +71,7 @@ public class RecommendationService {
 
         // Candidates — movies the user has NOT yet seen or favourited
         List<Movie> candidates = movieRepo.findAll().stream()
+                .filter(Movie::isActive)
                 .filter(m -> !alreadyEngaged.contains(m.getId()))
                 .toList();
 

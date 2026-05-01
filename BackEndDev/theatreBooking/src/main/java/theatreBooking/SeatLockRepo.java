@@ -15,4 +15,6 @@ public interface SeatLockRepo extends JpaRepository<SeatLock, Long> {
     List<SeatLock> findAllByExpiresAtBefore(LocalDateTime cutoff);
 
     List<SeatLock> findByShowtimeId(Long showtimeId);
+
+    void deleteByShowtimeId(Long showtimeId);
 }

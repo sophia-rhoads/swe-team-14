@@ -16,7 +16,9 @@ public class MovieService {
     }
 
     public List<Movie> getAllMovies() {
-        return movieRepo.findAll();
+        return movieRepo.findAll().stream()
+                .filter(Movie::isActive)
+                .toList();
     }
 
     public Movie getMovieById(Long id) {
@@ -25,21 +27,28 @@ public class MovieService {
     }
 
     public List<Movie> searchByTitle(String title) {
-        return movieRepo.findByTitleContainingIgnoreCase(title);
+        return movieRepo.findByTitleContainingIgnoreCase(title).stream()
+                .filter(Movie::isActive)
+                .toList();
     }
 
     public List<Movie> filterByGenre(String genre) {
-        return movieRepo.findByGenreIgnoreCase(genre);
+        return movieRepo.findByGenreIgnoreCase(genre).stream()
+                .filter(Movie::isActive)
+                .toList();
     }
 
     public List<Movie> getByStatus(String status) {
-        return movieRepo.findByStatus(MovieStatus.valueOf(status.toUpperCase()));
+        return movieRepo.findByStatus(MovieStatus.valueOf(status.toUpperCase())).stream()
+                .filter(Movie::isActive)
+                .toList();
     }
 
     public List<Movie> searchByShowDate(String showDate) {
         LocalDate date = LocalDate.parse(showDate);
         return showtimeRepo.findByShowDateWithMovie(date).stream()
                 .map(Showtime::getMovie)
+                .filter(Movie::isActive)
                 .distinct()
                 .toList();
     }
@@ -77,9 +86,9 @@ public class MovieService {
     }
 
     public void deleteMovie(Long id) {
-        if (!movieRepo.existsById(id)) {
-            throw new RuntimeException("Movie not found");
-        }
-        movieRepo.deleteById(id);
+        Movie movie = movieRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Movie not found"));
+        movie.setActive(false);
+        movieRepo.save(movie);
     }
 }
